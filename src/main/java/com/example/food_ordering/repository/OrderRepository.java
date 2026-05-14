@@ -3,7 +3,6 @@ package com.example.food_ordering.repository;
 import com.example.food_ordering.entity.Order;
 import com.example.food_ordering.entity.User;
 import com.example.food_ordering.enums.OrderStatus;
-import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

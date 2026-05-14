@@ -7,7 +7,7 @@ import java.util.List;
 public interface FoodRepository extends JpaRepository<Food, Long> {
     // Spring reads this name and generates:
     // SELECT * FROM foods WHERE is_available = true ORDER BY type, name
-    List<Food> findIsAvailableTrueOrderByTypeAscNameAsc();
+    List<Food> findByIsAvailableTrueOrderByTypeAscNameAsc();
 
     // SELECT * FROM foods WHERE type =?
     List<Food> findByType(String type);
