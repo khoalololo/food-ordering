@@ -14,4 +14,6 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
     // SELECT * FROM foods WHERE LOWER(name) LIKE LOWER('%?%')
     List<Food> findByNameContainingIgnoreCase(String name);
+
+    List<Food> findAllByOrderByTypeAscNameAsc(); // returns ALL including unavailable
 }

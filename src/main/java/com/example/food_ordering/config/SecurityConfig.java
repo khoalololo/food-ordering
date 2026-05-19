@@ -66,8 +66,10 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/api/food/**", "POST")).hasRole("MANAGER")
                         .requestMatchers(new AntPathRequestMatcher("/api/food/**", "PATCH")).hasRole("MANAGER")
                         .requestMatchers(new AntPathRequestMatcher("/api/food/**", "DELETE")).hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/order").hasRole("CUSTOMER")
                         .requestMatchers(new AntPathRequestMatcher("/api/order/all", "GET")).hasAnyRole("STAFF", "MANAGER")
                         .requestMatchers(new AntPathRequestMatcher("/api/order/*/advance", "PATCH")).hasAnyRole("STAFF", "MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/payment").hasRole("CUSTOMER")
                         .requestMatchers(new AntPathRequestMatcher("/api/user/**")).hasRole("MANAGER")
                         .requestMatchers(new AntPathRequestMatcher("/api/notification/kitchen")).hasAnyRole("STAFF", "MANAGER")
                         .requestMatchers(

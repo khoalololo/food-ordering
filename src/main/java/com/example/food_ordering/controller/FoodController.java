@@ -1,9 +1,11 @@
 package com.example.food_ordering.controller;
 
 import com.example.food_ordering.entity.Food;
+import com.example.food_ordering.repository.FoodRepository;
 import com.example.food_ordering.service.FoodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,5 +41,11 @@ public class FoodController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         foodService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<Food>> getAllIncludingUnavailable() {
+        return ResponseEntity.ok(foodService.getAllIncludingUnavailable());
     }
 }

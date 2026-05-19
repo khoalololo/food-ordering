@@ -14,6 +14,10 @@ public class FoodService {
     public List<Food> getAll(){
         return foodRepository.findByIsAvailableTrueOrderByTypeAscNameAsc();
     }
+
+    public List<Food> getAllIncludingUnavailable() {
+        return foodRepository.findAllByOrderByTypeAscNameAsc();
+    }
     public Food getById(Long id){
         // orElseThrow is the idiomatic Java way to handle not-found
         // we'll wire this to a 404 response via an exception handler later

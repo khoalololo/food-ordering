@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     // @Column lets you set constraints - nullable, unique, length
     @Column(nullable = false)

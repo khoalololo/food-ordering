@@ -64,7 +64,7 @@ public class OrderController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_STAFF")
                         || a.getAuthority().equals("ROLE_MANAGER"));
 
-        if (!isStaffOrAbove && order.getUser().getId() != user.getId()) {
+        if (!isStaffOrAbove && !order.getUser().getId().equals(user.getId())) {
             return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(orderService.toResponse(order));
@@ -98,7 +98,7 @@ public class OrderController {
                         || a.getAuthority().equals("ROLE_MANAGER"));
 
         // Only the owner or staff can cancel
-        if (!isStaffOrAbove && order.getUser().getId() != user.getId()) {
+        if (!isStaffOrAbove && !order.getUser().getId().equals(user.getId())) {
             return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(orderService.toResponse(orderService.cancelOrder(id)));

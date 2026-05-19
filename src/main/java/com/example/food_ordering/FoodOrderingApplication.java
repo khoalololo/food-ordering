@@ -3,6 +3,7 @@ package com.example.food_ordering;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -11,6 +12,7 @@ import com.example.food_ordering.enums.Role;
 import com.example.food_ordering.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@EnableMethodSecurity
 @SpringBootApplication
 public class FoodOrderingApplication {
 
