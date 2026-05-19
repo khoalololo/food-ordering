@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders — FoodOrder</title>
-    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         .order-card {
           background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
@@ -39,7 +39,7 @@
             <h1 class="page-title">My orders</h1>
             <p class="page-subtitle">Track and manage your food orders</p>
         </div>
-        <a href="menu.html" class="btn btn-primary">+ New order</a>
+        <a href="/customer/menu" class="btn btn-primary">+ New order</a>
     </div>
 
     <div class="filter-tabs">
@@ -57,10 +57,10 @@
     </div>
 </div>
 
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
     requireAuth();
-    renderNav('orders.html');
+    renderNav('/customer/orders');
 
     const STATUS_ICON = {
       PENDING:'⏳', CONFIRMED:'✅', PREPARING:'🍳', READY:'🔔', COMPLETED:'🎉', CANCELLED:'❌'
@@ -92,13 +92,13 @@
             <div class="empty-icon">📋</div>
             <h3>No orders yet</h3>
             <p>${activeStatus === 'all' ? 'Place your first order from the menu' : 'No orders with this status'}</p>
-            ${activeStatus === 'all' ? '<a href="menu.html" class="btn btn-primary" style="margin-top:1rem">Browse menu</a>' : ''}
+            ${activeStatus === 'all' ? '<a href="/customer/menu" class="btn btn-primary" style="margin-top:1rem">Browse menu</a>' : ''}
           </div>`;
         return;
       }
 
       list.innerHTML = filtered.map(o => `
-        <a class="order-card" href="tracking.html?orderId=${o.id}">
+        <a class="order-card" href="/customer/tracking?orderId=${o.id}">
           <div class="order-icon">${STATUS_ICON[o.status] || '📦'}</div>
           <div class="order-info">
             <div class="order-top">
@@ -119,7 +119,7 @@
             ${o.status === 'PENDING' || o.status === 'CONFIRMED' ? `
               <button class="btn btn-ghost btn-sm" onclick="event.preventDefault();cancelOrder(${o.id}, event)">Cancel</button>` : ''}
             ${o.status === 'PENDING' ? `
-              <a href="payment.html?orderId=${o.id}" class="btn btn-primary btn-sm" onclick="event.stopPropagation()">Pay now</a>` : ''}
+              <a href="/customer/payment?orderId=${o.id}" class="btn btn-primary btn-sm" onclick="event.stopPropagation()">Pay now</a>` : ''}
           </div>
         </a>
       `).join('');

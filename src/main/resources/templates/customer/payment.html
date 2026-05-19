@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment — FoodOrder</title>
-    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         .payment-layout { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; align-items:start; }
         @media(max-width:800px){ .payment-layout{ grid-template-columns:1fr; } }
@@ -94,19 +94,19 @@
             <button class="btn btn-primary btn-lg" style="width:100%;margin-top:1.25rem" onclick="pay()" id="pay-btn" disabled>
                 Confirm payment →
             </button>
-            <a href="orders.html" class="btn btn-ghost" style="width:100%;margin-top:0.5rem">Back to orders</a>
+            <a href="/customer/orders" class="btn btn-ghost" style="width:100%;margin-top:0.5rem">Back to orders</a>
         </div>
     </div>
 </div>
 
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
     requireAuth();
     renderNav('');
 
     const params = new URLSearchParams(location.search);
     const orderId = params.get('orderId');
-    if (!orderId) { location.href = 'orders.html'; }
+    if (!orderId) { location.href = '/customer/orders'; }
 
     let selectedMethod = null;
     let orderData = null;
@@ -158,7 +158,7 @@
       try {
         await POST('/payment', { orderId: Number(orderId), method: selectedMethod });
         toast('Payment successful!', 'success');
-        setTimeout(() => location.href = `tracking.html?orderId=${orderId}`, 900);
+        setTimeout(() => location.href = `/customer/tracking?orderId=${orderId}`, 900);
       } catch (ex) {
         toast(ex.message, 'error');
         btn.disabled = false;

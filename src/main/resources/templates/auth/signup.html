@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up — FoodOrder</title>
-    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem 1rem; }
         .auth-wrap { width:100%; max-width:420px; }
@@ -56,12 +56,12 @@
                 Create account
             </button>
         </form>
-        <p class="auth-footer">Already have an account? <a href="signin.html">Sign in</a></p>
+        <p class="auth-footer">Already have an account? <a href="/signin">Sign in</a></p>
     </div>
 </div>
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
-    if (Auth.isLoggedIn()) location.href = 'menu.html';
+    if (Auth.isLoggedIn()) location.href = '/customer/menu';
 
     document.getElementById('signup-form').addEventListener('submit', async e => {
       e.preventDefault();
@@ -89,7 +89,7 @@
           password,
         });
         toast('Account created! Please sign in.', 'success');
-        setTimeout(() => location.href = 'signin.html', 1200);
+        setTimeout(() => location.href = '/signin', 1200);
       } catch (ex) {
         err.textContent = ex.message || 'Registration failed';
         err.style.display = 'block';

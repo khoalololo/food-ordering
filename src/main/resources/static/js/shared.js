@@ -1,5 +1,5 @@
 // ── Config ──────────────────────────────────────────
-const API = 'http://localhost:8080/api';
+const API = '/api';
 
 // ── Token helpers ────────────────────────────────────
 const Auth = {
@@ -23,7 +23,7 @@ async function api(method, path, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  if (res.status === 401) { Auth.clear(); Auth.redirect('/signin.html'); return; }
+  if (res.status === 401) { Auth.clear(); Auth.redirect('/signin'); return; }
 
   const text = await res.text();
   let data;
@@ -74,10 +74,10 @@ const fmt = {
 
 // ── Route guard ──────────────────────────────────────
 function requireAuth(allowedRoles) {
-  if (!Auth.isLoggedIn()) { Auth.redirect('/signin.html'); return false; }
+  if (!Auth.isLoggedIn()) { Auth.redirect('/signin'); return false; }
   if (allowedRoles && !allowedRoles.includes(Auth.role())) {
     toast('Access denied', 'error');
-    Auth.redirect('/menu.html');
+    Auth.redirect('/customer/menu');
     return false;
   }
   return true;
@@ -117,19 +117,19 @@ function renderNav(activePage) {
   const role = Auth.role();
 
   const customerLinks = [
-    { href: 'menu.html',          label: 'Menu' },
-    { href: 'cart.html',          label: 'Cart', badgeId: 'cart-badge' },
-    { href: 'orders.html',        label: 'My Orders' },
-    { href: 'notifications.html', label: 'Notifications' },
+    { href: '/customer/menu',          label: 'Menu' },
+    { href: '/customer/cart',          label: 'Cart', badgeId: 'cart-badge' },
+    { href: '/customer/orders',        label: 'My Orders' },
+    { href: '/customer/notifications', label: 'Notifications' },
   ];
   const staffLinks = [
-    { href: 'staff-orders.html',  label: 'Orders' },
-    { href: 'notifications.html', label: 'Notifications' },
+    { href: '/staff/orders',  label: 'Orders' },
+    { href: '/customer/notifications', label: 'Notifications' },
   ];
   const managerLinks = [
-    { href: 'manager-foods.html', label: 'Foods' },
-    { href: 'manager-staff.html', label: 'Staff' },
-    { href: 'staff-orders.html',  label: 'Orders' },
+    { href: '/manager/foods', label: 'Foods' },
+    { href: '/manager/staff', label: 'Staff' },
+    { href: '/staff/orders',  label: 'Orders' },
   ];
 
   let links = customerLinks;
@@ -140,7 +140,7 @@ function renderNav(activePage) {
   if (!nav) return;
 
   nav.innerHTML = `
-    <a class="nav-brand" href="${role === 'STAFF' || role === 'MANAGER' ? 'staff-orders.html' : 'menu.html'}">FoodOrder</a>
+    <a class="nav-brand" href="${role === 'STAFF' || role === 'MANAGER' ? '/staff/orders' : '/customer/menu'}">FoodOrder</a>
     <div class="nav-links">
       ${links.map(l => `
         <a href="${l.href}" class="nav-link ${activePage === l.href ? 'active' : ''}">
@@ -150,10 +150,10 @@ function renderNav(activePage) {
       ${user ? `
         <span style="color:var(--muted);font-size:0.8rem;padding:0 0.5rem">${user.fullName || user.email}</span>
         <button class="btn btn-ghost btn-sm" onclick="signout()">Sign out</button>
-      ` : `<a href="signin.html" class="btn btn-primary btn-sm">Sign in</a>`}
+      ` : `<a href="/signin" class="btn btn-primary btn-sm">Sign in</a>`}
     </div>
   `;
   Cart.updateBadge();
 }
 
-function signout() { Auth.clear(); Cart.clear(); Auth.redirect('/signin.html'); }
+function signout() { Auth.clear(); Cart.clear(); Auth.redirect('/signin'); }

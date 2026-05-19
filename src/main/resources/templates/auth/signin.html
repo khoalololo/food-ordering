@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In — FoodOrder</title>
-    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .auth-wrap { width: 100%; max-width: 400px; padding: 1.5rem; }
@@ -22,7 +22,7 @@
 <body>
 <div id="toast-container"></div>
 <div class="auth-wrap">
-    <div class="auth-logo">🍔 FoodOrder</div>
+    <div class="auth-logo">FoodOrder</div>
     <p class="auth-tagline">Good food, delivered fast</p>
     <div class="auth-card">
         <h1 class="auth-title">Welcome back</h1>
@@ -40,15 +40,15 @@
                 Sign in
             </button>
         </form>
-        <p class="auth-footer">No account? <a href="signup.html">Create one</a></p>
+        <p class="auth-footer">No account? <a href="/signup">Create one</a></p>
     </div>
 </div>
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
     // Redirect if already logged in
     if (Auth.isLoggedIn()) {
       const role = Auth.role();
-      location.href = role === 'STAFF' || role === 'MANAGER' ? 'staff-orders.html' : 'menu.html';
+      location.href = role === 'STAFF' || role === 'MANAGER' ? '/staff/orders' : '/customer/menu';
     }
 
     document.getElementById('signin-form').addEventListener('submit', async e => {
@@ -67,7 +67,7 @@
         });
         Auth.set(data.token, data.user);
         const role = data.user?.role;
-        location.href = role === 'STAFF' || role === 'MANAGER' ? 'staff-orders.html' : 'menu.html';
+        location.href = role === 'STAFF' || role === 'MANAGER' ? '/staff/orders' : '/customer/menu';
       } catch (ex) {
         err.textContent = ex.message || 'Invalid email or password';
         err.style.display = 'block';

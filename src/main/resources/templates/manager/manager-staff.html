@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Management — Manager</title>
-    <link rel="stylesheet" href="shared.css">
+    <title>Staff Management — FoodOrder</title>
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         .toolbar { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; margin-bottom:1.5rem; }
         .toolbar .form-input { max-width:260px; }
@@ -193,10 +193,10 @@
     </div>
 </div>
 
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
     requireAuth(['MANAGER']);
-    renderNav('manager-staff.html');
+    renderNav('/manager/staff');
 
     let allUsers = [];
     let deleteId = null;

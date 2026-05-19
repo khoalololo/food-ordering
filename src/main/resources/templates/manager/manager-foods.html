@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Management — Manager</title>
-    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         .toolbar { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; margin-bottom:1.5rem; }
         .toolbar .form-input { max-width:240px; }
@@ -136,10 +136,10 @@
     </div>
 </div>
 
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
     requireAuth(['MANAGER']);
-    renderNav('manager-foods.html');
+    renderNav('/manager/foods');
 
     const EMOJI = { pizza:'🍕', burger:'🍔', pasta:'🍝', salad:'🥗', soup:'🍲', dessert:'🍰', drink:'🥤', food:'🍽' };
     let allFoods = [];

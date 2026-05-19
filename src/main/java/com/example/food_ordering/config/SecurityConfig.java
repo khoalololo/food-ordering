@@ -1,6 +1,7 @@
 package com.example.food_ordering.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher .AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -47,17 +49,32 @@ public class SecurityConfig {
                 // Stateless — no HTTP sessions
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/signin", "/signup", "/404", "/css/**", "/js/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/food", "/api/food/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,   "/api/food/**").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PATCH,  "/api/food/**").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/food/**").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/api/order/all").hasAnyRole("STAFF", "MANAGER")
-                        .requestMatchers(HttpMethod.PATCH, "/api/order/*/advance").hasAnyRole("STAFF", "MANAGER")
-                        .requestMatchers("/api/user/**").hasRole("MANAGER")
-                        .requestMatchers("/api/notification/kitchen").hasAnyRole("STAFF", "MANAGER")
-                        .requestMatchers("/customer/**", "/staff/**", "/manager/**").authenticated()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/signin"),
+                                new AntPathRequestMatcher("/signup"),
+                                new AntPathRequestMatcher("/404"),
+                                new AntPathRequestMatcher("/error"),
+                                new AntPathRequestMatcher("/favicon.ico"),
+                                new AntPathRequestMatcher("/css/**"),
+                                new AntPathRequestMatcher("/js/**")
+                        ).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/food", "GET")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/food/**", "GET")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/food/**", "POST")).hasRole("MANAGER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/food/**", "PATCH")).hasRole("MANAGER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/food/**", "DELETE")).hasRole("MANAGER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/order/all", "GET")).hasAnyRole("STAFF", "MANAGER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/order/*/advance", "PATCH")).hasAnyRole("STAFF", "MANAGER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/user/**")).hasRole("MANAGER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/notification/kitchen")).hasAnyRole("STAFF", "MANAGER")
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/customer/**"),
+                                new AntPathRequestMatcher("/staff/**"),
+                                new AntPathRequestMatcher("/manager/**")
+                        ).authenticated()
                         .anyRequest().authenticated()
                 )
 

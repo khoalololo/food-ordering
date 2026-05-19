@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu — FoodOrder</title>
-    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         .hero { padding:2.5rem 1.5rem 1.5rem; max-width:1200px; margin:0 auto; }
         .hero-title { font-family:'Syne',sans-serif; font-weight:800; font-size:2.25rem; letter-spacing:-0.03em; line-height:1.15; }
@@ -109,10 +109,10 @@
     </div>
 </div>
 
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
     requireAuth();
-    renderNav('menu.html');
+    renderNav('/customer/menu');
 
     const TOPPINGS_BY_TYPE = {
       pizza:   [{ key:'extraCheese', label:'Extra Cheese', price:10000 }, { key:'extraSauce', label:'Extra Sauce', price:5000 }, { key:'extraMeat', label:'Extra Meat', price:20000 }, { key:'spicy', label:'Spicy', price:0 }],

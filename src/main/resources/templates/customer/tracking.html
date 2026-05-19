@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Order — FoodOrder</title>
-    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="/css/shared.css">
     <style>
         /* Stepper */
         .stepper { display:flex; align-items:flex-start; margin:2rem 0; position:relative; }
@@ -75,7 +75,7 @@
             <h1 class="page-title">Track order</h1>
             <p class="page-subtitle" id="order-id-label">Loading…</p>
         </div>
-        <a href="orders.html" class="btn btn-ghost">← My orders</a>
+        <a href="/customer/orders" class="btn btn-ghost">← My orders</a>
     </div>
 
     <!-- Stepper -->
@@ -133,14 +133,14 @@
     </p>
 </div>
 
-<script src="shared.js"></script>
+<script src="/js/shared.js"></script>
 <script>
     requireAuth();
-    renderNav('orders.html');
+    renderNav('/customer/orders');
 
     const params = new URLSearchParams(location.search);
     const orderId = params.get('orderId');
-    if (!orderId) location.href = 'orders.html';
+    if (!orderId) location.href = '/customer/orders';
 
     document.getElementById('order-id-label').textContent = 'Order #' + orderId;
 
@@ -185,12 +185,12 @@
       row.innerHTML = '';
       if (status === 'PENDING') {
         row.innerHTML = `
-          <a href="payment.html?orderId=${orderId}" class="btn btn-primary">Pay now →</a>
+          <a href="/customer/payment?orderId=${orderId}" class="btn btn-primary">Pay now →</a>
           <button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;
       } else if (status === 'CONFIRMED') {
         row.innerHTML = `<button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;
       } else if (status === 'COMPLETED' || status === 'CANCELLED') {
-        row.innerHTML = `<a href="menu.html" class="btn btn-primary">Order again</a>`;
+        row.innerHTML = `<a href="/customer/menu" class="btn btn-primary">Order again</a>`;
         stopPolling('Order finalised.');
       }
     }
