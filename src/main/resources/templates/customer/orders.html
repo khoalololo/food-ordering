@@ -63,7 +63,7 @@
     renderNav('/customer/orders');
 
     const STATUS_ICON = {
-      PENDING:'⏳', CONFIRMED:'✅', PREPARING:'🍳', READY:'🔔', COMPLETED:'🎉', CANCELLED:'❌'
+      PENDING:'', CONFIRMED:'', PREPARING:'', READY:'', COMPLETED:'', CANCELLED:''
     };
 
     let allOrders = [];
@@ -89,7 +89,6 @@
       if (!filtered.length) {
         list.innerHTML = `
           <div class="empty">
-            <div class="empty-icon">📋</div>
             <h3>No orders yet</h3>
             <p>${activeStatus === 'all' ? 'Place your first order from the menu' : 'No orders with this status'}</p>
             ${activeStatus === 'all' ? '<a href="/customer/menu" class="btn btn-primary" style="margin-top:1rem">Browse menu</a>' : ''}
@@ -99,7 +98,6 @@
 
       list.innerHTML = filtered.map(o => `
         <a class="order-card" href="/customer/tracking?orderId=${o.id}">
-          <div class="order-icon">${STATUS_ICON[o.status] || '📦'}</div>
           <div class="order-info">
             <div class="order-top">
               <span class="order-id">Order #${o.id}</span>

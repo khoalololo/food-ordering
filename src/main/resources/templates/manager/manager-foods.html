@@ -49,14 +49,14 @@
         <input class="form-input" type="search" id="search-input" placeholder="Search by name…">
         <select class="form-select" id="type-filter" style="width:160px">
             <option value="">All types</option>
-            <option value="pizza">🍕 Pizza</option>
-            <option value="burger">🍔 Burger</option>
-            <option value="pasta">🍝 Pasta</option>
-            <option value="salad">🥗 Salad</option>
-            <option value="soup">🍲 Soup</option>
-            <option value="dessert">🍰 Dessert</option>
-            <option value="drink">🥤 Drink</option>
-            <option value="food">🍽 Other</option>
+            <option value="pizza">Pizza</option>
+            <option value="burger">Burger</option>
+            <option value="pasta">Pasta</option>
+            <option value="salad">Salad</option>
+            <option value="soup">Soup</option>
+            <option value="dessert">Dessert</option>
+            <option value="drink">Drink</option>
+            <option value="food">Other</option>
         </select>
         <select class="form-select" id="avail-filter" style="width:160px">
             <option value="">All items</option>
@@ -75,7 +75,7 @@
     <div class="modal">
         <div class="modal-header">
             <h2 class="modal-title" id="modal-title">Add food</h2>
-            <button class="btn btn-ghost btn-icon" onclick="closeModal('food-modal')">✕</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeModal('food-modal')">Close</button>
         </div>
         <div class="modal-body">
             <input type="hidden" id="f-id">
@@ -91,14 +91,14 @@
                 <div class="form-group">
                     <label class="form-label">Type *</label>
                     <select class="form-select" id="f-type">
-                        <option value="food">🍽 Other</option>
-                        <option value="pizza">🍕 Pizza</option>
-                        <option value="burger">🍔 Burger</option>
-                        <option value="pasta">🍝 Pasta</option>
-                        <option value="salad">🥗 Salad</option>
-                        <option value="soup">🍲 Soup</option>
-                        <option value="dessert">🍰 Dessert</option>
-                        <option value="drink">🥤 Drink</option>
+                        <option value="food">Other</option>
+                        <option value="pizza">Pizza</option>
+                        <option value="burger">Burger</option>
+                        <option value="pasta">Pasta</option>
+                        <option value="salad">Salad</option>
+                        <option value="soup">Soup</option>
+                        <option value="dessert">Dessert</option>
+                        <option value="drink">Drink</option>
                     </select>
                 </div>
             </div>
@@ -141,7 +141,7 @@
     requireAuth(['MANAGER']);
     renderNav('/manager/foods');
 
-    const EMOJI = { pizza:'🍕', burger:'🍔', pasta:'🍝', salad:'🥗', soup:'🍲', dessert:'🍰', drink:'🥤', food:'🍽' };
+    const EMOJI = { pizza:'', burger:'', pasta:'', salad:'', soup:'', dessert:'', drink:'', food:'' };
     let allFoods = [];
     let deleteId = null;
 
@@ -172,7 +172,7 @@
 
       const grid = document.getElementById('food-grid');
       if (!foods.length) {
-        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🍽</div><h3>No items found</h3><p>Adjust filters or add a new item</p></div>`;
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><h3>No items found</h3><p>Adjust filters or add a new item</p></div>`;
         return;
       }
 
@@ -180,7 +180,7 @@
       grid.innerHTML = foods.map(f => `
         <div class="food-card ${!available(f) ? 'unavailable-overlay' : ''}">
           <div class="food-img-wrap">
-            ${f.imageUrl ? `<img src="${f.imageUrl}" alt="${f.name}" onerror="this.parentElement.innerHTML='${EMOJI[f.type]||'🍽'}'">` : EMOJI[f.type]||'🍽'}
+            ${f.imageUrl ? `<img src="${f.imageUrl}" alt="${f.name}" onerror="this.parentElement.innerHTML=''">` : ''}
           </div>
           <div class="food-body">
             <div class="food-type">${f.type} ${!available(f) ? '<span class="unavail-badge">Unavailable</span>' : ''}</div>
@@ -194,7 +194,7 @@
               <button class="btn btn-ghost btn-sm" onclick="toggleAvailability(${f.id}, ${!available(f)})">
                 ${available(f) ? 'Hide' : 'Show'}
               </button>
-              <button class="btn btn-danger btn-sm" onclick="openDelete(${f.id}, '${f.name.replace(/'/g,"\\'")}')">✕</button>
+              <button class="btn btn-danger btn-sm" onclick="openDelete(${f.id}, '${f.name.replace(/'/g,"\\'")}')">Delete</button>
             </div>
           </div>
         </div>

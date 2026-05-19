@@ -92,7 +92,7 @@
                 <span class="amt" id="summary-total">—</span>
             </div>
             <button class="btn btn-primary btn-lg" style="width:100%;margin-top:1.25rem" onclick="pay()" id="pay-btn" disabled>
-                Confirm payment →
+                Confirm payment
             </button>
             <a href="/customer/orders" class="btn btn-ghost" style="width:100%;margin-top:0.5rem">Back to orders</a>
         </div>
@@ -162,7 +162,7 @@
       } catch (ex) {
         toast(ex.message, 'error');
         btn.disabled = false;
-        btn.textContent = 'Confirm payment →';
+        btn.textContent = 'Confirm payment';
       }
     }
 

@@ -46,10 +46,10 @@ function toast(msg, type = 'info', duration = 3500) {
     container.id = 'toast-container';
     document.body.appendChild(container);
   }
-  const icons = { success: '✓', error: '✕', info: 'ℹ' };
+  const icons = { success: '', error: '', info: '' };
   const t = document.createElement('div');
   t.className = `toast ${type}`;
-  t.innerHTML = `<span style="font-weight:700;font-size:1rem">${icons[type]||'•'}</span><span>${msg}</span>`;
+  t.innerHTML = `<span>${msg}</span>`;
   container.appendChild(t);
   setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='all 0.3s'; setTimeout(()=>t.remove(), 300); }, duration);
 }

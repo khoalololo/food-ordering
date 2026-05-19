@@ -103,7 +103,7 @@
     <div class="modal">
         <div class="modal-header">
             <h2 class="modal-title" id="modal-title">Add staff member</h2>
-            <button class="btn btn-ghost btn-icon" onclick="closeModal('staff-modal')">✕</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeModal('staff-modal')">Close</button>
         </div>
         <div class="modal-body">
             <input type="hidden" id="s-id">
@@ -128,7 +128,6 @@
                 <label class="form-label">Password *</label>
                 <div class="pw-toggle">
                     <input class="form-input" id="s-password" type="password" placeholder="At least 6 characters">
-                    <button class="pw-eye" type="button" onclick="togglePw()">👁</button>
                 </div>
             </div>
 
@@ -153,7 +152,7 @@
     <div class="modal" style="max-width:360px">
         <div class="modal-header">
             <h2 class="modal-title">Change role</h2>
-            <button class="btn btn-ghost btn-icon" onclick="closeModal('role-modal')">✕</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeModal('role-modal')">Close</button>
         </div>
         <div class="modal-body">
             <p style="color:var(--muted);font-size:0.875rem;margin-bottom:0.75rem">
@@ -237,7 +236,6 @@
       if (!users.length) {
         grid.innerHTML = `
           <div class="empty" style="grid-column:1/-1">
-            <div class="empty-icon">👥</div>
             <h3>No members found</h3>
             <p>Try adjusting your filters</p>
           </div>`;
@@ -267,7 +265,7 @@
               <button class="btn btn-ghost btn-sm" onclick="openRoleChange(${u.id}, '${(u.fullName||'').replace(/'/g,"\\'")}', '${u.role}')">
                 Role
               </button>
-              ${!isMe ? `<button class="btn btn-danger btn-sm" onclick="openDelete(${u.id}, '${(u.fullName||u.email||'').replace(/'/g,"\\'")}')">✕</button>` : ''}
+              ${!isMe ? `<button class="btn btn-danger btn-sm" onclick="openDelete(${u.id}, '${(u.fullName||u.email||'').replace(/'/g,"\\'")}')">Remove</button>` : ''}
             </div>
           </div>`;
       }).join('');
@@ -322,14 +320,12 @@
       try {
         if (id) {
           // Update existing user
-          await PATCH('/user/' + id, { fullName, email, phone, role });
+          await PATCH('/user/' + id, { fullName, email, phone });
+          // If role changed, update it too
+          await PATCH('/user/' + id + '/role', { role });
         } else {
-          // Register new staff via auth endpoint then update role
-          const newUser = await POST('/auth/register', { fullName, email, phone, password });
-          // After registration set proper role if not CUSTOMER
-          if (role !== 'CUSTOMER' && newUser?.id) {
-            await PATCH('/user/' + newUser.id + '/role', { role });
-          }
+          // Register new staff via auth endpoint, passing role directly
+          await POST('/auth/register', { fullName, email, phone, password, role });
         }
         toast(id ? 'Member updated' : 'Member added', 'success');
         closeModal('staff-modal');

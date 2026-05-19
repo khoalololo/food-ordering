@@ -62,13 +62,13 @@
 
 <div class="filters">
     <button class="filter-btn active" data-type="all">All</button>
-    <button class="filter-btn" data-type="pizza">🍕 Pizza</button>
-    <button class="filter-btn" data-type="burger">🍔 Burger</button>
-    <button class="filter-btn" data-type="pasta">🍝 Pasta</button>
-    <button class="filter-btn" data-type="salad">🥗 Salad</button>
-    <button class="filter-btn" data-type="soup">🍲 Soup</button>
-    <button class="filter-btn" data-type="dessert">🍰 Dessert</button>
-    <button class="filter-btn" data-type="drink">🥤 Drink</button>
+    <button class="filter-btn" data-type="pizza">Pizza</button>
+    <button class="filter-btn" data-type="burger">Burger</button>
+    <button class="filter-btn" data-type="pasta">Pasta</button>
+    <button class="filter-btn" data-type="salad">Salad</button>
+    <button class="filter-btn" data-type="soup">Soup</button>
+    <button class="filter-btn" data-type="dessert">Dessert</button>
+    <button class="filter-btn" data-type="drink">Drink</button>
     <input class="form-input filter-search" type="search" id="search-input" placeholder="Search menu…">
 </div>
 
@@ -81,7 +81,7 @@
     <div class="modal">
         <div class="modal-header">
             <h2 class="modal-title" id="modal-food-name">Customise order</h2>
-            <button class="btn btn-ghost btn-icon" onclick="closeModal('add-modal')">✕</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeModal('add-modal')">Close</button>
         </div>
         <div class="modal-body">
             <div id="modal-toppings-section">
@@ -124,7 +124,7 @@
       dessert: [{ key:'noSugar', label:'No Sugar', price:0 }],
     };
 
-    const EMOJI = { pizza:'🍕', burger:'🍔', pasta:'🍝', salad:'🥗', soup:'🍲', dessert:'🍰', drink:'🥤', food:'🍽' };
+    const EMOJI = { pizza:'', burger:'', pasta:'', salad:'', soup:'', dessert:'', drink:'', food:'' };
 
     let allFoods = [];
     let currentFood = null;
@@ -153,14 +153,14 @@
 
       const grid = document.getElementById('food-grid');
       if (!foods.length) {
-        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><h3>No items found</h3><p>Try a different filter or search</p></div>`;
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><h3>No items found</h3><p>Try a different filter or search</p></div>`;
         return;
       }
 
       grid.innerHTML = foods.map(f => `
         <div class="food-card ${f.isAvailable === false ? 'food-unavailable' : ''}" onclick="openAddModal(${f.id})">
           <div class="food-img">
-            ${f.imageUrl ? `<img src="${f.imageUrl}" alt="${f.name}" onerror="this.parentElement.innerHTML='${EMOJI[f.type]||'🍽'}'">` : EMOJI[f.type] || '🍽'}
+            ${f.imageUrl ? `<img src="${f.imageUrl}" alt="${f.name}" onerror="this.parentElement.innerHTML=''">` : ''}
           </div>
           <div class="food-body">
             <div class="food-type">${f.type}</div>

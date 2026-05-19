@@ -42,7 +42,6 @@
     </div>
 
     <div id="empty-state" class="empty" style="display:none">
-        <div class="empty-icon">🛒</div>
         <h3 style="margin-bottom:0.5rem">Cart is empty</h3>
         <p>Add some items from the menu</p>
         <a href="/customer/menu" class="btn btn-primary" style="margin-top:1rem">Browse menu</a>
@@ -64,7 +63,7 @@
             <div class="summary-row"><span style="color:var(--muted)">Delivery</span><span style="color:var(--green)">Free</span></div>
             <div class="summary-row total"><span>Total</span><span id="sum-total" class="val">—</span></div>
             <button class="btn btn-primary btn-lg" style="width:100%;margin-top:1.25rem" onclick="checkout()" id="checkout-btn">
-                Place order →
+                Place order
             </button>
             <a href="/customer/menu" class="btn btn-ghost" style="width:100%;margin-top:0.5rem">Continue shopping</a>
         </div>
@@ -76,7 +75,7 @@
     requireAuth();
     renderNav('/customer/cart');
 
-    const EMOJI = { pizza:'🍕', burger:'🍔', pasta:'🍝', salad:'🥗', soup:'🍲', dessert:'🍰', drink:'🥤', food:'🍽' };
+    const EMOJI = { pizza:'', burger:'', pasta:'', salad:'', soup:'', dessert:'', drink:'', food:'' };
 
     function render() {
       const items = Cart.items;
@@ -93,7 +92,6 @@
 
       document.getElementById('item-list').innerHTML = items.map(i => `
         <div class="cart-item">
-          <div class="item-emoji">${EMOJI[i.type] || '🍽'}</div>
           <div class="item-info">
             <div class="item-name">${i.name}</div>
             ${i.toppings?.length ? `<div class="item-toppings">+ ${i.toppings.join(', ')}</div>` : ''}
@@ -105,7 +103,7 @@
             <button class="qty-btn" onclick="updateQty('${i.key}', ${i.quantity + 1})">+</button>
           </div>
           <span class="item-subtotal">${fmt.currency(i.subtotal)}</span>
-          <button class="item-remove" onclick="removeItem('${i.key}')" title="Remove">✕</button>
+          <button class="item-remove" onclick="removeItem('${i.key}')" title="Remove">Remove</button>
         </div>
       `).join('');
 
@@ -142,7 +140,7 @@
       } catch (ex) {
         toast(ex.message, 'error');
         btn.disabled = false;
-        btn.textContent = 'Place order →';
+        btn.textContent = 'Place order';
       }
     }
 

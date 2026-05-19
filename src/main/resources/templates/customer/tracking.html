@@ -75,21 +75,20 @@
             <h1 class="page-title">Track order</h1>
             <p class="page-subtitle" id="order-id-label">Loading…</p>
         </div>
-        <a href="/customer/orders" class="btn btn-ghost">← My orders</a>
+        <a href="/customer/orders" class="btn btn-ghost">My orders</a>
     </div>
 
     <!-- Stepper -->
     <div class="stepper" id="stepper">
-        <div class="step" data-s="PENDING">  <div class="step-dot">📋</div><div class="step-label">Pending</div></div>
-        <div class="step" data-s="CONFIRMED"><div class="step-dot">✅</div><div class="step-label">Confirmed</div></div>
-        <div class="step" data-s="PREPARING"><div class="step-dot">🍳</div><div class="step-label">Preparing</div></div>
-        <div class="step" data-s="READY">    <div class="step-dot">🔔</div><div class="step-label">Ready</div></div>
-        <div class="step" data-s="COMPLETED"><div class="step-dot">🎉</div><div class="step-label">Done</div></div>
+        <div class="step" data-s="PENDING">  <div class="step-dot"></div><div class="step-label">Pending</div></div>
+        <div class="step" data-s="CONFIRMED"><div class="step-dot"></div><div class="step-label">Confirmed</div></div>
+        <div class="step" data-s="PREPARING"><div class="step-dot"></div><div class="step-label">Preparing</div></div>
+        <div class="step" data-s="READY">    <div class="step-dot"></div><div class="step-label">Ready</div></div>
+        <div class="step" data-s="COMPLETED"><div class="step-dot"></div><div class="step-label">Done</div></div>
     </div>
 
     <!-- Status banner -->
     <div class="status-banner" id="status-banner">
-        <span class="status-icon" id="status-icon">⏳</span>
         <span class="status-msg"  id="status-msg">Loading status…</span>
     </div>
 
@@ -146,12 +145,12 @@
 
     const STATUSES = ['PENDING','CONFIRMED','PREPARING','READY','COMPLETED'];
     const STATUS_CFG = {
-      PENDING:   { cls:'pending',   icon:'⏳', msg:'Waiting for the restaurant to confirm your order…' },
-      CONFIRMED: { cls:'confirmed', icon:'✅', msg:'Order confirmed — waiting to start preparation.' },
-      PREPARING: { cls:'preparing', icon:'🍳', msg:'Your food is being prepared right now!' },
-      READY:     { cls:'ready',     icon:'🔔', msg:'Your order is ready! A staff member will bring it to you.' },
-      COMPLETED: { cls:'completed', icon:'🎉', msg:'Order completed. Enjoy your meal!' },
-      CANCELLED: { cls:'cancelled', icon:'❌', msg:'This order has been cancelled.' },
+      PENDING:   { cls:'pending',   icon:'', msg:'Waiting for the restaurant to confirm your order…' },
+      CONFIRMED: { cls:'confirmed', icon:'', msg:'Order confirmed — waiting to start preparation.' },
+      PREPARING: { cls:'preparing', icon:'', msg:'Your food is being prepared right now!' },
+      READY:     { cls:'ready',     icon:'', msg:'Your order is ready! A staff member will bring it to you.' },
+      COMPLETED: { cls:'completed', icon:'', msg:'Order completed. Enjoy your meal!' },
+      CANCELLED: { cls:'cancelled', icon:'', msg:'This order has been cancelled.' },
     };
 
     let lastStatus = null;
@@ -164,7 +163,6 @@
       // Banner
       const banner = document.getElementById('status-banner');
       banner.className = 'status-banner ' + cfg.cls;
-      document.getElementById('status-icon').textContent = cfg.icon;
       document.getElementById('status-msg').textContent  = cfg.msg;
 
       // Info badge
@@ -185,7 +183,7 @@
       row.innerHTML = '';
       if (status === 'PENDING') {
         row.innerHTML = `
-          <a href="/customer/payment?orderId=${orderId}" class="btn btn-primary">Pay now →</a>
+          <a href="/customer/payment?orderId=${orderId}" class="btn btn-primary">Pay now</a>
           <button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;
       } else if (status === 'CONFIRMED') {
         row.innerHTML = `<button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;

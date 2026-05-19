@@ -44,7 +44,7 @@
             <p class="page-subtitle" id="last-refresh">Loading…</p>
         </div>
         <div style="display:flex;gap:0.5rem;">
-            <button class="btn btn-ghost" onclick="load()">↻ Refresh</button>
+            <button class="btn btn-ghost" onclick="load()">Refresh</button>
             <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--muted);cursor:pointer;">
                 <input type="checkbox" id="auto-refresh" checked style="accent-color:var(--accent)"> Auto-refresh
             </label>
@@ -61,8 +61,8 @@
 
     <!-- Toggle -->
     <div class="view-toggle">
-        <button class="vt-btn active" id="vt-board" onclick="switchView('board')">📋 Board</button>
-        <button class="vt-btn" id="vt-table" onclick="switchView('table')">📊 Table</button>
+        <button class="vt-btn active" id="vt-board" onclick="switchView('board')">Board</button>
+        <button class="vt-btn" id="vt-table" onclick="switchView('table')">Table</button>
     </div>
 
     <!-- Board view -->
@@ -91,7 +91,7 @@
     <div class="modal" style="max-width:540px">
         <div class="modal-header">
             <h2 class="modal-title" id="dm-title">Order detail</h2>
-            <button class="btn btn-ghost btn-icon" onclick="closeModal('detail-modal')">✕</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeModal('detail-modal')">Close</button>
         </div>
         <div class="modal-body" id="dm-body"></div>
         <div class="modal-footer" id="dm-footer"></div>
@@ -108,11 +108,11 @@
     let autoTimer = null;
 
     const COLUMNS = [
-      { status:'PENDING',   label:'⏳ Pending',   color:'var(--yellow)' },
-      { status:'CONFIRMED', label:'✅ Confirmed',  color:'var(--green)' },
-      { status:'PREPARING', label:'🍳 Preparing',  color:'var(--accent)' },
-      { status:'READY',     label:'🔔 Ready',      color:'var(--green)' },
-      { status:'COMPLETED', label:'🎉 Completed',  color:'var(--muted)' },
+      { status:'PENDING',   label:'Pending',   color:'var(--yellow)' },
+      { status:'CONFIRMED', label:'Confirmed',  color:'var(--green)' },
+      { status:'PREPARING', label:'Preparing',  color:'var(--accent)' },
+      { status:'READY',     label:'Ready',      color:'var(--green)' },
+      { status:'COMPLETED', label:'Completed',  color:'var(--muted)' },
     ];
 
     function timeSince(d) {
@@ -173,8 +173,8 @@
             <span class="oc-amount">${fmt.currency(o.totalAmount)}</span>
             <div class="oc-actions">
               <button class="btn btn-ghost btn-sm" onclick="viewDetail(${o.id})">View</button>
-              ${canAdvance(o.status) ? `<button class="btn btn-success btn-sm" onclick="advance(${o.id})">→ Next</button>` : ''}
-              ${canCancel(o.status)  ? `<button class="btn btn-danger btn-sm"  onclick="cancel(${o.id})">✕</button>` : ''}
+              ${canAdvance(o.status) ? `<button class="btn btn-success btn-sm" onclick="advance(${o.id})">Next</button>` : ''}
+              ${canCancel(o.status)  ? `<button class="btn btn-danger btn-sm"  onclick="cancel(${o.id})">Cancel</button>` : ''}
             </div>
           </div>
         </div>`;
@@ -196,7 +196,7 @@
           <td>
             <div style="display:flex;gap:0.35rem">
               <button class="btn btn-ghost btn-sm" onclick="viewDetail(${o.id})">View</button>
-              ${canAdvance(o.status) ? `<button class="btn btn-success btn-sm" onclick="advance(${o.id})">→ Next</button>` : ''}
+              ${canAdvance(o.status) ? `<button class="btn btn-success btn-sm" onclick="advance(${o.id})">Next</button>` : ''}
               ${canCancel(o.status)  ? `<button class="btn btn-danger btn-sm"  onclick="cancel(${o.id})">Cancel</button>` : ''}
             </div>
           </td>
@@ -248,7 +248,7 @@
           <span>Total</span><span style="color:var(--accent)">${fmt.currency(o.totalAmount)}</span>
         </div>`;
       document.getElementById('dm-footer').innerHTML = `
-        ${canAdvance(o.status) ? `<button class="btn btn-success" onclick="advance(${o.id});closeModal('detail-modal')">→ Advance status</button>` : ''}
+        ${canAdvance(o.status) ? `<button class="btn btn-success" onclick="advance(${o.id});closeModal('detail-modal')">Advance status</button>` : ''}
         ${canCancel(o.status)  ? `<button class="btn btn-danger"  onclick="cancel(${o.id});closeModal('detail-modal')">Cancel</button>` : ''}
         <button class="btn btn-ghost" onclick="closeModal('detail-modal')">Close</button>`;
       openModal('detail-modal');

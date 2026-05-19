@@ -29,12 +29,19 @@ public class AuthService {
             throw new RuntimeException("Email is already in use!");
         }
 
+        Role role = Role.CUSTOMER;
+        if (request.getRole() != null) {
+            try {
+                role = Role.valueOf(request.getRole().toUpperCase());
+            } catch (IllegalArgumentException ignored) {}
+        }
+
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName())
                 .phone(request.getPhone())
-                .role(Role.CUSTOMER)
+                .role(role)
                 .build();
 
         User saved = userRepository.save(user);

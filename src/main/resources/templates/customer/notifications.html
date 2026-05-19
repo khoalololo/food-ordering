@@ -75,8 +75,8 @@
     }
 
     const EVENT_ICON = {
-      ORDER_CREATED:'📦', ORDER_CONFIRMED:'✅', ORDER_STATUS_CHANGED:'🔄',
-      ORDER_CANCELLED:'❌', ORDER_COMPLETED:'🎉', ORDER_PAID:'💰', PAYMENT_SUCCESS:'💳',
+      ORDER_CREATED:'', ORDER_CONFIRMED:'', ORDER_STATUS_CHANGED:'',
+      ORDER_CANCELLED:'', ORDER_COMPLETED:'', ORDER_PAID:'', PAYMENT_SUCCESS:'',
     };
 
     async function load() {
@@ -100,13 +100,12 @@
 
       if (!notifications.length) {
         document.getElementById('notif-list').innerHTML = `
-          <div class="empty"><div class="empty-icon">🔔</div><h3>No notifications</h3><p>You're all caught up</p></div>`;
+          <div class="empty"><h3>No notifications</h3><p>You're all caught up</p></div>`;
         return;
       }
 
       document.getElementById('notif-list').innerHTML = notifications.map(n => `
         <div class="notif-item ${!n.isRead ? 'unread' : ''}" onclick="markRead(${n.id}, this)">
-          <div class="notif-icon">${EVENT_ICON[n.event] || '📢'}</div>
           <div class="notif-body">
             <div class="notif-msg">${n.message}</div>
             <div class="notif-meta">

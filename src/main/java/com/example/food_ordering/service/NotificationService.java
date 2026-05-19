@@ -79,6 +79,19 @@ public class NotificationService {
         return notificationRepository.findByTypeOrderByCreatedAtDesc("KITCHEN");
     }
 
+    public void markAsRead(Long id) {
+        Notification n = notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+        n.setRead(true);
+        notificationRepository.save(n);
+    }
+
+    public void markAllAsRead(User user) {
+        List<Notification> unread = notificationRepository.findByUserAndIsReadFalse(user);
+        unread.forEach(n -> n.setRead(true));
+        notificationRepository.saveAll(unread);
+    }
+
     public long countUnread(User user) {
         return notificationRepository.countByUserAndIsReadFalse(user);
     }
