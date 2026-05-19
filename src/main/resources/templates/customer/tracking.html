@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order — FoodOrder</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        /* Stepper */
+        .stepper { display:flex; align-items:flex-start; margin:2rem 0; position:relative; }
+        .step { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; }
+        .step:not(:last-child)::after {
+          content:''; position:absolute; top:18px; left:50%; right:-50%;
+          height:2px; background:var(--border2); z-index:0; transition:background 0.4s;
+        }
+        .step.done:not(:last-child)::after { background:var(--green); }
+        .step.active:not(:last-child)::after { background:var(--border2); }
+        .step.cancelled:not(:last-child)::after { background:var(--red); }
+
+        .step-dot {
+          width:36px; height:36px; border-radius:50%;
+          border:2px solid var(--border2); background:var(--surface);
+          display:flex; align-items:center; justify-content:center;
+          font-size:0.9rem; position:relative; z-index:2; transition:all 0.3s;
+        }
+        .step.done .step-dot   { border-color:var(--green); background:var(--green); }
+        .step.active .step-dot { border-color:var(--accent); box-shadow:0 0 0 4px rgba(232,108,47,0.2); }
+        .step.cancelled .step-dot { border-color:var(--red); background:var(--red); }
+
+        .step-label { font-size:0.68rem; font-weight:600; color:var(--muted); margin-top:0.5rem; text-align:center; text-transform:uppercase; letter-spacing:0.04em; transition:color 0.3s; }
+        .step.done .step-label, .step.active .step-label { color:var(--text); }
+        .step.cancelled .step-label { color:var(--red); }
+
+        /* Status banner */
+        .status-banner {
+          border-radius:var(--radius-lg); padding:1.25rem 1.5rem;
+          display:flex; align-items:center; gap:1rem;
+          margin-bottom:1.5rem; border:1px solid var(--border);
+        }
+        .status-banner.pending   { background:rgba(240,192,96,0.08); border-color:rgba(240,192,96,0.25); }
+        .status-banner.confirmed { background:rgba(76,175,125,0.08); border-color:rgba(76,175,125,0.25); }
+        .status-banner.preparing { background:rgba(232,108,47,0.08); border-color:rgba(232,108,47,0.25); }
+        .status-banner.ready     { background:rgba(76,175,125,0.1);  border-color:rgba(76,175,125,0.3); }
+        .status-banner.completed { background:rgba(76,175,125,0.08); border-color:rgba(76,175,125,0.2); }
+        .status-banner.cancelled { background:rgba(224,82,82,0.08);  border-color:rgba(224,82,82,0.2); }
+
+        .status-icon { font-size:2rem; flex-shrink:0; }
+        .status-msg  { font-weight:500; font-size:0.9rem; }
+
+        /* Poll dot */
+        .poll-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; }
+        .poll-dot { width:8px; height:8px; border-radius:50%; background:var(--green); animation:blink 1.6s ease-in-out infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
+        .poll-label { font-size:0.78rem; color:var(--muted); }
+
+        /* Item list */
+        .item-row { display:flex; justify-content:space-between; padding:0.65rem 0; border-bottom:1px solid var(--border); font-size:0.875rem; }
+        .item-row:last-child { border-bottom:none; }
+        .item-left .name { font-weight:500; }
+        .item-left .toppings { font-size:0.75rem; color:var(--muted); margin-top:0.15rem; }
+        .item-price { color:var(--accent2); font-weight:600; }
+
+        .info-table td { padding:0.5rem 0; font-size:0.875rem; }
+        .info-table td:first-child { color:var(--muted); width:120px; }
+        .info-table td:last-child { font-weight:500; }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page page-md">
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+            <h1 class="page-title">Track order</h1>
+            <p class="page-subtitle" id="order-id-label">Loading…</p>
+        </div>
+        <a href="orders.html" class="btn btn-ghost">← My orders</a>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper" id="stepper">
+        <div class="step" data-s="PENDING">  <div class="step-dot">📋</div><div class="step-label">Pending</div></div>
+        <div class="step" data-s="CONFIRMED"><div class="step-dot">✅</div><div class="step-label">Confirmed</div></div>
+        <div class="step" data-s="PREPARING"><div class="step-dot">🍳</div><div class="step-label">Preparing</div></div>
+        <div class="step" data-s="READY">    <div class="step-dot">🔔</div><div class="step-label">Ready</div></div>
+        <div class="step" data-s="COMPLETED"><div class="step-dot">🎉</div><div class="step-label">Done</div></div>
+    </div>
+
+    <!-- Status banner -->
+    <div class="status-banner" id="status-banner">
+        <span class="status-icon" id="status-icon">⏳</span>
+        <span class="status-msg"  id="status-msg">Loading status…</span>
+    </div>
+
+    <!-- Poll indicator -->
+    <div class="poll-row" id="poll-row">
+        <span class="poll-dot" id="poll-dot"></span>
+        <span class="poll-label" id="poll-label">Live tracking active…</span>
+    </div>
+
+    <!-- Actions -->
+    <div id="action-row" style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem;"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+        <!-- Items -->
+        <div class="card">
+            <div class="card-header"><span class="card-title">Items ordered</span></div>
+            <div class="card-body">
+                <div id="item-list" style="padding:0"></div>
+                <div style="display:flex;justify-content:space-between;padding-top:0.75rem;border-top:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:800;">
+                    <span>Total</span>
+                    <span id="total-amt" style="color:var(--accent)">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="card">
+            <div class="card-header"><span class="card-title">Order info</span></div>
+            <div class="card-body">
+                <table class="info-table" style="width:100%;border-collapse:collapse">
+                    <tr><td>Order ID</td><td id="info-id">—</td></tr>
+                    <tr><td>Status</td><td id="info-status">—</td></tr>
+                    <tr><td>Placed at</td><td id="info-date">—</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <p style="text-align:right;font-size:0.72rem;color:var(--muted);margin-top:1rem">
+        Last updated: <span id="last-updated">—</span>
+    </p>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth();
+    renderNav('orders.html');
+
+    const params = new URLSearchParams(location.search);
+    const orderId = params.get('orderId');
+    if (!orderId) location.href = 'orders.html';
+
+    document.getElementById('order-id-label').textContent = 'Order #' + orderId;
+
+    const STATUSES = ['PENDING','CONFIRMED','PREPARING','READY','COMPLETED'];
+    const STATUS_CFG = {
+      PENDING:   { cls:'pending',   icon:'⏳', msg:'Waiting for the restaurant to confirm your order…' },
+      CONFIRMED: { cls:'confirmed', icon:'✅', msg:'Order confirmed — waiting to start preparation.' },
+      PREPARING: { cls:'preparing', icon:'🍳', msg:'Your food is being prepared right now!' },
+      READY:     { cls:'ready',     icon:'🔔', msg:'Your order is ready! A staff member will bring it to you.' },
+      COMPLETED: { cls:'completed', icon:'🎉', msg:'Order completed. Enjoy your meal!' },
+      CANCELLED: { cls:'cancelled', icon:'❌', msg:'This order has been cancelled.' },
+    };
+
+    let lastStatus = null;
+    let pollTimer  = null;
+    let pollActive = true;
+
+    function applyStatus(status) {
+      const cfg = STATUS_CFG[status] || STATUS_CFG.PENDING;
+
+      // Banner
+      const banner = document.getElementById('status-banner');
+      banner.className = 'status-banner ' + cfg.cls;
+      document.getElementById('status-icon').textContent = cfg.icon;
+      document.getElementById('status-msg').textContent  = cfg.msg;
+
+      // Info badge
+      document.getElementById('info-status').innerHTML = fmt.badge(status);
+
+      // Stepper
+      const idx = STATUSES.indexOf(status);
+      document.querySelectorAll('.stepper .step').forEach(step => {
+        const si = STATUSES.indexOf(step.dataset.s);
+        step.classList.remove('done','active','cancelled');
+        if (status === 'CANCELLED') { if (si === 0) step.classList.add('cancelled'); return; }
+        if (si < idx)  step.classList.add('done');
+        if (si === idx) step.classList.add('done','active');
+      });
+
+      // Actions
+      const row = document.getElementById('action-row');
+      row.innerHTML = '';
+      if (status === 'PENDING') {
+        row.innerHTML = `
+          <a href="payment.html?orderId=${orderId}" class="btn btn-primary">Pay now →</a>
+          <button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;
+      } else if (status === 'CONFIRMED') {
+        row.innerHTML = `<button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;
+      } else if (status === 'COMPLETED' || status === 'CANCELLED') {
+        row.innerHTML = `<a href="menu.html" class="btn btn-primary">Order again</a>`;
+        stopPolling('Order finalised.');
+      }
+    }
+
+    function stopPolling(msg) {
+      pollActive = false;
+      clearTimeout(pollTimer);
+      const dot = document.getElementById('poll-dot');
+      dot.style.animation = 'none'; dot.style.background = 'var(--muted)';
+      document.getElementById('poll-label').textContent = msg;
+    }
+
+    async function poll() {
+      if (!pollActive) return;
+      try {
+        const data = await GET('/order/' + orderId);
+        document.getElementById('last-updated').textContent =
+          new Intl.DateTimeFormat('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
+        if (data.status !== lastStatus) {
+          lastStatus = data.status;
+          applyStatus(data.status);
+        }
+        if (['COMPLETED','CANCELLED'].includes(data.status)) return;
+      } catch (e) { console.warn('poll error:', e); }
+      pollTimer = setTimeout(poll, 5000);
+    }
+
+    async function loadInitial() {
+      try {
+        const data = await GET('/order/' + orderId);
+        lastStatus = data.status;
+
+        document.getElementById('info-id').textContent   = '#' + data.id;
+        document.getElementById('info-date').textContent = fmt.date(data.createdAt);
+        document.getElementById('total-amt').textContent = fmt.currency(data.totalAmount);
+
+        document.getElementById('item-list').innerHTML = (data.items || []).map(i => `
+          <div class="item-row">
+            <div class="item-left">
+              <div class="name">${i.foodName || 'Item #' + i.foodId} ×${i.quantity}</div>
+              ${i.toppings ? `<div class="toppings">${i.toppings}</div>` : ''}
+            </div>
+            <span class="item-price">${fmt.currency(i.subtotal)}</span>
+          </div>
+        `).join('');
+
+        applyStatus(data.status);
+        if (!['COMPLETED','CANCELLED'].includes(data.status)) pollTimer = setTimeout(poll, 5000);
+      } catch (ex) {
+        toast(ex.message, 'error');
+      }
+    }
+
+    async function cancelOrder() {
+      if (!confirm('Cancel this order?')) return;
+      try {
+        await PATCH('/order/' + orderId + '/cancel');
+        applyStatus('CANCELLED');
+        stopPolling('Order cancelled.');
+      } catch (ex) { toast(ex.message, 'error'); }
+    }
+
+    loadInitial();
+</script>
+</body>
+</html>

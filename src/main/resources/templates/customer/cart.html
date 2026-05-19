@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart — FoodOrder</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .cart-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start; }
+        @media(max-width:800px) { .cart-layout { grid-template-columns:1fr; } }
+
+        .cart-item { display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid var(--border); transition:background 0.1s; }
+        .cart-item:last-child { border-bottom:none; }
+        .cart-item:hover { background:var(--surface2); }
+        .item-emoji { font-size:2rem; width:48px; height:48px; display:flex; align-items:center; justify-content:center; background:var(--surface2); border-radius:10px; flex-shrink:0; }
+        .item-info { flex:1; min-width:0; }
+        .item-name { font-family:'Syne',sans-serif; font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .item-toppings { font-size:0.75rem; color:var(--muted); margin-top:0.2rem; }
+        .item-price { font-size:0.8rem; color:var(--accent2); margin-top:0.15rem; }
+        .item-controls { display:flex; align-items:center; gap:0.5rem; flex-shrink:0; }
+        .qty-btn { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:0.9rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+        .qty-btn:hover { border-color:var(--accent); color:var(--accent); }
+        .item-qty { font-weight:600; font-size:0.9rem; min-width:20px; text-align:center; }
+        .item-subtotal { font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--accent2); min-width:80px; text-align:right; }
+        .item-remove { background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.85rem; padding:0.25rem; transition:color 0.15s; }
+        .item-remove:hover { color:var(--red); }
+
+        .summary-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; position:sticky; top:76px; }
+        .summary-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; margin-bottom:1.25rem; }
+        .summary-row { display:flex; justify-content:space-between; font-size:0.875rem; padding:0.4rem 0; }
+        .summary-row.total { border-top:1px solid var(--border); margin-top:0.5rem; padding-top:0.75rem; font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; }
+        .summary-row.total .val { color:var(--accent); }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page">
+    <div class="page-header">
+        <h1 class="page-title">Your cart</h1>
+    </div>
+
+    <div id="empty-state" class="empty" style="display:none">
+        <div class="empty-icon">🛒</div>
+        <h3>Cart is empty</h3>
+        <p>Add some items from the menu</p>
+        <a href="menu.html" class="btn btn-primary" style="margin-top:1rem">Browse menu</a>
+    </div>
+
+    <div id="cart-content" class="cart-layout">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Items</span>
+                <button class="btn btn-ghost btn-sm" onclick="clearAll()">Clear all</button>
+            </div>
+            <div id="item-list"></div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">Order summary</div>
+            <div class="summary-row"><span style="color:var(--muted)">Items</span><span id="sum-count" class="val">0</span></div>
+            <div class="summary-row"><span style="color:var(--muted)">Subtotal</span><span id="sum-subtotal" class="val">—</span></div>
+            <div class="summary-row"><span style="color:var(--muted)">Delivery</span><span style="color:var(--green)">Free</span></div>
+            <div class="summary-row total"><span>Total</span><span id="sum-total" class="val">—</span></div>
+            <button class="btn btn-primary btn-lg" style="width:100%;margin-top:1.25rem" onclick="checkout()" id="checkout-btn">
+                Place order →
+            </button>
+            <a href="menu.html" class="btn btn-ghost" style="width:100%;margin-top:0.5rem">Continue shopping</a>
+        </div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth();
+    renderNav('cart.html');
+
+    const EMOJI = { pizza:'🍕', burger:'🍔', pasta:'🍝', salad:'🥗', soup:'🍲', dessert:'🍰', drink:'🥤', food:'🍽' };
+
+    function render() {
+      const items = Cart.items;
+      const empty = document.getElementById('empty-state');
+      const content = document.getElementById('cart-content');
+
+      if (!items.length) {
+        empty.style.display = 'block';
+        content.style.display = 'none';
+        return;
+      }
+      empty.style.display = 'none';
+      content.style.display = 'grid';
+
+      document.getElementById('item-list').innerHTML = items.map(i => `
+        <div class="cart-item">
+          <div class="item-emoji">${EMOJI[i.type] || '🍽'}</div>
+          <div class="item-info">
+            <div class="item-name">${i.name}</div>
+            ${i.toppings?.length ? `<div class="item-toppings">+ ${i.toppings.join(', ')}</div>` : ''}
+            <div class="item-price">${fmt.currency(i.unitPrice)} each</div>
+          </div>
+          <div class="item-controls">
+            <button class="qty-btn" onclick="updateQty('${i.key}', ${i.quantity - 1})">−</button>
+            <span class="item-qty">${i.quantity}</span>
+            <button class="qty-btn" onclick="updateQty('${i.key}', ${i.quantity + 1})">+</button>
+          </div>
+          <span class="item-subtotal">${fmt.currency(i.subtotal)}</span>
+          <button class="item-remove" onclick="removeItem('${i.key}')" title="Remove">✕</button>
+        </div>
+      `).join('');
+
+      const count = Cart.count();
+      const total = Cart.total();
+      document.getElementById('sum-count').textContent = count + ' item' + (count !== 1 ? 's' : '');
+      document.getElementById('sum-subtotal').textContent = fmt.currency(total);
+      document.getElementById('sum-total').textContent = fmt.currency(total);
+    }
+
+    function updateQty(key, qty) { Cart.update(key, qty); render(); }
+    function removeItem(key) { Cart.remove(key); render(); }
+    function clearAll() { if (confirm('Clear your entire cart?')) { Cart.clear(); render(); } }
+
+    async function checkout() {
+      const items = Cart.items;
+      if (!items.length) return;
+      const btn = document.getElementById('checkout-btn');
+      btn.disabled = true;
+      btn.textContent = 'Placing order…';
+
+      try {
+        const payload = {
+          items: items.map(i => ({
+            foodId: i.foodId,
+            quantity: i.quantity,
+            toppings: i.toppings || [],
+          }))
+        };
+        const order = await POST('/order', payload);
+        Cart.clear();
+        toast('Order placed!', 'success');
+        setTimeout(() => location.href = `payment.html?orderId=${order.id}`, 800);
+      } catch (ex) {
+        toast(ex.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Place order →';
+      }
+    }
+
+    render();
+</script>
+</body>
+</html>

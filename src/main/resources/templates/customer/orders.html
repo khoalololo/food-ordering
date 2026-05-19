@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders — FoodOrder</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .order-card {
+          background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+          padding:1.25rem; display:flex; gap:1.25rem; align-items:flex-start;
+          transition:border-color 0.15s, transform 0.15s; cursor:pointer; text-decoration:none; color:inherit;
+        }
+        .order-card:hover { border-color:var(--border2); transform:translateY(-1px); }
+        .order-icon { width:48px; height:48px; border-radius:12px; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+        .order-info { flex:1; min-width:0; }
+        .order-top { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.4rem; }
+        .order-id { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; }
+        .order-meta { font-size:0.78rem; color:var(--muted); display:flex; gap:1rem; flex-wrap:wrap; }
+        .order-items-preview { margin-top:0.5rem; font-size:0.8rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .order-right { display:flex; flex-direction:column; align-items:flex-end; gap:0.4rem; flex-shrink:0; }
+        .order-amount { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; color:var(--accent2); }
+
+        .order-list { display:flex; flex-direction:column; gap:0.75rem; }
+
+        .filter-tabs { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+        .tab { padding:0.35rem 0.85rem; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
+        .tab:hover { color:var(--text); border-color:var(--border2); }
+        .tab.active { background:var(--surface2); color:var(--text); border-color:var(--border2); }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page page-md">
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+            <h1 class="page-title">My orders</h1>
+            <p class="page-subtitle">Track and manage your food orders</p>
+        </div>
+        <a href="menu.html" class="btn btn-primary">+ New order</a>
+    </div>
+
+    <div class="filter-tabs">
+        <button class="tab active" data-status="all">All</button>
+        <button class="tab" data-status="PENDING">Pending</button>
+        <button class="tab" data-status="CONFIRMED">Confirmed</button>
+        <button class="tab" data-status="PREPARING">Preparing</button>
+        <button class="tab" data-status="READY">Ready</button>
+        <button class="tab" data-status="COMPLETED">Completed</button>
+        <button class="tab" data-status="CANCELLED">Cancelled</button>
+    </div>
+
+    <div id="orders-list" class="order-list">
+        <div style="padding:3rem;text-align:center;color:var(--muted)">Loading orders…</div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth();
+    renderNav('orders.html');
+
+    const STATUS_ICON = {
+      PENDING:'⏳', CONFIRMED:'✅', PREPARING:'🍳', READY:'🔔', COMPLETED:'🎉', CANCELLED:'❌'
+    };
+
+    let allOrders = [];
+    let activeStatus = 'all';
+
+    async function load() {
+      try {
+        allOrders = await GET('/order/my');
+        render();
+      } catch (ex) {
+        document.getElementById('orders-list').innerHTML =
+          `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+      }
+    }
+
+    function render() {
+      const filtered = activeStatus === 'all'
+        ? allOrders
+        : allOrders.filter(o => o.status === activeStatus);
+
+      const list = document.getElementById('orders-list');
+
+      if (!filtered.length) {
+        list.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">📋</div>
+            <h3>No orders yet</h3>
+            <p>${activeStatus === 'all' ? 'Place your first order from the menu' : 'No orders with this status'}</p>
+            ${activeStatus === 'all' ? '<a href="menu.html" class="btn btn-primary" style="margin-top:1rem">Browse menu</a>' : ''}
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map(o => `
+        <a class="order-card" href="tracking.html?orderId=${o.id}">
+          <div class="order-icon">${STATUS_ICON[o.status] || '📦'}</div>
+          <div class="order-info">
+            <div class="order-top">
+              <span class="order-id">Order #${o.id}</span>
+              ${fmt.badge(o.status)}
+            </div>
+            <div class="order-meta">
+              <span>${fmt.date(o.createdAt)}</span>
+              <span>${o.items?.length || 0} item${(o.items?.length || 0) !== 1 ? 's' : ''}</span>
+            </div>
+            ${o.items?.length ? `
+              <div class="order-items-preview">
+                ${o.items.map(i => `${i.foodName || 'Item'} ×${i.quantity}`).join(' · ')}
+              </div>` : ''}
+          </div>
+          <div class="order-right">
+            <span class="order-amount">${fmt.currency(o.totalAmount)}</span>
+            ${o.status === 'PENDING' || o.status === 'CONFIRMED' ? `
+              <button class="btn btn-ghost btn-sm" onclick="event.preventDefault();cancelOrder(${o.id}, event)">Cancel</button>` : ''}
+            ${o.status === 'PENDING' ? `
+              <a href="payment.html?orderId=${o.id}" class="btn btn-primary btn-sm" onclick="event.stopPropagation()">Pay now</a>` : ''}
+          </div>
+        </a>
+      `).join('');
+    }
+
+    async function cancelOrder(id, e) {
+      e.stopPropagation();
+      if (!confirm('Cancel this order?')) return;
+      try {
+        await PATCH('/order/' + id + '/cancel');
+        toast('Order cancelled', 'info');
+        load();
+      } catch (ex) {
+        toast(ex.message, 'error');
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        activeStatus = t.dataset.status;
+        render();
+      });
+    });
+
+    load();
+</script>
+</body>
+</html>

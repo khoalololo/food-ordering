@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodOrder</title>
+    <link rel="stylesheet" href="/css/shared.css">
+    <style>
+        body { display:flex; align-items:center; justify-content:center; min-height:100vh; flex-direction:column; gap:1rem; }
+        .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:2.5rem; color:var(--accent); }
+        .sub  { color:var(--muted); font-size:0.875rem; }
+        .spinner {
+          width:32px; height:32px; border:3px solid var(--border2);
+          border-top-color:var(--accent); border-radius:50%;
+          animation:spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="logo">FoodOrder</div>
+<div class="spinner"></div>
+<p class="sub">Redirecting…</p>
+<script src="/js/shared.js"></script>
+<script>
+    // Give shared.js a tick to load localStorage
+    setTimeout(() => {
+      if (!window.Auth || !Auth.isLoggedIn()) {
+        location.replace('/signin');
+        return;
+      }
+      const role = Auth.role();
+      if (role === 'MANAGER') location.replace('/manager/foods');
+      else if (role === 'STAFF') location.replace('/staff/orders');
+      else location.replace('/customer/menu');
+    }, 100);
+</script>
+</body>
+</html>

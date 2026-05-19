@@ -26,7 +26,7 @@ public class OrderService {
     private final ApplicationEventPublisher eventPublisher; // Spring's built-in Observer
 
     // @Transactional: if anything inside throws an exception, the whole DB operation rolls back
-    // This is critical — you never want a half-saved order in your database
+    // This is critical, you never want a half-saved order in your database
     @Transactional
     public Order createOrder(CreateOrderRequest request, User user){
         Order order = Order.builder()
@@ -48,7 +48,7 @@ public class OrderService {
                             : null)
                     .build();
 
-            order.addItem(item); // uses our helper method — keeps both sides in sync
+            order.addItem(item); // uses our helper method to keeps both sides in sync
             total = total.add(subtotal);
         }
         order.setTotalAmount(total);

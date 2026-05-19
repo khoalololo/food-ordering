@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu — FoodOrder</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .hero { padding:2.5rem 1.5rem 1.5rem; max-width:1200px; margin:0 auto; }
+        .hero-title { font-family:'Syne',sans-serif; font-weight:800; font-size:2.25rem; letter-spacing:-0.03em; line-height:1.15; }
+        .hero-title span { color:var(--accent); }
+        .hero-sub { color:var(--muted); margin-top:0.5rem; font-size:0.95rem; }
+
+        .filters { max-width:1200px; margin:0 auto 1.5rem; padding:0 1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
+        .filter-btn { padding:0.4rem 1rem; border-radius:999px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
+        .filter-btn:hover { border-color:var(--border2); color:var(--text); }
+        .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+        .filter-search { flex:1; min-width:180px; max-width:280px; }
+
+        .food-grid { max-width:1200px; margin:0 auto; padding:0 1.5rem 4rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:1rem; }
+
+        .food-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; cursor:pointer; transition:border-color 0.15s, transform 0.15s; }
+        .food-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+        .food-img { width:100%; height:150px; object-fit:cover; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:3rem; }
+        .food-img img { width:100%; height:100%; object-fit:cover; }
+        .food-body { padding:1rem; }
+        .food-type { font-size:0.7rem; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; }
+        .food-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; margin-bottom:0.5rem; line-height:1.3; }
+        .food-desc { font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; }
+        .food-footer { display:flex; align-items:center; justify-content:space-between; }
+        .food-price { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--accent2); }
+        .food-unavailable { opacity:0.45; pointer-events:none; }
+        .food-unavailable .food-name::after { content:' (Unavailable)'; font-size:0.7rem; color:var(--red); font-family:'DM Sans',sans-serif; }
+
+        /* Topping modal */
+        .topping-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+        .topping-opt { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.75rem; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); cursor:pointer; transition:all 0.15s; }
+        .topping-opt:hover { border-color:var(--border2); }
+        .topping-opt.checked { border-color:var(--accent); background:rgba(232,108,47,0.08); }
+        .topping-opt input { display:none; }
+        .topping-name { font-size:0.825rem; font-weight:500; }
+        .topping-price { font-size:0.72rem; color:var(--accent2); margin-left:auto; }
+
+        .qty-row { display:flex; align-items:center; gap:0.75rem; }
+        .qty-btn { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:1.1rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+        .qty-btn:hover { border-color:var(--accent); color:var(--accent); }
+        .qty-val { font-family:'Syne',sans-serif; font-weight:700; font-size:1.1rem; min-width:24px; text-align:center; }
+
+        .price-preview { background:rgba(232,108,47,0.08); border:1px solid rgba(232,108,47,0.2); border-radius:var(--radius); padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; }
+        .price-preview-label { font-size:0.825rem; color:var(--muted); }
+        .price-preview-val { font-family:'Syne',sans-serif; font-weight:800; font-size:1.15rem; color:var(--accent); }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="hero">
+    <h1 class="hero-title">Order what you <span>crave</span></h1>
+    <p class="hero-sub">Fresh ingredients, fast delivery, made to order</p>
+</div>
+
+<div class="filters">
+    <button class="filter-btn active" data-type="all">All</button>
+    <button class="filter-btn" data-type="pizza">🍕 Pizza</button>
+    <button class="filter-btn" data-type="burger">🍔 Burger</button>
+    <button class="filter-btn" data-type="pasta">🍝 Pasta</button>
+    <button class="filter-btn" data-type="salad">🥗 Salad</button>
+    <button class="filter-btn" data-type="soup">🍲 Soup</button>
+    <button class="filter-btn" data-type="dessert">🍰 Dessert</button>
+    <button class="filter-btn" data-type="drink">🥤 Drink</button>
+    <input class="form-input filter-search" type="search" id="search-input" placeholder="Search menu…">
+</div>
+
+<div class="food-grid" id="food-grid">
+    <div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--muted)">Loading menu…</div>
+</div>
+
+<!-- Topping / Add to cart modal -->
+<div class="modal-overlay" id="add-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-food-name">Customise order</h2>
+            <button class="btn btn-ghost btn-icon" onclick="closeModal('add-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="modal-toppings-section">
+                <p style="font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem">Toppings</p>
+                <div class="topping-grid" id="modal-toppings"></div>
+            </div>
+            <hr class="divider">
+            <div>
+                <p style="font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem">Quantity</p>
+                <div class="qty-row">
+                    <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                    <span class="qty-val" id="qty-val">1</span>
+                    <button class="qty-btn" onclick="changeQty(1)">+</button>
+                </div>
+            </div>
+            <div class="price-preview">
+                <span class="price-preview-label">Total</span>
+                <span class="price-preview-val" id="price-preview">0₫</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('add-modal')">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmAdd()">Add to cart</button>
+        </div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth();
+    renderNav('menu.html');
+
+    const TOPPINGS_BY_TYPE = {
+      pizza:   [{ key:'extraCheese', label:'Extra Cheese', price:10000 }, { key:'extraSauce', label:'Extra Sauce', price:5000 }, { key:'extraMeat', label:'Extra Meat', price:20000 }, { key:'spicy', label:'Spicy', price:0 }],
+      burger:  [{ key:'extraCheese', label:'Extra Cheese', price:10000 }, { key:'extraMeat', label:'Extra Meat', price:20000 }, { key:'extraVeggies', label:'Extra Veggies', price:8000 }, { key:'noOnion', label:'No Onion', price:0 }],
+      pasta:   [{ key:'extraCheese', label:'Extra Cheese', price:10000 }, { key:'extraSauce', label:'Extra Sauce', price:5000 }, { key:'spicy', label:'Spicy', price:0 }],
+      salad:   [{ key:'extraVeggies', label:'Extra Veggies', price:8000 }, { key:'noDressing', label:'No Dressing', price:0 }],
+      soup:    [{ key:'extraMeat', label:'Extra Meat', price:20000 }, { key:'spicy', label:'Spicy', price:0 }],
+      drink:   [{ key:'extraIce', label:'Extra Ice', price:0 }, { key:'noSugar', label:'No Sugar', price:0 }],
+      dessert: [{ key:'noSugar', label:'No Sugar', price:0 }],
+    };
+
+    const EMOJI = { pizza:'🍕', burger:'🍔', pasta:'🍝', salad:'🥗', soup:'🍲', dessert:'🍰', drink:'🥤', food:'🍽' };
+
+    let allFoods = [];
+    let currentFood = null;
+    let currentQty = 1;
+    let activeType = 'all';
+    let searchQuery = '';
+
+    async function loadFoods() {
+      try {
+        allFoods = await GET('/food');
+        renderGrid();
+      } catch (ex) {
+        document.getElementById('food-grid').innerHTML =
+          `<div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+      }
+    }
+
+    function renderGrid() {
+      const q = searchQuery.toLowerCase();
+      const foods = allFoods.filter(f => {
+        if (!f.isAvailable && !f.available) return false;
+        if (activeType !== 'all' && f.type !== activeType) return false;
+        if (q && !f.name.toLowerCase().includes(q)) return false;
+        return true;
+      });
+
+      const grid = document.getElementById('food-grid');
+      if (!foods.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><h3>No items found</h3><p>Try a different filter or search</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = foods.map(f => `
+        <div class="food-card ${f.isAvailable === false ? 'food-unavailable' : ''}" onclick="openAddModal(${f.id})">
+          <div class="food-img">
+            ${f.imageUrl ? `<img src="${f.imageUrl}" alt="${f.name}" onerror="this.parentElement.innerHTML='${EMOJI[f.type]||'🍽'}'">` : EMOJI[f.type] || '🍽'}
+          </div>
+          <div class="food-body">
+            <div class="food-type">${f.type}</div>
+            <div class="food-name">${f.name}</div>
+            ${f.description ? `<div class="food-desc">${f.description}</div>` : ''}
+            <div class="food-footer">
+              <span class="food-price">${fmt.currency(f.basePrice)}</span>
+              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openAddModal(${f.id})">+ Add</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeType = btn.dataset.type;
+        renderGrid();
+      });
+    });
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      searchQuery = e.target.value;
+      renderGrid();
+    });
+
+    // Add to cart modal
+    function openAddModal(foodId) {
+      currentFood = allFoods.find(f => f.id === foodId);
+      if (!currentFood) return;
+      currentQty = 1;
+
+      document.getElementById('modal-food-name').textContent = currentFood.name;
+      document.getElementById('qty-val').textContent = '1';
+
+      const toppings = TOPPINGS_BY_TYPE[currentFood.type] || [];
+      const tSection = document.getElementById('modal-toppings-section');
+      tSection.style.display = toppings.length ? '' : 'none';
+
+      document.getElementById('modal-toppings').innerHTML = toppings.map(t => `
+        <label class="topping-opt" id="top-${t.key}">
+          <input type="checkbox" value="${t.key}" onchange="recalcPrice()">
+          <span class="topping-name">${t.label}</span>
+          ${t.price > 0 ? `<span class="topping-price">+${fmt.currency(t.price)}</span>` : '<span class="topping-price" style="color:var(--muted)">Free</span>'}
+        </label>
+      `).join('');
+
+      // checkbox toggle styling
+      document.getElementById('modal-toppings').querySelectorAll('.topping-opt').forEach(el => {
+        el.addEventListener('click', function() {
+          const cb = this.querySelector('input');
+          cb.checked = !cb.checked;
+          this.classList.toggle('checked', cb.checked);
+          recalcPrice();
+        });
+      });
+
+      recalcPrice();
+      openModal('add-modal');
+    }
+
+    function recalcPrice() {
+      if (!currentFood) return;
+      const checked = [...document.querySelectorAll('#modal-toppings input:checked')].map(i => i.value);
+      const toppings = TOPPINGS_BY_TYPE[currentFood.type] || [];
+      const extra = checked.reduce((s, k) => s + (toppings.find(t=>t.key===k)?.price || 0), 0);
+      const total = (currentFood.basePrice + extra) * currentQty;
+      document.getElementById('price-preview').textContent = fmt.currency(total);
+    }
+
+    function changeQty(delta) {
+      currentQty = Math.max(1, Math.min(20, currentQty + delta));
+      document.getElementById('qty-val').textContent = currentQty;
+      recalcPrice();
+    }
+
+    function confirmAdd() {
+      if (!currentFood) return;
+      const checked = [...document.querySelectorAll('#modal-toppings input:checked')].map(i => i.value);
+      const toppings = TOPPINGS_BY_TYPE[currentFood.type] || [];
+      const toppingLabels = checked.map(k => toppings.find(t=>t.key===k)?.label).filter(Boolean);
+      Cart.add(currentFood, currentQty, toppingLabels);
+      closeModal('add-modal');
+      toast(`${currentFood.name} added to cart`, 'success');
+    }
+
+    loadFoods();
+</script>
+</body>
+</html>

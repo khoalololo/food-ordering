@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up — FoodOrder</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem 1rem; }
+        .auth-wrap { width:100%; max-width:420px; }
+        .auth-logo { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--accent); text-align:center; margin-bottom:0.25rem; }
+        .auth-tagline { text-align:center; color:var(--muted); font-size:0.875rem; margin-bottom:2rem; }
+        .auth-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; }
+        .auth-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.25rem; margin-bottom:1.5rem; }
+        .auth-form { display:flex; flex-direction:column; gap:1rem; }
+        .auth-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+        .auth-footer { text-align:center; margin-top:1.25rem; font-size:0.875rem; color:var(--muted); }
+        .auth-footer a { color:var(--accent); font-weight:500; }
+        .auth-footer a:hover { text-decoration:underline; }
+        .error-msg { background:rgba(224,82,82,0.1); border:1px solid rgba(224,82,82,0.3); border-radius:var(--radius); padding:0.65rem 0.9rem; font-size:0.875rem; color:var(--red); display:none; }
+        @media(max-width:480px) { .auth-row { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div class="auth-wrap">
+    <div class="auth-logo">FoodOrder</div>
+    <p class="auth-tagline">Good food, delivered fast</p>
+    <div class="auth-card">
+        <h1 class="auth-title">Create account</h1>
+        <div id="error-msg" class="error-msg"></div>
+        <form class="auth-form" id="signup-form">
+            <div class="form-group">
+                <label class="form-label">Full name</label>
+                <input class="form-input" type="text" id="fullName" placeholder="Nguyen Van A" required autocomplete="name">
+            </div>
+            <div class="auth-row">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-input" type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input class="form-input" type="tel" id="phone" placeholder="0901 234 567" required autocomplete="tel">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input class="form-input" type="password" id="password" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Confirm password</label>
+                <input class="form-input" type="password" id="confirm" placeholder="Repeat password" required autocomplete="new-password">
+            </div>
+            <button class="btn btn-primary btn-lg" type="submit" id="submit-btn" style="margin-top:0.5rem">
+                Create account
+            </button>
+        </form>
+        <p class="auth-footer">Already have an account? <a href="signin.html">Sign in</a></p>
+    </div>
+</div>
+<script src="shared.js"></script>
+<script>
+    if (Auth.isLoggedIn()) location.href = 'menu.html';
+
+    document.getElementById('signup-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const err = document.getElementById('error-msg');
+      err.style.display = 'none';
+
+      const password = document.getElementById('password').value;
+      const confirm  = document.getElementById('confirm').value;
+
+      if (password !== confirm) {
+        err.textContent = 'Passwords do not match';
+        err.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Creating account…';
+
+      try {
+        await POST('/auth/register', {
+          fullName: document.getElementById('fullName').value.trim(),
+          email:    document.getElementById('email').value.trim(),
+          phone:    document.getElementById('phone').value.trim(),
+          password,
+        });
+        toast('Account created! Please sign in.', 'success');
+        setTimeout(() => location.href = 'signin.html', 1200);
+      } catch (ex) {
+        err.textContent = ex.message || 'Registration failed';
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Create account';
+      }
+    });
+</script>
+</body>
+</html>

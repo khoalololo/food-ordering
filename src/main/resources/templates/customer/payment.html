@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment — FoodOrder</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .payment-layout { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; align-items:start; }
+        @media(max-width:800px){ .payment-layout{ grid-template-columns:1fr; } }
+
+        .method-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
+        @media(max-width:480px){ .method-grid{ grid-template-columns:1fr; } }
+
+        .method-card {
+          border:2px solid var(--border); border-radius:var(--radius-lg);
+          padding:1.25rem 1rem; cursor:pointer; transition:all 0.15s;
+          display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+          background:var(--surface2); text-align:center;
+        }
+        .method-card:hover { border-color:var(--border2); }
+        .method-card.selected { border-color:var(--accent); background:rgba(232,108,47,0.07); }
+        .method-card input { display:none; }
+        .method-icon { font-size:2rem; }
+        .method-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; }
+        .method-desc { font-size:0.72rem; color:var(--muted); }
+
+        .summary-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; position:sticky; top:76px; }
+        .summary-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; margin-bottom:1.25rem; }
+        .summary-row { display:flex; justify-content:space-between; font-size:0.875rem; padding:0.4rem 0; border-bottom:1px solid var(--border); }
+        .summary-row:last-of-type { border-bottom:none; }
+        .summary-total { display:flex; justify-content:space-between; margin-top:0.75rem; padding-top:0.75rem; border-top:2px solid var(--border); font-family:'Syne',sans-serif; font-weight:800; font-size:1.15rem; }
+        .summary-total .amt { color:var(--accent); }
+
+        .order-item-row { display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
+        .order-item-row:last-child { border-bottom:none; }
+        .order-item-name { font-weight:500; }
+        .order-item-qty { color:var(--muted); font-size:0.78rem; margin-top:0.15rem; }
+        .order-item-price { color:var(--accent2); font-weight:600; }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page">
+    <div class="page-header">
+        <h1 class="page-title">Checkout</h1>
+        <p class="page-subtitle" id="order-id-label">Loading order…</p>
+    </div>
+
+    <div class="payment-layout">
+        <!-- Left: payment method -->
+        <div style="display:flex;flex-direction:column;gap:1.25rem;">
+            <div class="card">
+                <div class="card-header"><span class="card-title">Payment method</span></div>
+                <div class="card-body">
+                    <div class="method-grid">
+                        <label class="method-card" id="method-cash" onclick="selectMethod('CASH')">
+                            <input type="radio" name="method" value="CASH">
+                            <span class="method-name">Cash</span>
+                            <span class="method-desc">Pay on delivery</span>
+                        </label>
+                        <label class="method-card" id="method-bank" onclick="selectMethod('BANK')">
+                            <input type="radio" name="method" value="BANK">
+                            <span class="method-name">Bank transfer</span>
+                            <span class="method-desc">Online banking</span>
+                        </label>
+                        <label class="method-card" id="method-momo" onclick="selectMethod('MOMO')">
+                            <input type="radio" name="method" value="MOMO">
+                            <span class="method-name">MoMo</span>
+                            <span class="method-desc">E-wallet</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="order-items-card" style="display:none">
+                <div class="card-header"><span class="card-title">Order items</span></div>
+                <div class="card-body" id="order-items-list"></div>
+            </div>
+        </div>
+
+        <!-- Right: summary -->
+        <div class="summary-card">
+            <div class="summary-title">Summary</div>
+            <div id="summary-rows">
+                <div style="color:var(--muted);font-size:0.875rem">Loading…</div>
+            </div>
+            <div class="summary-total">
+                <span>Total</span>
+                <span class="amt" id="summary-total">—</span>
+            </div>
+            <button class="btn btn-primary btn-lg" style="width:100%;margin-top:1.25rem" onclick="pay()" id="pay-btn" disabled>
+                Confirm payment →
+            </button>
+            <a href="orders.html" class="btn btn-ghost" style="width:100%;margin-top:0.5rem">Back to orders</a>
+        </div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth();
+    renderNav('');
+
+    const params = new URLSearchParams(location.search);
+    const orderId = params.get('orderId');
+    if (!orderId) { location.href = 'orders.html'; }
+
+    let selectedMethod = null;
+    let orderData = null;
+
+    function selectMethod(m) {
+      selectedMethod = m;
+      document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('method-' + m.toLowerCase())?.classList.add('selected');
+      document.getElementById('pay-btn').disabled = false;
+    }
+
+    async function loadOrder() {
+      try {
+        orderData = await GET('/order/' + orderId);
+        document.getElementById('order-id-label').textContent = 'Order #' + orderData.id;
+
+        // Summary rows
+        document.getElementById('summary-rows').innerHTML = `
+          <div class="summary-row"><span style="color:var(--muted)">Order #</span><span>${orderData.id}</span></div>
+          <div class="summary-row"><span style="color:var(--muted)">Status</span><span>${fmt.badge(orderData.status)}</span></div>
+          <div class="summary-row"><span style="color:var(--muted)">Items</span><span>${orderData.items?.length || 0}</span></div>
+        `;
+        document.getElementById('summary-total').textContent = fmt.currency(orderData.totalAmount);
+
+        // Items list
+        if (orderData.items?.length) {
+          const card = document.getElementById('order-items-card');
+          card.style.display = '';
+          document.getElementById('order-items-list').innerHTML = orderData.items.map(i => `
+            <div class="order-item-row">
+              <div>
+                <div class="order-item-name">${i.foodName || 'Item #' + i.foodId}</div>
+                ${i.toppings ? `<div class="order-item-qty">${i.toppings} · ×${i.quantity}</div>` : `<div class="order-item-qty">×${i.quantity}</div>`}
+              </div>
+              <span class="order-item-price">${fmt.currency(i.subtotal)}</span>
+            </div>
+          `).join('');
+        }
+      } catch (ex) {
+        toast(ex.message, 'error');
+      }
+    }
+
+    async function pay() {
+      if (!selectedMethod) { toast('Select a payment method', 'info'); return; }
+      const btn = document.getElementById('pay-btn');
+      btn.disabled = true;
+      btn.textContent = 'Processing…';
+      try {
+        await POST('/payment', { orderId: Number(orderId), method: selectedMethod });
+        toast('Payment successful!', 'success');
+        setTimeout(() => location.href = `tracking.html?orderId=${orderId}`, 900);
+      } catch (ex) {
+        toast(ex.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Confirm payment →';
+      }
+    }
+
+    loadOrder();
+</script>
+</body>
+</html>

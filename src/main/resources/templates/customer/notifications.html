@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications — FoodOrder</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .notif-item {
+          display:flex; align-items:flex-start; gap:1rem;
+          padding:1rem 1.25rem; border-bottom:1px solid var(--border);
+          transition:background 0.1s; cursor:pointer; text-decoration:none; color:inherit;
+        }
+        .notif-item:last-child { border-bottom:none; }
+        .notif-item:hover { background:var(--surface2); }
+        .notif-item.unread { border-left:3px solid var(--accent); }
+
+        .notif-icon { width:40px; height:40px; border-radius:10px; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+        .notif-body { flex:1; min-width:0; }
+        .notif-msg { font-size:0.875rem; font-weight:500; line-height:1.45; margin-bottom:0.3rem; }
+        .notif-meta { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
+        .notif-time { font-size:0.72rem; color:var(--muted); }
+        .notif-unread-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:0.35rem; }
+
+        .tabs { display:flex; gap:0.4rem; margin-bottom:1.5rem; }
+        .tab { padding:0.35rem 0.85rem; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
+        .tab:hover { color:var(--text); }
+        .tab.active { background:var(--surface2); color:var(--text); border-color:var(--border2); }
+
+        .notif-header-actions { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+        .unread-count { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:var(--muted); }
+        .unread-count strong { color:var(--accent); }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page page-md">
+    <div class="page-header">
+        <h1 class="page-title">Notifications</h1>
+        <p class="page-subtitle">Stay updated on your orders</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-type="USER">My notifications</button>
+        <button class="tab" data-type="KITCHEN" id="kitchen-tab" style="display:none">Kitchen</button>
+    </div>
+
+    <div class="card">
+        <div class="notif-header-actions" style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
+            <span class="unread-count" id="unread-label">Loading…</span>
+            <button class="btn btn-ghost btn-sm" onclick="markAllRead()" id="mark-all-btn" style="display:none">
+                Mark all read
+            </button>
+        </div>
+        <div id="notif-list">
+            <div style="padding:3rem;text-align:center;color:var(--muted)">Loading…</div>
+        </div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth();
+    renderNav('notifications.html');
+
+    const role = Auth.role();
+    let activeType = 'USER';
+    let notifications = [];
+
+    // Show kitchen tab for staff/manager
+    if (role === 'STAFF' || role === 'MANAGER') {
+      document.getElementById('kitchen-tab').style.display = '';
+    }
+
+    const EVENT_ICON = {
+      ORDER_CREATED:'📦', ORDER_CONFIRMED:'✅', ORDER_STATUS_CHANGED:'🔄',
+      ORDER_CANCELLED:'❌', ORDER_COMPLETED:'🎉', ORDER_PAID:'💰', PAYMENT_SUCCESS:'💳',
+    };
+
+    async function load() {
+      try {
+        const endpoint = activeType === 'KITCHEN' ? '/notification/kitchen' : '/notification/my';
+        notifications = await GET(endpoint);
+        render();
+      } catch (ex) {
+        document.getElementById('notif-list').innerHTML =
+          `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+      }
+    }
+
+    function render() {
+      const unread = notifications.filter(n => !n.isRead).length;
+      const label  = document.getElementById('unread-label');
+      const markBtn = document.getElementById('mark-all-btn');
+
+      label.innerHTML = `<strong>${unread}</strong> unread`;
+      markBtn.style.display = unread > 0 ? '' : 'none';
+
+      if (!notifications.length) {
+        document.getElementById('notif-list').innerHTML = `
+          <div class="empty"><div class="empty-icon">🔔</div><h3>No notifications</h3><p>You're all caught up</p></div>`;
+        return;
+      }
+
+      document.getElementById('notif-list').innerHTML = notifications.map(n => `
+        <div class="notif-item ${!n.isRead ? 'unread' : ''}" onclick="markRead(${n.id}, this)">
+          <div class="notif-icon">${EVENT_ICON[n.event] || '📢'}</div>
+          <div class="notif-body">
+            <div class="notif-msg">${n.message}</div>
+            <div class="notif-meta">
+              <span class="notif-time">${fmt.date(n.createdAt)}</span>
+              ${n.orderId ? `<span class="tag">Order #${n.orderId}</span>` : ''}
+              <span class="tag">${n.event}</span>
+            </div>
+          </div>
+          ${!n.isRead ? '<span class="notif-unread-dot"></span>' : ''}
+        </div>
+      `).join('');
+    }
+
+    async function markRead(id, el) {
+      try {
+        await PATCH('/notification/' + id + '/read');
+        const n = notifications.find(x => x.id === id);
+        if (n) n.isRead = true;
+        el.classList.remove('unread');
+        el.querySelector('.notif-unread-dot')?.remove();
+        const unread = notifications.filter(n => !n.isRead).length;
+        document.getElementById('unread-label').innerHTML = `<strong>${unread}</strong> unread`;
+        document.getElementById('mark-all-btn').style.display = unread > 0 ? '' : 'none';
+      } catch (ex) { toast(ex.message, 'error'); }
+    }
+
+    async function markAllRead() {
+      try {
+        await PATCH('/notification/read-all');
+        notifications.forEach(n => n.isRead = true);
+        render();
+        toast('All marked as read', 'success');
+      } catch (ex) { toast(ex.message, 'error'); }
+    }
+
+    document.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        activeType = t.dataset.type;
+        load();
+      });
+    });
+
+    load();
+</script>
+</body>
+</html>

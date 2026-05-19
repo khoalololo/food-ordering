@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Management — Manager</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .toolbar { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; margin-bottom:1.5rem; }
+        .toolbar .form-input { max-width:240px; }
+
+        .food-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1rem; }
+
+        .food-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; transition:border-color 0.15s; }
+        .food-card:hover { border-color:var(--border2); }
+        .food-img-wrap { height:140px; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:3rem; overflow:hidden; }
+        .food-img-wrap img { width:100%; height:100%; object-fit:cover; }
+        .food-body { padding:1rem; }
+        .food-type { font-size:0.7rem; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.25rem; }
+        .food-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; margin-bottom:0.35rem; }
+        .food-desc { font-size:0.75rem; color:var(--muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:0.65rem; }
+        .food-meta { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; }
+        .food-price { font-family:'Syne',sans-serif; font-weight:800; color:var(--accent2); }
+        .food-actions { display:flex; gap:0.4rem; }
+        .unavailable-overlay { opacity:0.55; }
+        .unavail-badge { font-size:0.68rem; padding:0.15rem 0.5rem; background:rgba(224,82,82,0.15); color:var(--red); border-radius:4px; font-weight:600; }
+
+        /* Form inside modal */
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+        @media(max-width:480px){ .form-row{grid-template-columns:1fr;} }
+        .form-check { display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; cursor:pointer; }
+        .form-check input { accent-color:var(--accent); width:16px; height:16px; cursor:pointer; }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page">
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+            <h1 class="page-title">Food management</h1>
+            <p class="page-subtitle" id="food-count">Loading…</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCreate()">+ Add food</button>
+    </div>
+
+    <div class="toolbar">
+        <input class="form-input" type="search" id="search-input" placeholder="Search by name…">
+        <select class="form-select" id="type-filter" style="width:160px">
+            <option value="">All types</option>
+            <option value="pizza">🍕 Pizza</option>
+            <option value="burger">🍔 Burger</option>
+            <option value="pasta">🍝 Pasta</option>
+            <option value="salad">🥗 Salad</option>
+            <option value="soup">🍲 Soup</option>
+            <option value="dessert">🍰 Dessert</option>
+            <option value="drink">🥤 Drink</option>
+            <option value="food">🍽 Other</option>
+        </select>
+        <select class="form-select" id="avail-filter" style="width:160px">
+            <option value="">All items</option>
+            <option value="true">Available only</option>
+            <option value="false">Unavailable only</option>
+        </select>
+    </div>
+
+    <div class="food-grid" id="food-grid">
+        <div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--muted)">Loading…</div>
+    </div>
+</div>
+
+<!-- Create / Edit modal -->
+<div class="modal-overlay" id="food-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-title">Add food</h2>
+            <button class="btn btn-ghost btn-icon" onclick="closeModal('food-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="f-id">
+            <div class="form-group">
+                <label class="form-label">Name *</label>
+                <input class="form-input" id="f-name" placeholder="e.g. Margherita Pizza">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Base price (VND) *</label>
+                    <input class="form-input" id="f-price" type="number" min="0" placeholder="75000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Type *</label>
+                    <select class="form-select" id="f-type">
+                        <option value="food">🍽 Other</option>
+                        <option value="pizza">🍕 Pizza</option>
+                        <option value="burger">🍔 Burger</option>
+                        <option value="pasta">🍝 Pasta</option>
+                        <option value="salad">🥗 Salad</option>
+                        <option value="soup">🍲 Soup</option>
+                        <option value="dessert">🍰 Dessert</option>
+                        <option value="drink">🥤 Drink</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Image URL</label>
+                <input class="form-input" id="f-image" type="url" placeholder="https://…">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-textarea" id="f-desc" placeholder="Short description…"></textarea>
+            </div>
+            <label class="form-check">
+                <input type="checkbox" id="f-available" checked>
+                Available on menu
+            </label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('food-modal')">Cancel</button>
+            <button class="btn btn-primary" id="save-btn" onclick="save()">Save food</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="delete-modal">
+    <div class="modal" style="max-width:380px">
+        <div class="modal-header"><h2 class="modal-title">Delete food?</h2></div>
+        <div class="modal-body">
+            <p style="color:var(--muted);font-size:0.9rem">This will permanently remove <strong id="delete-name"></strong> from the menu. This cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('delete-modal')">Cancel</button>
+            <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDelete()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth(['MANAGER']);
+    renderNav('manager-foods.html');
+
+    const EMOJI = { pizza:'🍕', burger:'🍔', pasta:'🍝', salad:'🥗', soup:'🍲', dessert:'🍰', drink:'🥤', food:'🍽' };
+    let allFoods = [];
+    let deleteId = null;
+
+    async function load() {
+      try {
+        allFoods = await GET('/food/all'); // manager endpoint returns all incl. unavailable
+        render();
+      } catch {
+        // fallback to public endpoint
+        try { allFoods = await GET('/food'); render(); } catch (ex) { toast(ex.message,'error'); }
+      }
+    }
+
+    function render() {
+      const q    = document.getElementById('search-input').value.toLowerCase();
+      const type = document.getElementById('type-filter').value;
+      const avail= document.getElementById('avail-filter').value;
+
+      let foods = allFoods.filter(f => {
+        if (q && !f.name.toLowerCase().includes(q)) return false;
+        if (type && f.type !== type) return false;
+        if (avail === 'true'  && !(f.isAvailable ?? f.available)) return false;
+        if (avail === 'false' &&  (f.isAvailable ?? f.available)) return false;
+        return true;
+      });
+
+      document.getElementById('food-count').textContent = `${foods.length} of ${allFoods.length} items`;
+
+      const grid = document.getElementById('food-grid');
+      if (!foods.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🍽</div><h3>No items found</h3><p>Adjust filters or add a new item</p></div>`;
+        return;
+      }
+
+      const available = f => f.isAvailable ?? f.available ?? true;
+      grid.innerHTML = foods.map(f => `
+        <div class="food-card ${!available(f) ? 'unavailable-overlay' : ''}">
+          <div class="food-img-wrap">
+            ${f.imageUrl ? `<img src="${f.imageUrl}" alt="${f.name}" onerror="this.parentElement.innerHTML='${EMOJI[f.type]||'🍽'}'">` : EMOJI[f.type]||'🍽'}
+          </div>
+          <div class="food-body">
+            <div class="food-type">${f.type} ${!available(f) ? '<span class="unavail-badge">Unavailable</span>' : ''}</div>
+            <div class="food-name">${f.name}</div>
+            ${f.description ? `<div class="food-desc">${f.description}</div>` : ''}
+            <div class="food-meta">
+              <span class="food-price">${fmt.currency(f.basePrice)}</span>
+            </div>
+            <div class="food-actions">
+              <button class="btn btn-secondary btn-sm" style="flex:1" onclick="openEdit(${f.id})">Edit</button>
+              <button class="btn btn-ghost btn-sm" onclick="toggleAvailability(${f.id}, ${!available(f)})">
+                ${available(f) ? 'Hide' : 'Show'}
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="openDelete(${f.id}, '${f.name.replace(/'/g,"\\'")}')">✕</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCreate() {
+      document.getElementById('modal-title').textContent = 'Add food';
+      document.getElementById('f-id').value     = '';
+      document.getElementById('f-name').value   = '';
+      document.getElementById('f-price').value  = '';
+      document.getElementById('f-type').value   = 'food';
+      document.getElementById('f-image').value  = '';
+      document.getElementById('f-desc').value   = '';
+      document.getElementById('f-available').checked = true;
+      document.getElementById('save-btn').textContent = 'Add food';
+      openModal('food-modal');
+    }
+
+    function openEdit(id) {
+      const f = allFoods.find(x => x.id === id);
+      if (!f) return;
+      document.getElementById('modal-title').textContent  = 'Edit food';
+      document.getElementById('f-id').value     = f.id;
+      document.getElementById('f-name').value   = f.name;
+      document.getElementById('f-price').value  = f.basePrice;
+      document.getElementById('f-type').value   = f.type || 'food';
+      document.getElementById('f-image').value  = f.imageUrl || '';
+      document.getElementById('f-desc').value   = f.description || '';
+      document.getElementById('f-available').checked = f.isAvailable ?? f.available ?? true;
+      document.getElementById('save-btn').textContent = 'Save changes';
+      openModal('food-modal');
+    }
+
+    async function save() {
+      const id    = document.getElementById('f-id').value;
+      const name  = document.getElementById('f-name').value.trim();
+      const price = document.getElementById('f-price').value;
+      if (!name || !price) { toast('Name and price are required', 'error'); return; }
+
+      const payload = {
+        name,
+        basePrice:   Number(price),
+        type:        document.getElementById('f-type').value,
+        imageUrl:    document.getElementById('f-image').value.trim() || null,
+        description: document.getElementById('f-desc').value.trim() || null,
+        isAvailable: document.getElementById('f-available').checked,
+      };
+
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+
+      try {
+        if (id) await PATCH('/food/' + id, payload);
+        else    await POST('/food', payload);
+        toast(id ? 'Food updated' : 'Food added', 'success');
+        closeModal('food-modal');
+        load();
+      } catch (ex) {
+        toast(ex.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = id ? 'Save changes' : 'Add food';
+      }
+    }
+
+    async function toggleAvailability(id, makeAvailable) {
+      try {
+        await PATCH('/food/' + id, { isAvailable: makeAvailable });
+        toast(makeAvailable ? 'Food is now visible' : 'Food hidden from menu', 'info');
+        load();
+      } catch (ex) { toast(ex.message, 'error'); }
+    }
+
+    function openDelete(id, name) {
+      deleteId = id;
+      document.getElementById('delete-name').textContent = name;
+      openModal('delete-modal');
+    }
+
+    async function confirmDelete() {
+      if (!deleteId) return;
+      const btn = document.getElementById('confirm-delete-btn');
+      btn.disabled = true; btn.textContent = 'Deleting…';
+      try {
+        await DELETE('/food/' + deleteId);
+        toast('Food deleted', 'info');
+        closeModal('delete-modal');
+        load();
+      } catch (ex) {
+        toast(ex.message, 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Delete';
+        deleteId = null;
+      }
+    }
+
+    // Filter listeners
+    ['search-input','type-filter','avail-filter'].forEach(id => {
+      document.getElementById(id).addEventListener('input', render);
+    });
+
+    load();
+</script>
+</body>
+</html>

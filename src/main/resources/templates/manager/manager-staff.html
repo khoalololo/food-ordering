@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Management — Manager</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .toolbar { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; margin-bottom:1.5rem; }
+        .toolbar .form-input { max-width:260px; }
+
+        .staff-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
+
+        .staff-card {
+          background:var(--surface); border:1px solid var(--border);
+          border-radius:var(--radius-lg); padding:1.25rem;
+          display:flex; flex-direction:column; gap:0.85rem;
+          transition:border-color 0.15s;
+        }
+        .staff-card:hover { border-color:var(--border2); }
+
+        .staff-top { display:flex; align-items:center; gap:0.85rem; }
+        .staff-avatar {
+          width:44px; height:44px; border-radius:50%;
+          background:var(--surface2); border:1px solid var(--border2);
+          display:flex; align-items:center; justify-content:center;
+          font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem;
+          color:var(--accent); flex-shrink:0; text-transform:uppercase;
+        }
+        .staff-info { flex:1; min-width:0; }
+        .staff-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .staff-email { font-size:0.775rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:0.15rem; }
+
+        .staff-meta { display:flex; flex-wrap:wrap; gap:0.4rem; }
+        .staff-actions { display:flex; gap:0.4rem; }
+
+        .role-badge {
+          display:inline-flex; align-items:center;
+          padding:0.2rem 0.65rem; border-radius:6px;
+          font-size:0.72rem; font-weight:700;
+          text-transform:uppercase; letter-spacing:0.04em;
+        }
+        .role-MANAGER  { background:rgba(232,108,47,0.15); color:var(--accent); }
+        .role-STAFF    { background:rgba(76,175,125,0.15);  color:var(--green); }
+        .role-CUSTOMER { background:rgba(138,135,128,0.12); color:var(--muted); }
+        .role-ADMIN    { background:rgba(224,82,82,0.15);   color:var(--red); }
+
+        .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
+        @media(max-width:700px){ .stats-row{grid-template-columns:repeat(2,1fr);} }
+
+        .form-check { display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; cursor:pointer; }
+        .form-check input { accent-color:var(--accent); width:16px; height:16px; cursor:pointer; }
+
+        .pw-toggle { position:relative; }
+        .pw-toggle .form-input { padding-right:2.5rem; }
+        .pw-eye {
+          position:absolute; right:0.75rem; top:50%; transform:translateY(-50%);
+          background:none; border:none; color:var(--muted); cursor:pointer;
+          font-size:0.9rem; padding:0; line-height:1;
+        }
+        .pw-eye:hover { color:var(--text); }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page">
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+            <h1 class="page-title">Staff management</h1>
+            <p class="page-subtitle" id="staff-count">Loading…</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCreate()">+ Add staff</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="card stat-card"><div class="stat-label">Total staff</div><div class="stat-value" id="st-total">—</div></div>
+        <div class="card stat-card"><div class="stat-label">Managers</div><div class="stat-value" id="st-managers">—</div></div>
+        <div class="card stat-card"><div class="stat-label">Staff</div><div class="stat-value" id="st-staff">—</div></div>
+        <div class="card stat-card"><div class="stat-label">Customers</div><div class="stat-value" id="st-customers">—</div></div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <input class="form-input" type="search" id="search-input" placeholder="Search by name or email…">
+        <select class="form-select" id="role-filter" style="width:160px">
+            <option value="">All roles</option>
+            <option value="MANAGER">Manager</option>
+            <option value="STAFF">Staff</option>
+            <option value="CUSTOMER">Customer</option>
+        </select>
+    </div>
+
+    <div class="staff-grid" id="staff-grid">
+        <div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--muted)">Loading…</div>
+    </div>
+</div>
+
+<!-- Create / Edit modal -->
+<div class="modal-overlay" id="staff-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-title">Add staff member</h2>
+            <button class="btn btn-ghost btn-icon" onclick="closeModal('staff-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="s-id">
+
+            <div class="form-group">
+                <label class="form-label">Full name *</label>
+                <input class="form-input" id="s-name" placeholder="Nguyen Van A">
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input class="form-input" id="s-email" type="email" placeholder="staff@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone *</label>
+                    <input class="form-input" id="s-phone" type="tel" placeholder="0901 234 567">
+                </div>
+            </div>
+
+            <div class="form-group" id="pw-group">
+                <label class="form-label">Password *</label>
+                <div class="pw-toggle">
+                    <input class="form-input" id="s-password" type="password" placeholder="At least 6 characters">
+                    <button class="pw-eye" type="button" onclick="togglePw()">👁</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Role *</label>
+                <select class="form-select" id="s-role">
+                    <option value="STAFF">Staff</option>
+                    <option value="MANAGER">Manager</option>
+                    <option value="CUSTOMER">Customer</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('staff-modal')">Cancel</button>
+            <button class="btn btn-primary" id="save-btn" onclick="save()">Add member</button>
+        </div>
+    </div>
+</div>
+
+<!-- Role change modal -->
+<div class="modal-overlay" id="role-modal">
+    <div class="modal" style="max-width:360px">
+        <div class="modal-header">
+            <h2 class="modal-title">Change role</h2>
+            <button class="btn btn-ghost btn-icon" onclick="closeModal('role-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <p style="color:var(--muted);font-size:0.875rem;margin-bottom:0.75rem">
+                Changing role for <strong id="role-name"></strong>
+            </p>
+            <input type="hidden" id="role-user-id">
+            <div class="form-group">
+                <label class="form-label">New role</label>
+                <select class="form-select" id="role-select">
+                    <option value="CUSTOMER">Customer</option>
+                    <option value="STAFF">Staff</option>
+                    <option value="MANAGER">Manager</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('role-modal')">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmRoleChange()">Save role</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="delete-modal">
+    <div class="modal" style="max-width:380px">
+        <div class="modal-header"><h2 class="modal-title">Remove staff member?</h2></div>
+        <div class="modal-body">
+            <p style="color:var(--muted);font-size:0.9rem">
+                This will downgrade <strong id="delete-name"></strong> to a regular customer.
+                Their order history will be preserved.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('delete-modal')">Cancel</button>
+            <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDelete()">Remove</button>
+        </div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth(['MANAGER']);
+    renderNav('manager-staff.html');
+
+    let allUsers = [];
+    let deleteId = null;
+
+    // ── Load ──────────────────────────────────────────
+    async function load() {
+      try {
+        allUsers = await GET('/user/all');
+        updateStats();
+        render();
+      } catch (ex) {
+        document.getElementById('staff-grid').innerHTML =
+          `<div style="grid-column:1/-1;padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('st-total').textContent     = allUsers.length;
+      document.getElementById('st-managers').textContent  = allUsers.filter(u => u.role === 'MANAGER').length;
+      document.getElementById('st-staff').textContent     = allUsers.filter(u => u.role === 'STAFF').length;
+      document.getElementById('st-customers').textContent = allUsers.filter(u => u.role === 'CUSTOMER').length;
+    }
+
+    function render() {
+      const q    = document.getElementById('search-input').value.toLowerCase();
+      const role = document.getElementById('role-filter').value;
+
+      const users = allUsers.filter(u => {
+        if (role && u.role !== role) return false;
+        if (q && !u.fullName?.toLowerCase().includes(q) && !u.email?.toLowerCase().includes(q)) return false;
+        return true;
+      });
+
+      document.getElementById('staff-count').textContent =
+        `${users.length} of ${allUsers.length} members`;
+
+      const grid = document.getElementById('staff-grid');
+      if (!users.length) {
+        grid.innerHTML = `
+          <div class="empty" style="grid-column:1/-1">
+            <div class="empty-icon">👥</div>
+            <h3>No members found</h3>
+            <p>Try adjusting your filters</p>
+          </div>`;
+        return;
+      }
+
+      const me = Auth.user;
+      grid.innerHTML = users.map(u => {
+        const initials = (u.fullName || u.email || '?').slice(0,2).toUpperCase();
+        const isMe = me && me.id === u.id;
+        return `
+          <div class="staff-card">
+            <div class="staff-top">
+              <div class="staff-avatar">${initials}</div>
+              <div class="staff-info">
+                <div class="staff-name">${u.fullName || '—'} ${isMe ? '<span style="font-size:0.65rem;color:var(--muted)">(you)</span>' : ''}</div>
+                <div class="staff-email">${u.email}</div>
+              </div>
+            </div>
+            <div class="staff-meta">
+              <span class="role-badge role-${u.role}">${u.role}</span>
+              ${u.phone ? `<span class="tag">${u.phone}</span>` : ''}
+              ${u.createdAt ? `<span class="tag">Joined ${new Date(u.createdAt).toLocaleDateString('vi-VN')}</span>` : ''}
+            </div>
+            <div class="staff-actions">
+              <button class="btn btn-secondary btn-sm" style="flex:1" onclick="openEdit(${u.id})">Edit</button>
+              <button class="btn btn-ghost btn-sm" onclick="openRoleChange(${u.id}, '${(u.fullName||'').replace(/'/g,"\\'")}', '${u.role}')">
+                Role
+              </button>
+              ${!isMe ? `<button class="btn btn-danger btn-sm" onclick="openDelete(${u.id}, '${(u.fullName||u.email||'').replace(/'/g,"\\'")}')">✕</button>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Create ────────────────────────────────────────
+    function openCreate() {
+      document.getElementById('modal-title').textContent  = 'Add staff member';
+      document.getElementById('s-id').value      = '';
+      document.getElementById('s-name').value    = '';
+      document.getElementById('s-email').value   = '';
+      document.getElementById('s-phone').value   = '';
+      document.getElementById('s-password').value= '';
+      document.getElementById('s-role').value    = 'STAFF';
+      document.getElementById('pw-group').style.display = '';
+      document.getElementById('save-btn').textContent    = 'Add member';
+      openModal('staff-modal');
+    }
+
+    // ── Edit ──────────────────────────────────────────
+    function openEdit(id) {
+      const u = allUsers.find(x => x.id === id);
+      if (!u) return;
+      document.getElementById('modal-title').textContent = 'Edit member';
+      document.getElementById('s-id').value      = u.id;
+      document.getElementById('s-name').value    = u.fullName || '';
+      document.getElementById('s-email').value   = u.email || '';
+      document.getElementById('s-phone').value   = u.phone || '';
+      document.getElementById('s-password').value= '';
+      document.getElementById('s-role').value    = u.role || 'STAFF';
+      // hide password on edit — separate flow needed for pw reset
+      document.getElementById('pw-group').style.display = 'none';
+      document.getElementById('save-btn').textContent   = 'Save changes';
+      openModal('staff-modal');
+    }
+
+    // ── Save (create or update) ───────────────────────
+    async function save() {
+      const id       = document.getElementById('s-id').value;
+      const fullName = document.getElementById('s-name').value.trim();
+      const email    = document.getElementById('s-email').value.trim();
+      const phone    = document.getElementById('s-phone').value.trim();
+      const password = document.getElementById('s-password').value;
+      const role     = document.getElementById('s-role').value;
+
+      if (!fullName || !email) { toast('Name and email are required', 'error'); return; }
+      if (!id && !password)    { toast('Password is required for new members', 'error'); return; }
+
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+
+      try {
+        if (id) {
+          // Update existing user
+          await PATCH('/user/' + id, { fullName, email, phone, role });
+        } else {
+          // Register new staff via auth endpoint then update role
+          const newUser = await POST('/auth/register', { fullName, email, phone, password });
+          // After registration set proper role if not CUSTOMER
+          if (role !== 'CUSTOMER' && newUser?.id) {
+            await PATCH('/user/' + newUser.id + '/role', { role });
+          }
+        }
+        toast(id ? 'Member updated' : 'Member added', 'success');
+        closeModal('staff-modal');
+        load();
+      } catch (ex) {
+        toast(ex.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = id ? 'Save changes' : 'Add member';
+      }
+    }
+
+    // ── Role change ───────────────────────────────────
+    function openRoleChange(id, name, currentRole) {
+      document.getElementById('role-user-id').value = id;
+      document.getElementById('role-name').textContent = name;
+      document.getElementById('role-select').value = currentRole;
+      openModal('role-modal');
+    }
+
+    async function confirmRoleChange() {
+      const id   = document.getElementById('role-user-id').value;
+      const role = document.getElementById('role-select').value;
+      try {
+        await PATCH('/user/' + id + '/role', { role });
+        toast('Role updated to ' + role, 'success');
+        closeModal('role-modal');
+        load();
+      } catch (ex) { toast(ex.message, 'error'); }
+    }
+
+    // ── Delete (downgrade to CUSTOMER) ───────────────
+    function openDelete(id, name) {
+      deleteId = id;
+      document.getElementById('delete-name').textContent = name;
+      openModal('delete-modal');
+    }
+
+    async function confirmDelete() {
+      if (!deleteId) return;
+      const btn = document.getElementById('confirm-delete-btn');
+      btn.disabled = true; btn.textContent = 'Removing…';
+      try {
+        // Downgrade to customer rather than hard-delete to preserve order history
+        await PATCH('/user/' + deleteId + '/role', { role: 'CUSTOMER' });
+        toast('Member removed from staff', 'info');
+        closeModal('delete-modal');
+        load();
+      } catch (ex) {
+        toast(ex.message, 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Remove';
+        deleteId = null;
+      }
+    }
+
+    // ── Password toggle ───────────────────────────────
+    function togglePw() {
+      const input = document.getElementById('s-password');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // ── Filter listeners ──────────────────────────────
+    document.getElementById('search-input').addEventListener('input', render);
+    document.getElementById('role-filter').addEventListener('change', render);
+
+    load();
+</script>
+</body>
+</html>

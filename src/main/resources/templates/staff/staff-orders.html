@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders — Staff</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .board { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; }
+
+        .column { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+        .column-header { padding:0.85rem 1rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+        .column-title { font-family:'Syne',sans-serif; font-weight:700; font-size:0.875rem; display:flex; align-items:center; gap:0.5rem; }
+        .column-count { background:var(--surface2); border-radius:20px; padding:0.1rem 0.55rem; font-size:0.72rem; font-weight:600; color:var(--muted); }
+        .column-body { padding:0.75rem; display:flex; flex-direction:column; gap:0.6rem; min-height:80px; }
+
+        .order-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:0.85rem; transition:border-color 0.15s; }
+        .order-card:hover { border-color:var(--border2); }
+        .oc-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem; }
+        .oc-id { font-family:'Syne',sans-serif; font-weight:700; font-size:0.85rem; }
+        .oc-time { font-size:0.72rem; color:var(--muted); }
+        .oc-items { font-size:0.78rem; color:var(--muted); margin-bottom:0.65rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .oc-bottom { display:flex; align-items:center; justify-content:space-between; gap:0.4rem; }
+        .oc-amount { font-family:'Syne',sans-serif; font-weight:700; font-size:0.875rem; color:var(--accent2); }
+        .oc-actions { display:flex; gap:0.35rem; }
+
+        .view-toggle { display:flex; gap:0.4rem; margin-bottom:1.5rem; }
+        .vt-btn { padding:0.35rem 0.85rem; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
+        .vt-btn.active { background:var(--surface2); color:var(--text); border-color:var(--border2); }
+
+        /* Table view */
+        .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
+        @media(max-width:700px){ .stats-row{grid-template-columns:repeat(2,1fr);} }
+    </style>
+</head>
+<body>
+<nav id="main-nav"></nav>
+<div id="toast-container"></div>
+
+<div class="page">
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+            <h1 class="page-title">Order management</h1>
+            <p class="page-subtitle" id="last-refresh">Loading…</p>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-ghost" onclick="load()">↻ Refresh</button>
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--muted);cursor:pointer;">
+                <input type="checkbox" id="auto-refresh" checked style="accent-color:var(--accent)"> Auto-refresh
+            </label>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row">
+        <div class="card stat-card"><div class="stat-label">Pending</div><div class="stat-value" id="st-pending">—</div></div>
+        <div class="card stat-card"><div class="stat-label">Preparing</div><div class="stat-value" id="st-preparing">—</div></div>
+        <div class="card stat-card"><div class="stat-label">Ready</div><div class="stat-value" id="st-ready">—</div></div>
+        <div class="card stat-card"><div class="stat-label">Completed today</div><div class="stat-value" id="st-completed">—</div></div>
+    </div>
+
+    <!-- Toggle -->
+    <div class="view-toggle">
+        <button class="vt-btn active" id="vt-board" onclick="switchView('board')">📋 Board</button>
+        <button class="vt-btn" id="vt-table" onclick="switchView('table')">📊 Table</button>
+    </div>
+
+    <!-- Board view -->
+    <div id="board-view" class="board"></div>
+
+    <!-- Table view -->
+    <div id="table-view" style="display:none;">
+        <div class="card">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Order #</th><th>Status</th><th>Items</th>
+                        <th>Amount</th><th>Placed at</th><th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detail-modal">
+    <div class="modal" style="max-width:540px">
+        <div class="modal-header">
+            <h2 class="modal-title" id="dm-title">Order detail</h2>
+            <button class="btn btn-ghost btn-icon" onclick="closeModal('detail-modal')">✕</button>
+        </div>
+        <div class="modal-body" id="dm-body"></div>
+        <div class="modal-footer" id="dm-footer"></div>
+    </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+    requireAuth(['STAFF','MANAGER']);
+    renderNav('staff-orders.html');
+
+    let allOrders = [];
+    let currentView = 'board';
+    let autoTimer = null;
+
+    const COLUMNS = [
+      { status:'PENDING',   label:'⏳ Pending',   color:'var(--yellow)' },
+      { status:'CONFIRMED', label:'✅ Confirmed',  color:'var(--green)' },
+      { status:'PREPARING', label:'🍳 Preparing',  color:'var(--accent)' },
+      { status:'READY',     label:'🔔 Ready',      color:'var(--green)' },
+      { status:'COMPLETED', label:'🎉 Completed',  color:'var(--muted)' },
+    ];
+
+    function timeSince(d) {
+      const diff = (Date.now() - new Date(d)) / 60000;
+      if (diff < 1) return 'just now';
+      if (diff < 60) return Math.floor(diff) + 'm ago';
+      return Math.floor(diff/60) + 'h ago';
+    }
+
+    async function load() {
+      try {
+        allOrders = await GET('/order/all');
+        updateStats();
+        if (currentView === 'board') renderBoard();
+        else renderTable();
+        document.getElementById('last-refresh').textContent =
+          'Refreshed ' + new Intl.DateTimeFormat('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
+      } catch (ex) {
+        toast(ex.message, 'error');
+      }
+    }
+
+    function updateStats() {
+      const today = new Date().toDateString();
+      document.getElementById('st-pending').textContent   = allOrders.filter(o=>o.status==='PENDING').length;
+      document.getElementById('st-preparing').textContent = allOrders.filter(o=>o.status==='PREPARING').length;
+      document.getElementById('st-ready').textContent     = allOrders.filter(o=>o.status==='READY').length;
+      document.getElementById('st-completed').textContent = allOrders.filter(o=>o.status==='COMPLETED' && new Date(o.createdAt).toDateString()===today).length;
+    }
+
+    function renderBoard() {
+      const board = document.getElementById('board-view');
+      board.innerHTML = COLUMNS.map(col => {
+        const orders = allOrders.filter(o => o.status === col.status);
+        return `
+          <div class="column">
+            <div class="column-header">
+              <span class="column-title" style="color:${col.color}">${col.label}</span>
+              <span class="column-count">${orders.length}</span>
+            </div>
+            <div class="column-body">
+              ${orders.length ? orders.map(o => orderCard(o)).join('') : '<div style="padding:0.5rem;font-size:0.78rem;color:var(--muted);text-align:center">Empty</div>'}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function orderCard(o) {
+      const itemsPreview = (o.items||[]).map(i=>`${i.foodName||'Item'}×${i.quantity}`).join(', ') || '—';
+      return `
+        <div class="order-card">
+          <div class="oc-top">
+            <span class="oc-id">#${o.id}</span>
+            <span class="oc-time">${timeSince(o.createdAt)}</span>
+          </div>
+          <div class="oc-items">${itemsPreview}</div>
+          <div class="oc-bottom">
+            <span class="oc-amount">${fmt.currency(o.totalAmount)}</span>
+            <div class="oc-actions">
+              <button class="btn btn-ghost btn-sm" onclick="viewDetail(${o.id})">View</button>
+              ${canAdvance(o.status) ? `<button class="btn btn-success btn-sm" onclick="advance(${o.id})">→ Next</button>` : ''}
+              ${canCancel(o.status)  ? `<button class="btn btn-danger btn-sm"  onclick="cancel(${o.id})">✕</button>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('table-body');
+      if (!allOrders.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted)">No orders</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = allOrders.map(o => `
+        <tr>
+          <td><strong>#${o.id}</strong></td>
+          <td>${fmt.badge(o.status)}</td>
+          <td style="color:var(--muted)">${(o.items||[]).length} item(s)</td>
+          <td style="color:var(--accent2);font-weight:600">${fmt.currency(o.totalAmount)}</td>
+          <td style="color:var(--muted);font-size:0.8rem">${fmt.date(o.createdAt)}</td>
+          <td>
+            <div style="display:flex;gap:0.35rem">
+              <button class="btn btn-ghost btn-sm" onclick="viewDetail(${o.id})">View</button>
+              ${canAdvance(o.status) ? `<button class="btn btn-success btn-sm" onclick="advance(${o.id})">→ Next</button>` : ''}
+              ${canCancel(o.status)  ? `<button class="btn btn-danger btn-sm"  onclick="cancel(${o.id})">Cancel</button>` : ''}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function canAdvance(s) { return ['PENDING','CONFIRMED','PREPARING','READY'].includes(s); }
+    function canCancel(s)  { return ['PENDING','CONFIRMED'].includes(s); }
+
+    async function advance(id) {
+      try {
+        await PATCH('/order/' + id + '/advance');
+        toast('Status updated', 'success');
+        load();
+      } catch (ex) { toast(ex.message, 'error'); }
+    }
+
+    async function cancel(id) {
+      if (!confirm('Cancel order #' + id + '?')) return;
+      try {
+        await PATCH('/order/' + id + '/cancel');
+        toast('Order cancelled', 'info');
+        load();
+      } catch (ex) { toast(ex.message, 'error'); }
+    }
+
+    function viewDetail(id) {
+      const o = allOrders.find(x => x.id === id);
+      if (!o) return;
+      document.getElementById('dm-title').textContent = 'Order #' + o.id;
+      document.getElementById('dm-body').innerHTML = `
+        <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem">
+          ${fmt.badge(o.status)}
+          <span style="color:var(--muted);font-size:0.8rem">${fmt.date(o.createdAt)}</span>
+        </div>
+        <hr class="divider">
+        <p style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem">Items</p>
+        ${(o.items||[]).map(i=>`
+          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.875rem">
+            <div>
+              <div style="font-weight:500">${i.foodName||'Item #'+i.foodId} ×${i.quantity}</div>
+              ${i.toppings?`<div style="font-size:0.72rem;color:var(--muted)">${i.toppings}</div>`:''}
+            </div>
+            <span style="color:var(--accent2);font-weight:600">${fmt.currency(i.subtotal)}</span>
+          </div>
+        `).join('')}
+        <div style="display:flex;justify-content:space-between;padding-top:0.75rem;font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem">
+          <span>Total</span><span style="color:var(--accent)">${fmt.currency(o.totalAmount)}</span>
+        </div>`;
+      document.getElementById('dm-footer').innerHTML = `
+        ${canAdvance(o.status) ? `<button class="btn btn-success" onclick="advance(${o.id});closeModal('detail-modal')">→ Advance status</button>` : ''}
+        ${canCancel(o.status)  ? `<button class="btn btn-danger"  onclick="cancel(${o.id});closeModal('detail-modal')">Cancel</button>` : ''}
+        <button class="btn btn-ghost" onclick="closeModal('detail-modal')">Close</button>`;
+      openModal('detail-modal');
+    }
+
+    function switchView(v) {
+      currentView = v;
+      document.getElementById('board-view').style.display = v === 'board' ? 'grid' : 'none';
+      document.getElementById('table-view').style.display = v === 'table' ? '' : 'none';
+      document.getElementById('vt-board').classList.toggle('active', v === 'board');
+      document.getElementById('vt-table').classList.toggle('active', v === 'table');
+      if (v === 'board') renderBoard(); else renderTable();
+    }
+
+    // Auto-refresh every 15s
+    function scheduleRefresh() {
+      clearTimeout(autoTimer);
+      if (document.getElementById('auto-refresh').checked) {
+        autoTimer = setTimeout(() => { load(); scheduleRefresh(); }, 15000);
+      }
+    }
+    document.getElementById('auto-refresh').addEventListener('change', scheduleRefresh);
+
+    load().then(scheduleRefresh);
+</script>
+</body>
+</html>
