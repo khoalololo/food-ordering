@@ -29,7 +29,15 @@ async function api(method, path, body) {
   let data;
   try { data = JSON.parse(text); } catch { data = text; }
 
-  if (!res.ok) throw new Error(data?.message || data || `Error ${res.status}`);
+  if (!res.ok) {
+    let message = `Error ${res.status}`;
+    if (data && typeof data === 'object' && data.message) {
+      message = data.message;
+    } else if (typeof data === 'string' && data) {
+      message = data;
+    }
+    throw new Error(message);
+  }
   return data;
 }
 

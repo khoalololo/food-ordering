@@ -21,7 +21,7 @@ public class FoodOrderingApplication {
 		Environment env = context.getEnvironment();
 		String port = env.getProperty("server.port");
 		if (port == null) {
-			port = "8080";
+			port = "9090";
 		}
 		System.out.println("\n----------------------------------------------------------");
 		System.out.println("Application is running! Access it at:");

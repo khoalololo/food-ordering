@@ -20,7 +20,6 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // The "owned" side of the relationship — this is where the foreign key column lives
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="order_id", nullable = false)
     private Order order;
@@ -30,18 +29,19 @@ public class OrderItem {
     private Food food;
 
     @Column(nullable = false)
+    private String foodName;
+
+    @Column(nullable = false)
     private int quantity;
 
-    // Snapshot of the price at the time of ordering
-    // Critical: food price may change later — we store what the customer actually paid
     @Column(nullable = false)
     private BigDecimal unitPrice;
 
     @Column(nullable = false)
-    private BigDecimal subtotal; // unitPrice * quantity
+    private BigDecimal subtotal;
 
     // Store toppings as a simple comma-separated string
     // For a real app you'd make a Topping entity, but this keeps it simple
     @Column(columnDefinition = "TEXT")
-    private String toppings; // e.g. "Extra Cheese,Spicy"
+    private String toppings;
 }

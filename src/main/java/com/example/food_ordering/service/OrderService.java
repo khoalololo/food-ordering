@@ -40,6 +40,7 @@ public class OrderService {
             BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(itemReq.getQuantity()));
             OrderItem item = OrderItem.builder()
                     .food(food)
+                    .foodName(food.getName())
                     .quantity(itemReq.getQuantity())
                     .unitPrice(unitPrice)
                     .subtotal(subtotal)
@@ -108,7 +109,7 @@ public class OrderService {
         List<OrderResponse.OrderItemResponse> itemResponses = order.getItems().stream()
                 .map(item -> OrderResponse.OrderItemResponse.builder()
                         .foodId(item.getFood().getId())
-                        .foodName(item.getFood().getName())
+                        .foodName(item.getFoodName())
                         .quantity(item.getQuantity())
                         .unitPrice(item.getUnitPrice())
                         .subtotal(item.getSubtotal())

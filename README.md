@@ -141,7 +141,7 @@ jwt.expiration=86400000
 mvn spring-boot:run
 ```
 
-The app starts at `http://localhost:8080`.
+The app starts at `http://localhost:9090`.
 
 Spring will create all tables automatically on first run (`ddl-auto=update`).
 

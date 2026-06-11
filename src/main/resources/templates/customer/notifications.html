@@ -49,13 +49,13 @@
 
     <div class="card">
         <div class="notif-header-actions" style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
-            <span class="unread-count" id="unread-label">Loading…</span>
+            <span class="unread-count" id="unread-label"></span>
             <button class="btn btn-ghost btn-sm" onclick="markAllRead()" id="mark-all-btn" style="display:none">
                 Mark all read
             </button>
         </div>
         <div id="notif-list">
-            <div style="padding:3rem;text-align:center;color:var(--muted)">Loading…</div>
+            <div style="padding:3rem;text-align:center;color:var(--muted)">Loading notifications…</div>
         </div>
     </div>
 </div>
@@ -83,10 +83,16 @@
       try {
         const endpoint = activeType === 'KITCHEN' ? '/notification/kitchen' : '/notification/my';
         notifications = await GET(endpoint);
+        if (!Array.isArray(notifications)) notifications = [];
         render();
       } catch (ex) {
-        document.getElementById('notif-list').innerHTML =
-          `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+        if (ex.message.includes('403')) {
+          notifications = [];
+          render();
+        } else {
+          document.getElementById('notif-list').innerHTML =
+            `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+        }
       }
     }
 
@@ -100,7 +106,7 @@
 
       if (!notifications.length) {
         document.getElementById('notif-list').innerHTML = `
-          <div class="empty"><h3>No notifications</h3><p>You're all caught up</p></div>`;
+          <div class="empty"><h3>No notifications</h3><p>Your notification list is none</p></div>`;
         return;
       }
 

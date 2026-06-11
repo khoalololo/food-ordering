@@ -72,10 +72,16 @@
     async function load() {
       try {
         allOrders = await GET('/order/my');
+        if (!Array.isArray(allOrders)) allOrders = [];
         render();
       } catch (ex) {
-        document.getElementById('orders-list').innerHTML =
-          `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+        if (ex.message.includes('403')) {
+          allOrders = [];
+          render();
+        } else {
+          document.getElementById('orders-list').innerHTML =
+            `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+        }
       }
     }
 
@@ -90,7 +96,7 @@
         list.innerHTML = `
           <div class="empty">
             <h3>No orders yet</h3>
-            <p>${activeStatus === 'all' ? 'Place your first order from the menu' : 'No orders with this status'}</p>
+            <p>${activeStatus === 'all' ? 'Your order list is empty' : 'No orders with this status'}</p>
             ${activeStatus === 'all' ? '<a href="/customer/menu" class="btn btn-primary" style="margin-top:1rem">Browse menu</a>' : ''}
           </div>`;
         return;
