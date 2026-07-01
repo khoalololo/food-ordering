@@ -3,77 +3,705 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In — FoodOrder</title>
+    <title>Sign In | KhoaFastFood</title>
+
     <link rel="stylesheet" href="/css/shared.css">
+
     <style>
-        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .auth-wrap { width: 100%; max-width: 400px; padding: 1.5rem; }
-        .auth-logo { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--accent); text-align:center; margin-bottom:0.25rem; }
-        .auth-tagline { text-align:center; color:var(--muted); font-size:0.875rem; margin-bottom:2rem; }
-        .auth-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:2rem; }
-        .auth-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.25rem; margin-bottom:1.5rem; }
-        .auth-form { display:flex; flex-direction:column; gap:1rem; }
-        .auth-footer { text-align:center; margin-top:1.25rem; font-size:0.875rem; color:var(--muted); }
-        .auth-footer a { color:var(--accent); font-weight:500; }
-        .auth-footer a:hover { text-decoration:underline; }
-        .error-msg { background:rgba(224,82,82,0.1); border:1px solid rgba(224,82,82,0.3); border-radius:var(--radius); padding:0.65rem 0.9rem; font-size:0.875rem; color:var(--red); display:none; }
+        @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
+
+        :root {
+            --navy: #0A2947;
+            --cream: #F3E4C9;
+            --sage: #D3D4C0;
+            --brown: #8B5E3C;
+            --bg: #fffaf3;
+            --surface: #fff7ec;
+            --white: #ffffff;
+            --red: #c94832;
+            --green: #2f7d4f;
+            --shadow: 0 24px 70px rgba(10, 41, 71, 0.16);
+            --shadow-soft: 0 14px 35px rgba(10, 41, 71, 0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            color: var(--navy);
+            background:
+                radial-gradient(circle at 12% 12%, rgba(139, 94, 60, 0.18), transparent 28rem),
+                radial-gradient(circle at 88% 82%, rgba(10, 41, 71, 0.14), transparent 30rem),
+                linear-gradient(135deg, #fffaf3 0%, #f3e4c9 100%);
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            z-index: 0;
+            border-radius: 999px;
+            filter: blur(2px);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        body::before {
+            width: 260px;
+            height: 260px;
+            left: -80px;
+            top: -70px;
+            background: rgba(139, 94, 60, 0.16);
+        }
+
+        body::after {
+            width: 310px;
+            height: 310px;
+            right: -100px;
+            bottom: -90px;
+            background: rgba(10, 41, 71, 0.13);
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .auth-page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.08fr 0.92fr;
+            align-items: center;
+            width: min(1180px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 42px 0;
+            gap: 38px;
+        }
+
+        .hero-panel {
+            position: relative;
+            min-height: 650px;
+            padding: 44px;
+            border-radius: 42px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92)),
+                radial-gradient(circle at top right, rgba(243, 228, 201, 0.20), transparent 22rem);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            right: -120px;
+            top: -120px;
+            width: 320px;
+            height: 320px;
+            border-radius: 999px;
+            background: rgba(243, 228, 201, 0.12);
+        }
+
+        .hero-panel::after {
+            content: "";
+            position: absolute;
+            left: 44px;
+            bottom: 44px;
+            width: 150px;
+            height: 150px;
+            border-radius: 34px;
+            border: 1px solid rgba(243, 228, 201, 0.22);
+            transform: rotate(10deg);
+        }
+
+        .brand-row {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-icon {
+            width: 68px;
+            height: 68px;
+            display: grid;
+            place-items: center;
+            border-radius: 24px;
+            background: rgba(243, 228, 201, 0.16);
+            border: 1px solid rgba(243, 228, 201, 0.24);
+            font-size: 34px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
+        }
+
+        .brand-name {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .brand-sub {
+            margin: 4px 0 0;
+            color: rgba(243, 228, 201, 0.76);
+            font-size: 14px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            margin-top: 92px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 16px;
+            padding: 8px 13px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(243, 228, 201, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.20);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .hero-title {
+            margin: 0;
+            max-width: 560px;
+            font-size: clamp(48px, 5.8vw, 78px);
+            line-height: 0.95;
+            letter-spacing: -3px;
+            font-weight: 800;
+        }
+
+        .hero-text {
+            max-width: 480px;
+            margin: 24px 0 0;
+            color: rgba(243, 228, 201, 0.78);
+            font-size: 17px;
+            line-height: 1.75;
+        }
+
+        .food-stack {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 52px;
+            max-width: 520px;
+        }
+
+        .food-card-mini {
+            padding: 16px;
+            min-height: 132px;
+            border-radius: 26px;
+            background: rgba(255, 250, 243, 0.12);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            backdrop-filter: blur(16px);
+        }
+
+        .food-emoji {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            background: rgba(243, 228, 201, 0.16);
+            font-size: 25px;
+        }
+
+        .food-card-mini strong {
+            display: block;
+            margin-top: 13px;
+            font-size: 14px;
+            color: var(--cream);
+        }
+
+        .food-card-mini span {
+            display: block;
+            margin-top: 5px;
+            color: rgba(243, 228, 201, 0.68);
+            font-size: 12px;
+        }
+
+        .auth-wrap {
+            width: 100%;
+        }
+
+        .auth-card {
+            position: relative;
+            padding: 38px;
+            border-radius: 36px;
+            background: rgba(255, 247, 236, 0.92);
+            border: 1px solid rgba(211, 212, 192, 0.88);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--navy), var(--brown), var(--sage));
+        }
+
+        .auth-logo-mobile {
+            display: none;
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .auth-logo-mobile .mark {
+            width: 64px;
+            height: 64px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 12px;
+            border-radius: 22px;
+            color: var(--cream);
+            background: var(--navy);
+            font-size: 31px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .auth-logo-mobile h1 {
+            margin: 0;
+            color: var(--brown);
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .auth-logo-mobile p {
+            margin: 8px 0 0;
+            color: var(--brown);
+            font-size: 14px;
+        }
+
+        .auth-title {
+            margin: 0;
+            color: var(--navy);
+            font-size: 38px;
+            line-height: 1.08;
+            letter-spacing: -1.4px;
+            font-weight: 800;
+        }
+
+        .auth-desc {
+            margin: 12px 0 28px;
+            color: var(--brown);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 9px;
+        }
+
+        .form-label {
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+        }
+
+        .input-shell {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brown);
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            min-height: 54px;
+            padding: 15px 17px 15px 48px;
+            border-radius: 18px;
+            border: 1px solid var(--sage);
+            color: var(--navy);
+            background: rgba(255, 255, 255, 0.82);
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--brown);
+            background: var(--white);
+            box-shadow: 0 0 0 5px rgba(139, 94, 60, 0.12);
+        }
+
+        .form-input::placeholder {
+            color: rgba(139, 94, 60, 0.62);
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: -4px;
+        }
+
+        .remember {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--brown);
+            font-size: 13px;
+            user-select: none;
+        }
+
+        .remember input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--brown);
+        }
+
+        .helper-link {
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .helper-link:hover {
+            color: var(--brown);
+        }
+
+        .btn {
+            width: 100%;
+            min-height: 56px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 0;
+            border-radius: 999px;
+            color: var(--cream);
+            background: linear-gradient(135deg, var(--navy), #123d64);
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 16px 34px rgba(10, 41, 71, 0.22);
+            transition: 0.22s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 42px rgba(10, 41, 71, 0.26);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-footer {
+            margin: 24px 0 0;
+            text-align: center;
+            color: var(--brown);
+            font-size: 14px;
+        }
+
+        .auth-footer a {
+            color: var(--navy);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            color: var(--brown);
+        }
+
+        .quick-login {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 22px;
+            background: rgba(243, 228, 201, 0.55);
+            border: 1px dashed rgba(139, 94, 60, 0.35);
+        }
+
+        .quick-login p {
+            margin: 0 0 10px;
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .quick-login code {
+            display: block;
+            margin-top: 5px;
+            color: var(--brown);
+            font-size: 13px;
+            white-space: normal;
+        }
+
+        .error-msg {
+            display: none;
+            margin: 18px 0 0;
+            padding: 13px 15px;
+            border-radius: 16px;
+            color: #9b1c1c;
+            background: rgba(201, 72, 50, 0.11);
+            border: 1px solid rgba(201, 72, 50, 0.22);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        #toast-container {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 9999;
+            display: grid;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 18px;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--navy);
+            box-shadow: var(--shadow);
+            font-weight: 700;
+        }
+
+        .toast.error {
+            background: var(--red);
+        }
+
+        .toast.success {
+            background: var(--green);
+        }
+
+        @media (max-width: 980px) {
+            .auth-page {
+                grid-template-columns: 1fr;
+                width: min(560px, calc(100% - 32px));
+            }
+
+            .hero-panel {
+                display: none;
+            }
+
+            .auth-logo-mobile {
+                display: block;
+            }
+
+            .auth-card {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .auth-page {
+                padding: 24px 0;
+            }
+
+            .auth-card {
+                padding: 28px 22px;
+                border-radius: 30px;
+            }
+
+            .auth-title {
+                font-size: 31px;
+            }
+
+            .form-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
+
 <body>
 <div id="toast-container"></div>
-<div class="auth-wrap">
-    <div class="auth-logo">FoodOrder</div>
-    <p class="auth-tagline">Good food, delivered fast</p>
-    <div class="auth-card">
-        <h1 class="auth-title">Welcome back</h1>
-        <div id="error-msg" class="error-msg"></div>
-        <form class="auth-form" id="signin-form">
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input class="form-input" type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+
+<main class="auth-page">
+    <section class="hero-panel">
+        <div class="brand-row">
+            <div class="brand-icon">🍔</div>
+            <div>
+                <h2 class="brand-name">KhoaFastFood</h2>
+                <p class="brand-sub">Fast order, fresh mood</p>
             </div>
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <input class="form-input" type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <div class="hero-content">
+            <p class="eyebrow">🔥 Food ordering system</p>
+            <h1 class="hero-title">Order nhanh, món nóng, bụng vui.</h1>
+            <p class="hero-text">
+                Quản lý món ăn, đơn hàng và khách hàng trong một giao diện gọn gàng.
+                Đăng nhập để vào đúng khu vực của bạn.
+            </p>
+
+            <div class="food-stack">
+                <div class="food-card-mini">
+                    <div class="food-emoji">🍕</div>
+                    <strong>Pizza</strong>
+                    <span>Cheese loaded</span>
+                </div>
+                <div class="food-card-mini">
+                    <div class="food-emoji">🍟</div>
+                    <strong>Combo</strong>
+                    <span>Quick lunch</span>
+                </div>
+                <div class="food-card-mini">
+                    <div class="food-emoji">🥤</div>
+                    <strong>Drinks</strong>
+                    <span>Fresh refill</span>
+                </div>
             </div>
-            <button class="btn btn-primary btn-lg" type="submit" id="submit-btn" style="margin-top:0.5rem">
-                Sign in
-            </button>
-        </form>
-        <p class="auth-footer">No account? <a href="/signup">Create one</a></p>
-    </div>
-</div>
+        </div>
+    </section>
+
+    <section class="auth-wrap">
+        <div class="auth-card">
+            <div class="auth-logo-mobile">
+                <div class="mark">🍔</div>
+                <h1>KhoaFastFood</h1>
+                <p>Món ngon lên đơn nhanh, nhìn là đói</p>
+            </div>
+
+            <h1 class="auth-title">Welcome back</h1>
+            <p class="auth-desc">
+                Đăng nhập để tiếp tục đặt món, quản lý đơn hàng hoặc cập nhật menu.
+            </p>
+
+            <div id="error-msg" class="error-msg"></div>
+
+            <form class="auth-form" id="signin-form">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <div class="input-shell">
+                        <span class="input-icon">✉️</span>
+                        <input
+                            class="form-input"
+                            type="email"
+                            id="email"
+                            placeholder="manager@food.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-shell">
+                        <span class="input-icon">🔒</span>
+                        <input
+                            class="form-input"
+                            type="password"
+                            id="password"
+                            placeholder="admin123"
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="remember">
+                        <input type="checkbox" checked>
+                        Remember me
+                    </label>
+                    <a class="helper-link" href="/signup">Create account</a>
+                </div>
+
+                <button class="btn btn-primary btn-lg" type="submit" id="submit-btn">
+                    Sign in
+                    <span>→</span>
+                </button>
+            </form>
+
+            <div class="quick-login">
+                <p>Demo account</p>
+                <code>Email: manager@food.com</code>
+                <code>Password: admin123</code>
+            </div>
+
+            <p class="auth-footer">
+                No account?
+                <a href="/signup">Create one</a>
+            </p>
+        </div>
+    </section>
+</main>
+
 <script src="/js/shared.js"></script>
 <script>
-    // Redirect if already logged in
-    if (Auth.isLoggedIn()) {
-      const role = Auth.role();
-      location.href = role === 'STAFF' || role === 'MANAGER' ? '/staff/orders' : '/customer/menu';
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+        const role = Auth.role();
+        location.href = role === 'STAFF' || role === 'MANAGER' ? '/staff/orders' : '/customer/menu';
     }
 
     document.getElementById('signin-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      const err = document.getElementById('error-msg');
-      err.style.display = 'none';
-      btn.disabled = true;
-      btn.textContent = 'Signing in…';
+        e.preventDefault();
 
-      try {
-        // POST /api/auth/login returns { token, user }
-        const data = await POST('/auth/login', {
-          email: document.getElementById('email').value.trim(),
-          password: document.getElementById('password').value,
-        });
-        Auth.set(data.token, data.user);
-        const role = data.user?.role;
-        location.href = role === 'STAFF' || role === 'MANAGER' ? '/staff/orders' : '/customer/menu';
-      } catch (ex) {
-        err.textContent = ex.message || 'Invalid email or password';
-        err.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = 'Sign in';
-      }
+        const btn = document.getElementById('submit-btn');
+        const err = document.getElementById('error-msg');
+
+        err.style.display = 'none';
+        btn.disabled = true;
+        btn.innerHTML = 'Signing in...';
+
+        try {
+            if (typeof POST === 'undefined') {
+                throw new Error('Please run Spring Boot and open http://localhost:9090/signin to login.');
+            }
+
+            const data = await POST('/auth/login', {
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+            });
+
+            Auth.set(data.token, data.user);
+
+            const role = data.user?.role;
+            location.href = role === 'STAFF' || role === 'MANAGER' ? '/staff/orders' : '/customer/menu';
+        } catch (ex) {
+            err.textContent = ex.message || 'Invalid email or password';
+            err.style.display = 'block';
+            btn.disabled = false;
+            btn.innerHTML = 'Sign in <span>→</span>';
+        }
     });
 </script>
 </body>

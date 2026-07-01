@@ -3,160 +3,1497 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications — FoodOrder</title>
+    <title>Menu | KhoaFastFood</title>
+
     <link rel="stylesheet" href="/css/shared.css">
+
     <style>
-        .notif-item {
-          display:flex; align-items:flex-start; gap:1rem;
-          padding:1rem 1.25rem; border-bottom:1px solid var(--border);
-          transition:background 0.1s; cursor:pointer; text-decoration:none; color:inherit;
+        @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
+
+        :root {
+            --navy: #0A2947;
+            --cream: #F3E4C9;
+            --sage: #D3D4C0;
+            --brown: #8B5E3C;
+            --bg: #fffaf3;
+            --surface: #fff7ec;
+            --white: #ffffff;
+            --red: #c94832;
+            --green: #2f7d4f;
+            --yellow: #d99a2b;
+            --shadow: 0 24px 70px rgba(10, 41, 71, 0.16);
+            --shadow-soft: 0 14px 35px rgba(10, 41, 71, 0.10);
         }
-        .notif-item:last-child { border-bottom:none; }
-        .notif-item:hover { background:var(--surface2); }
-        .notif-item.unread { border-left:3px solid var(--accent); }
 
-        .notif-icon { width:40px; height:40px; border-radius:10px; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
-        .notif-body { flex:1; min-width:0; }
-        .notif-msg { font-size:0.875rem; font-weight:500; line-height:1.45; margin-bottom:0.3rem; }
-        .notif-meta { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
-        .notif-time { font-size:0.72rem; color:var(--muted); }
-        .notif-unread-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:0.35rem; }
+        * {
+            box-sizing: border-box;
+        }
 
-        .tabs { display:flex; gap:0.4rem; margin-bottom:1.5rem; }
-        .tab { padding:0.35rem 0.85rem; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
-        .tab:hover { color:var(--text); }
-        .tab.active { background:var(--surface2); color:var(--text); border-color:var(--border2); }
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
 
-        .notif-header-actions { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
-        .unread-count { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:var(--muted); }
-        .unread-count strong { color:var(--accent); }
+        body {
+            min-height: 100vh;
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            color: var(--navy);
+            background:
+                radial-gradient(circle at 10% 12%, rgba(139, 94, 60, 0.16), transparent 28rem),
+                radial-gradient(circle at 92% 88%, rgba(10, 41, 71, 0.13), transparent 32rem),
+                linear-gradient(135deg, #fffaf3 0%, #f3e4c9 100%);
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            z-index: 0;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        body::before {
+            width: 280px;
+            height: 280px;
+            left: -96px;
+            top: -92px;
+            background: rgba(139, 94, 60, 0.14);
+            filter: blur(2px);
+        }
+
+        body::after {
+            width: 320px;
+            height: 320px;
+            right: -120px;
+            bottom: -120px;
+            background: rgba(10, 41, 71, 0.12);
+            filter: blur(2px);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+        }
+
+        #main-nav {
+            position: relative;
+            z-index: 5;
+            width: min(1180px, calc(100% - 48px));
+            margin: 22px auto 0;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            border-radius: 28px;
+            background: rgba(255, 250, 243, 0.88);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px);
+        }
+
+        .nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .nav-brand::before {
+            content: "🍔";
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--brown);
+            box-shadow: var(--shadow-soft);
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 800;
+            transition: 0.18s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--cream);
+            background: var(--navy);
+        }
+
+        .nav-badge {
+            min-width: 20px;
+            height: 20px;
+            margin-left: 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            color: var(--cream);
+            background: var(--red);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            width: min(1180px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 34px 0 80px;
+        }
+
+        .menu-hero {
+            position: relative;
+            min-height: 330px;
+            padding: 38px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 310px;
+            align-items: center;
+            gap: 28px;
+            border-radius: 42px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92)),
+                radial-gradient(circle at top right, rgba(243, 228, 201, 0.22), transparent 20rem);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .menu-hero::before {
+            content: "";
+            position: absolute;
+            right: -100px;
+            top: -140px;
+            width: 320px;
+            height: 320px;
+            border-radius: 999px;
+            background: rgba(243, 228, 201, 0.13);
+        }
+
+        .menu-hero::after {
+            content: "";
+            position: absolute;
+            left: 42%;
+            bottom: -120px;
+            width: 250px;
+            height: 250px;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.08);
+        }
+
+        .hero-copy,
+        .hero-food-card {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 14px;
+            padding: 8px 13px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(243, 228, 201, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.20);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .page-title {
+            margin: 0;
+            max-width: 680px;
+            font-size: clamp(46px, 5.6vw, 78px);
+            line-height: 0.95;
+            letter-spacing: -3px;
+            font-weight: 800;
+        }
+
+        .page-title span {
+            color: #fff2d7;
+        }
+
+        .hero-text {
+            max-width: 560px;
+            margin: 20px 0 0;
+            color: rgba(243, 228, 201, 0.78);
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 15px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(255, 250, 243, 0.12);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            font-size: 13px;
+            font-weight: 800;
+            backdrop-filter: blur(16px);
+        }
+
+        .hero-food-card {
+            padding: 22px;
+            border-radius: 34px;
+            background: rgba(255, 250, 243, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.2);
+            backdrop-filter: blur(16px);
+        }
+
+        .hero-food-emoji {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            border-radius: 26px;
+            background: rgba(243, 228, 201, 0.16);
+            font-size: 38px;
+        }
+
+        .hero-food-card h3 {
+            margin: 18px 0 8px;
+            color: var(--cream);
+            font-size: 24px;
+            line-height: 1.15;
+            letter-spacing: -0.8px;
+        }
+
+        .hero-food-card p {
+            margin: 0;
+            color: rgba(243, 228, 201, 0.72);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .filters-card {
+            position: relative;
+            z-index: 2;
+            margin-top: 26px;
+            padding: 18px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 16px;
+            align-items: center;
+            border-radius: 30px;
+            background: rgba(255, 250, 243, 0.88);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px);
+        }
+
+        .filter-list {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            min-height: 42px;
+            padding: 10px 15px;
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            border-radius: 999px;
+            color: var(--brown);
+            background: rgba(255, 255, 255, 0.54);
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--navy);
+            background: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .filter-btn.active {
+            color: var(--cream);
+            background: var(--navy);
+            border-color: var(--navy);
+            box-shadow: 0 12px 28px rgba(10, 41, 71, 0.18);
+        }
+
+        .search-shell {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brown);
+            pointer-events: none;
+        }
+
+        .filter-search {
+            width: 100%;
+            min-height: 48px;
+            padding: 13px 16px 13px 46px;
+            border-radius: 999px;
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            color: var(--navy);
+            background: rgba(255, 255, 255, 0.76);
+            font-size: 14px;
+            outline: none;
+            transition: 0.18s ease;
+        }
+
+        .filter-search:focus {
+            border-color: var(--brown);
+            background: var(--white);
+            box-shadow: 0 0 0 5px rgba(139, 94, 60, 0.12);
+        }
+
+        .section-head {
+            margin: 34px 0 18px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .section-title {
+            margin: 0;
+            color: var(--navy);
+            font-size: 32px;
+            line-height: 1;
+            letter-spacing: -1.2px;
+            font-weight: 800;
+        }
+
+        .section-sub {
+            margin: 7px 0 0;
+            color: var(--brown);
+            font-size: 14px;
+        }
+
+        .menu-count {
+            padding: 9px 13px;
+            border-radius: 999px;
+            color: var(--brown);
+            background: rgba(255, 250, 243, 0.82);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+            gap: 22px;
+        }
+
+        .food-card {
+            position: relative;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 32px;
+            background: rgba(255, 247, 236, 0.92);
+            border: 1px solid rgba(211, 212, 192, 0.88);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.22s ease;
+        }
+
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: rgba(139, 94, 60, 0.44);
+        }
+
+        .food-img {
+            position: relative;
+            height: 160px;
+            display: grid;
+            place-items: center;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            overflow: hidden;
+        }
+
+        .food-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .food-emoji {
+            width: 82px;
+            height: 82px;
+            display: grid;
+            place-items: center;
+            border-radius: 28px;
+            background: rgba(243, 228, 201, 0.14);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            font-size: 42px;
+            backdrop-filter: blur(14px);
+        }
+
+        .food-type {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(10, 41, 71, 0.72);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            backdrop-filter: blur(12px);
+        }
+
+        .food-body {
+            padding: 20px;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .food-name {
+            margin: 0;
+            color: var(--navy);
+            font-size: 21px;
+            line-height: 1.16;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .food-desc {
+            margin: 10px 0 0;
+            color: var(--brown);
+            font-size: 13px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .food-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .food-price {
+            color: var(--brown);
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 999px;
+            color: var(--cream);
+            background: linear-gradient(135deg, var(--navy), #123d64);
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 14px 30px rgba(10, 41, 71, 0.20);
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 38px rgba(10, 41, 71, 0.24);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-ghost {
+            color: var(--navy);
+            background: rgba(255, 250, 243, 0.72);
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            box-shadow: none;
+        }
+
+        .btn-ghost:hover {
+            color: var(--brown);
+            background: var(--white);
+        }
+
+        .btn-sm {
+            min-height: 38px;
+            padding: 9px 14px;
+            font-size: 13px;
+        }
+
+        .empty,
+        .loading {
+            grid-column: 1 / -1;
+            padding: 54px 30px;
+            text-align: center;
+            border-radius: 34px;
+            background: rgba(255, 247, 236, 0.92);
+            border: 1px solid rgba(211, 212, 192, 0.88);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .empty-icon {
+            width: 82px;
+            height: 82px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 18px;
+            border-radius: 30px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            font-size: 40px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .empty h3,
+        .loading h3 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .empty p,
+        .loading p {
+            margin: 10px auto 0;
+            max-width: 460px;
+            color: var(--brown);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(10, 41, 71, 0.42);
+            backdrop-filter: blur(12px);
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(560px, 100%);
+            max-height: calc(100vh - 48px);
+            overflow: auto;
+            border-radius: 34px;
+            background: rgba(255, 247, 236, 0.98);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            box-shadow: 0 30px 90px rgba(10, 41, 71, 0.32);
+        }
+
+        .modal-header {
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 1px solid rgba(211, 212, 192, 0.84);
+        }
+
+        .modal-title {
+            margin: 0;
+            color: var(--navy);
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.9px;
+        }
+
+        .modal-body {
+            padding: 24px;
+            display: grid;
+            gap: 20px;
+        }
+
+        .modal-label {
+            margin: 0 0 10px;
+            color: var(--brown);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .modal-food-preview {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 24px;
+            background: rgba(243, 228, 201, 0.48);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .modal-food-icon {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 20px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            font-size: 28px;
+        }
+
+        .modal-food-preview strong {
+            display: block;
+            color: var(--navy);
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .modal-food-preview span {
+            display: block;
+            margin-top: 4px;
+            color: var(--brown);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .topping-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .topping-opt {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 58px;
+            padding: 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .topping-opt:hover {
+            background: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .topping-opt.checked {
+            border-color: rgba(139, 94, 60, 0.58);
+            background: rgba(243, 228, 201, 0.6);
+            box-shadow: 0 10px 24px rgba(10, 41, 71, 0.08);
+        }
+
+        .topping-opt input {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--brown);
+        }
+
+        .topping-name {
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .topping-price {
+            margin-left: auto;
+            color: var(--brown);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .qty-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.78);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .qty-btn {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 0;
+            border-radius: 999px;
+            color: var(--navy);
+            background: rgba(243, 228, 201, 0.88);
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .qty-btn:hover {
+            color: var(--cream);
+            background: var(--navy);
+        }
+
+        .qty-val {
+            min-width: 34px;
+            text-align: center;
+            color: var(--navy);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .price-preview {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            border-radius: 24px;
+            background: rgba(243, 228, 201, 0.48);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .price-preview-label {
+            color: var(--brown);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .price-preview-val {
+            color: var(--brown);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .modal-footer {
+            padding: 20px 24px 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid rgba(211, 212, 192, 0.84);
+        }
+
+        #toast-container {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 9999;
+            display: grid;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 18px;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--navy);
+            box-shadow: var(--shadow);
+            font-weight: 700;
+        }
+
+        .toast.error {
+            background: var(--red);
+        }
+
+        .toast.success {
+            background: var(--green);
+        }
+
+        @media (max-width: 980px) {
+            #main-nav,
+            .page {
+                width: min(100% - 32px, 1180px);
+            }
+
+            #main-nav {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+            }
+
+            .menu-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-food-card {
+                max-width: 420px;
+            }
+
+            .filters-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .page-title {
+                font-size: 42px;
+                letter-spacing: -1.8px;
+            }
+
+            .menu-hero {
+                padding: 30px 24px;
+                border-radius: 34px;
+            }
+
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topping-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 520px) {
+            #main-nav,
+            .page {
+                width: min(100% - 24px, 1180px);
+            }
+
+            .filters-card {
+                padding: 14px;
+            }
+
+            .food-card {
+                border-radius: 28px;
+            }
+
+            .modal {
+                border-radius: 28px;
+            }
+        }
     </style>
 </head>
+
 <body>
 <nav id="main-nav"></nav>
 <div id="toast-container"></div>
 
-<div class="page page-md">
-    <div class="page-header">
-        <h1 class="page-title">Notifications</h1>
-        <p class="page-subtitle">Stay updated on your orders</p>
-    </div>
+<div class="page">
+    <section class="menu-hero">
+        <div class="hero-copy">
+            <p class="eyebrow">🍽️ Fresh menu</p>
+            <h1 class="page-title">Chọn món ngon, <span>thêm vào giỏ</span> thật nhanh.</h1>
+            <p class="hero-text">
+                Lướt menu, chọn topping, chỉnh số lượng và đưa món vào giỏ hàng.
+                Giao diện gọn như quầy bếp vừa lau xong, nhìn là muốn gọi món.
+            </p>
 
-    <div class="tabs">
-        <button class="tab active" data-type="USER">My notifications</button>
-        <button class="tab" data-type="KITCHEN" id="kitchen-tab" style="display:none">Kitchen</button>
-    </div>
-
-    <div class="card">
-        <div class="notif-header-actions" style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
-            <span class="unread-count" id="unread-label"></span>
-            <button class="btn btn-ghost btn-sm" onclick="markAllRead()" id="mark-all-btn" style="display:none">
-                Mark all read
-            </button>
+            <div class="hero-actions">
+                <span class="hero-pill">⚡ Fast ordering</span>
+                <span class="hero-pill">🧾 Easy checkout</span>
+                <span class="hero-pill">🍔 Fresh food</span>
+            </div>
         </div>
-        <div id="notif-list">
-            <div style="padding:3rem;text-align:center;color:var(--muted)">Loading notifications…</div>
+
+        <aside class="hero-food-card">
+            <div class="hero-food-emoji">🍔</div>
+            <h3>Today’s pick</h3>
+            <p>
+                Burger, pizza, pasta, salad, soup, dessert và drink.
+                Chọn món đi, căn bếp đang bật đèn chờ bạn.
+            </p>
+        </aside>
+    </section>
+
+    <section class="filters-card">
+        <div class="filter-list">
+            <button class="filter-btn active" data-type="all">All</button>
+            <button class="filter-btn" data-type="pizza">Pizza</button>
+            <button class="filter-btn" data-type="burger">Burger</button>
+            <button class="filter-btn" data-type="pasta">Pasta</button>
+            <button class="filter-btn" data-type="salad">Salad</button>
+            <button class="filter-btn" data-type="soup">Soup</button>
+            <button class="filter-btn" data-type="dessert">Dessert</button>
+            <button class="filter-btn" data-type="drink">Drink</button>
+        </div>
+
+        <div class="search-shell">
+            <span class="search-icon">🔎</span>
+            <input class="filter-search" type="search" id="search-input" placeholder="Search menu...">
+        </div>
+    </section>
+
+    <section class="section-head">
+        <div>
+            <h2 class="section-title">Menu items</h2>
+            <p class="section-sub">Chọn món bạn thích rồi thêm topping trong modal.</p>
+        </div>
+        <div class="menu-count" id="menu-count">0 items</div>
+    </section>
+
+    <section class="food-grid" id="food-grid">
+        <div class="loading">
+            <div class="empty-icon">🍳</div>
+            <h3>Loading menu...</h3>
+            <p>Đang mở bếp và chuẩn bị danh sách món ăn.</p>
+        </div>
+    </section>
+</div>
+
+<div class="modal-overlay" id="add-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-food-name">Customise order</h2>
+            <button class="btn btn-ghost btn-sm" onclick="closeMenuModal()">Close</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="modal-food-preview">
+                <div class="modal-food-icon" id="modal-food-icon">🍽️</div>
+                <div>
+                    <strong id="modal-food-title">Food name</strong>
+                    <span id="modal-food-desc">Pick toppings and quantity before adding to cart.</span>
+                </div>
+            </div>
+
+            <div id="modal-toppings-section">
+                <p class="modal-label">Toppings</p>
+                <div class="topping-grid" id="modal-toppings"></div>
+            </div>
+
+            <div>
+                <p class="modal-label">Quantity</p>
+                <div class="qty-row">
+                    <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                    <span class="qty-val" id="qty-val">1</span>
+                    <button class="qty-btn" onclick="changeQty(1)">+</button>
+                </div>
+            </div>
+
+            <div class="price-preview">
+                <span class="price-preview-label">Estimated total</span>
+                <span class="price-preview-val" id="price-preview">0₫</span>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeMenuModal()">Cancel</button>
+            <button class="btn" onclick="confirmAdd()">Add to cart <span>→</span></button>
         </div>
     </div>
 </div>
 
 <script src="/js/shared.js"></script>
+
 <script>
-    requireAuth();
-    renderNav('/customer/notifications');
-
-    const role = Auth.role();
-    let activeType = 'USER';
-    let notifications = [];
-
-    // Show kitchen tab for staff/manager
-    if (role === 'STAFF' || role === 'MANAGER') {
-      document.getElementById('kitchen-tab').style.display = '';
-    }
-
-    const EVENT_ICON = {
-      ORDER_CREATED:'', ORDER_CONFIRMED:'', ORDER_STATUS_CHANGED:'',
-      ORDER_CANCELLED:'', ORDER_COMPLETED:'', ORDER_PAID:'', PAYMENT_SUCCESS:'',
+    const TOPPINGS_BY_TYPE = {
+        pizza: [
+            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+            { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
+            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+            { key: 'spicy', label: 'Spicy', price: 0 }
+        ],
+        burger: [
+            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+            { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
+            { key: 'noOnion', label: 'No Onion', price: 0 }
+        ],
+        pasta: [
+            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+            { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
+            { key: 'spicy', label: 'Spicy', price: 0 }
+        ],
+        salad: [
+            { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
+            { key: 'noDressing', label: 'No Dressing', price: 0 }
+        ],
+        soup: [
+            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+            { key: 'spicy', label: 'Spicy', price: 0 }
+        ],
+        drink: [
+            { key: 'extraIce', label: 'Extra Ice', price: 0 },
+            { key: 'noSugar', label: 'No Sugar', price: 0 }
+        ],
+        dessert: [
+            { key: 'noSugar', label: 'No Sugar', price: 0 }
+        ]
     };
 
-    async function load() {
-      try {
-        const endpoint = activeType === 'KITCHEN' ? '/notification/kitchen' : '/notification/my';
-        notifications = await GET(endpoint);
-        if (!Array.isArray(notifications)) notifications = [];
-        render();
-      } catch (ex) {
-        if (ex.message.includes('403')) {
-          notifications = [];
-          render();
-        } else {
-          document.getElementById('notif-list').innerHTML =
-            `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+    const FOOD_EMOJI = {
+        pizza: '🍕',
+        burger: '🍔',
+        pasta: '🍝',
+        salad: '🥗',
+        soup: '🍲',
+        dessert: '🍰',
+        drink: '🥤',
+        food: '🍽️'
+    };
+
+    const PREVIEW_FOODS = [
+        {
+            id: 1,
+            name: 'Cheese Burger',
+            type: 'burger',
+            description: 'Juicy beef patty, melted cheese, fresh lettuce and signature sauce.',
+            basePrice: 59000,
+            available: true
+        },
+        {
+            id: 2,
+            name: 'Pepperoni Pizza',
+            type: 'pizza',
+            description: 'Crispy crust, tomato sauce, mozzarella cheese and pepperoni.',
+            basePrice: 99000,
+            available: true
+        },
+        {
+            id: 3,
+            name: 'Creamy Pasta',
+            type: 'pasta',
+            description: 'Soft pasta tossed in creamy sauce with herbs and parmesan.',
+            basePrice: 79000,
+            available: true
+        },
+        {
+            id: 4,
+            name: 'Fresh Garden Salad',
+            type: 'salad',
+            description: 'Crisp vegetables, light dressing and a fresh green finish.',
+            basePrice: 49000,
+            available: true
+        },
+        {
+            id: 5,
+            name: 'Hot Mushroom Soup',
+            type: 'soup',
+            description: 'Warm mushroom soup for a cozy meal starter.',
+            basePrice: 39000,
+            available: true
+        },
+        {
+            id: 6,
+            name: 'Chocolate Cake',
+            type: 'dessert',
+            description: 'Soft chocolate cake with a rich sweet finish.',
+            basePrice: 45000,
+            available: true
+        },
+        {
+            id: 7,
+            name: 'Iced Lemon Tea',
+            type: 'drink',
+            description: 'Cool lemon tea with a bright citrus taste.',
+            basePrice: 25000,
+            available: true
         }
-      }
+    ];
+
+    const PreviewCart = {
+        _items: [],
+        add(food, qty, toppings = []) {
+            const key = food.id + ':' + toppings.join(',');
+            const existing = this._items.find(item => item.key === key);
+
+            if (existing) {
+                existing.quantity += qty;
+                existing.subtotal = existing.unitPrice * existing.quantity;
+            } else {
+                this._items.push({
+                    key,
+                    foodId: food.id,
+                    name: food.name,
+                    type: food.type,
+                    unitPrice: food.basePrice,
+                    quantity: qty,
+                    toppings,
+                    subtotal: food.basePrice * qty
+                });
+            }
+
+            updatePreviewBadge();
+        },
+        count() {
+            return this._items.reduce((sum, item) => sum + item.quantity, 0);
+        }
+    };
+
+    const Formatter = typeof fmt !== 'undefined'
+        ? fmt
+        : {
+            currency: n => new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                maximumFractionDigits: 0
+            }).format(n)
+        };
+
+    const CartStore = typeof Cart !== 'undefined' ? Cart : PreviewCart;
+
+    const notify = typeof toast === 'function'
+        ? toast
+        : function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const item = document.createElement('div');
+            item.className = `toast ${type}`;
+            item.textContent = message;
+            container.appendChild(item);
+
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(16px)';
+                item.style.transition = '0.25s ease';
+                setTimeout(() => item.remove(), 260);
+            }, 2600);
+        };
+
+    let allFoods = [];
+    let currentFood = null;
+    let currentQty = 1;
+    let activeType = 'all';
+    let searchQuery = '';
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
     }
 
-    function render() {
-      const unread = notifications.filter(n => !n.isRead).length;
-      const label  = document.getElementById('unread-label');
-      const markBtn = document.getElementById('mark-all-btn');
+    function foodEmoji(type) {
+        return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
+    }
 
-      label.innerHTML = `<strong>${unread}</strong> unread`;
-      markBtn.style.display = unread > 0 ? '' : 'none';
+    function isAvailable(food) {
+        if (food.isAvailable === false) return false;
+        if (food.available === false) return false;
+        return true;
+    }
 
-      if (!notifications.length) {
-        document.getElementById('notif-list').innerHTML = `
-          <div class="empty"><h3>No notifications</h3><p>Your notification list is none</p></div>`;
-        return;
-      }
+    function renderPreviewNav() {
+        const nav = document.getElementById('main-nav');
+        if (!nav) return;
 
-      document.getElementById('notif-list').innerHTML = notifications.map(n => `
-        <div class="notif-item ${!n.isRead ? 'unread' : ''}" onclick="markRead(${n.id}, this)">
-          <div class="notif-body">
-            <div class="notif-msg">${n.message}</div>
-            <div class="notif-meta">
-              <span class="notif-time">${fmt.date(n.createdAt)}</span>
-              ${n.orderId ? `<span class="tag">Order #${n.orderId}</span>` : ''}
-              <span class="tag">${n.event}</span>
+        nav.innerHTML = `
+            <a class="nav-brand" href="/customer/menu">KhoaFastFood</a>
+            <div class="nav-links">
+                <a class="nav-link active" href="/customer/menu">Menu</a>
+                <a class="nav-link" href="/customer/cart">
+                    Cart
+                    <span class="nav-badge" id="cart-badge" style="display:none">0</span>
+                </a>
+                <a class="nav-link" href="/customer/orders">My Orders</a>
+                <a class="nav-link" href="/customer/notifications">Notifications</a>
             </div>
-          </div>
-          ${!n.isRead ? '<span class="notif-unread-dot"></span>' : ''}
-        </div>
-      `).join('');
+        `;
     }
 
-    async function markRead(id, el) {
-      try {
-        await PATCH('/notification/' + id + '/read');
-        const n = notifications.find(x => x.id === id);
-        if (n) n.isRead = true;
-        el.classList.remove('unread');
-        el.querySelector('.notif-unread-dot')?.remove();
-        const unread = notifications.filter(n => !n.isRead).length;
-        document.getElementById('unread-label').innerHTML = `<strong>${unread}</strong> unread`;
-        document.getElementById('mark-all-btn').style.display = unread > 0 ? '' : 'none';
-      } catch (ex) { toast(ex.message, 'error'); }
+    function updatePreviewBadge() {
+        const badge = document.getElementById('cart-badge');
+        if (!badge) return;
+
+        const count = CartStore.count ? CartStore.count() : 0;
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-flex' : 'none';
     }
 
-    async function markAllRead() {
-      try {
-        await PATCH('/notification/read-all');
-        notifications.forEach(n => n.isRead = true);
-        render();
-        toast('All marked as read', 'success');
-      } catch (ex) { toast(ex.message, 'error'); }
+    function setupNav() {
+        if (typeof requireAuth === 'function') {
+            const ok = requireAuth();
+
+            if (ok && typeof renderNav === 'function') {
+                renderNav('/customer/menu');
+
+                const brand = document.querySelector('.nav-brand');
+                if (brand) brand.textContent = 'KhoaFastFood';
+            }
+        } else {
+            renderPreviewNav();
+        }
+
+        updatePreviewBadge();
     }
 
-    document.querySelectorAll('.tab').forEach(t => {
-      t.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
-        activeType = t.dataset.type;
-        load();
-      });
+    async function loadFoods() {
+        try {
+            if (typeof GET === 'function') {
+                allFoods = await GET('/food');
+            } else {
+                allFoods = PREVIEW_FOODS;
+            }
+
+            renderGrid();
+        } catch (ex) {
+            if (location.protocol === 'file:') {
+                allFoods = PREVIEW_FOODS;
+                renderGrid();
+                return;
+            }
+
+            document.getElementById('food-grid').innerHTML = `
+                <div class="empty">
+                    <div class="empty-icon">⚠️</div>
+                    <h3>Could not load menu</h3>
+                    <p>${escapeHtml(ex.message || 'Please try again later.')}</p>
+                </div>
+            `;
+        }
+    }
+
+    function renderGrid() {
+        const q = searchQuery.trim().toLowerCase();
+
+        const foods = allFoods.filter(food => {
+            if (!isAvailable(food)) return false;
+            if (activeType !== 'all' && String(food.type).toLowerCase() !== activeType) return false;
+            if (q && !String(food.name).toLowerCase().includes(q)) return false;
+            return true;
+        });
+
+        const grid = document.getElementById('food-grid');
+        const count = document.getElementById('menu-count');
+
+        count.textContent = foods.length + ' item' + (foods.length !== 1 ? 's' : '');
+
+        if (!foods.length) {
+            grid.innerHTML = `
+                <div class="empty">
+                    <div class="empty-icon">🔎</div>
+                    <h3>No items found</h3>
+                    <p>Thử đổi loại món hoặc nhập từ khóa khác để tìm menu phù hợp hơn.</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = foods.map(food => `
+            <article class="food-card" onclick="openAddModal(${food.id})">
+                <div class="food-img">
+                    ${food.imageUrl
+                        ? `<img src="${escapeHtml(food.imageUrl)}" alt="${escapeHtml(food.name)}" onerror="this.remove(); this.parentElement.querySelector('.food-emoji').style.display='grid';">`
+                        : ''
+                    }
+                    <div class="food-emoji" style="${food.imageUrl ? 'display:none' : ''}">
+                        ${foodEmoji(food.type)}
+                    </div>
+                    <div class="food-type">${escapeHtml(food.type || 'food')}</div>
+                </div>
+
+                <div class="food-body">
+                    <h3 class="food-name">${escapeHtml(food.name)}</h3>
+
+                    ${food.description
+                        ? `<p class="food-desc">${escapeHtml(food.description)}</p>`
+                        : `<p class="food-desc">Freshly prepared and ready to add to your cart.</p>`
+                    }
+
+                    <div class="food-footer">
+                        <span class="food-price">${Formatter.currency(food.basePrice || 0)}</span>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); openAddModal(${food.id})">
+                            + Add
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(item => item.classList.remove('active'));
+            btn.classList.add('active');
+            activeType = btn.dataset.type;
+            renderGrid();
+        });
     });
 
-    load();
+    document.getElementById('search-input').addEventListener('input', e => {
+        searchQuery = e.target.value;
+        renderGrid();
+    });
+
+    function openAddModal(foodId) {
+        currentFood = allFoods.find(food => Number(food.id) === Number(foodId));
+        if (!currentFood) return;
+
+        currentQty = 1;
+
+        document.getElementById('modal-food-name').textContent = currentFood.name;
+        document.getElementById('modal-food-title').textContent = currentFood.name;
+        document.getElementById('modal-food-desc').textContent = currentFood.description || 'Pick toppings and quantity before adding to cart.';
+        document.getElementById('modal-food-icon').textContent = foodEmoji(currentFood.type);
+        document.getElementById('qty-val').textContent = '1';
+
+        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+        const toppingSection = document.getElementById('modal-toppings-section');
+        const toppingGrid = document.getElementById('modal-toppings');
+
+        toppingSection.style.display = toppings.length ? 'block' : 'none';
+
+        toppingGrid.innerHTML = toppings.map(topping => `
+            <label class="topping-opt">
+                <input type="checkbox" value="${escapeHtml(topping.key)}" onchange="handleToppingChange(this)">
+                <span class="topping-name">${escapeHtml(topping.label)}</span>
+                <span class="topping-price">
+                    ${topping.price > 0 ? '+' + Formatter.currency(topping.price) : 'Free'}
+                </span>
+            </label>
+        `).join('');
+
+        recalcPrice();
+        openMenuModal();
+    }
+
+    function handleToppingChange(input) {
+        input.closest('.topping-opt')?.classList.toggle('checked', input.checked);
+        recalcPrice();
+    }
+
+    function selectedToppingKeys() {
+        return [...document.querySelectorAll('#modal-toppings input:checked')].map(input => input.value);
+    }
+
+    function recalcPrice() {
+        if (!currentFood) return;
+
+        const checked = selectedToppingKeys();
+        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+
+        const extra = checked.reduce((sum, key) => {
+            return sum + (toppings.find(topping => topping.key === key)?.price || 0);
+        }, 0);
+
+        const total = (Number(currentFood.basePrice || 0) + extra) * currentQty;
+        document.getElementById('price-preview').textContent = Formatter.currency(total);
+    }
+
+    function changeQty(delta) {
+        currentQty = Math.max(1, Math.min(20, currentQty + delta));
+        document.getElementById('qty-val').textContent = currentQty;
+        recalcPrice();
+    }
+
+    function confirmAdd() {
+        if (!currentFood) return;
+
+        const checked = selectedToppingKeys();
+        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+
+        const toppingLabels = checked
+            .map(key => toppings.find(topping => topping.key === key)?.label)
+            .filter(Boolean);
+
+        CartStore.add(currentFood, currentQty, toppingLabels);
+
+        closeMenuModal();
+        updatePreviewBadge();
+        notify(`${currentFood.name} added to cart`, 'success');
+    }
+
+    function openMenuModal() {
+        const modal = document.getElementById('add-modal');
+
+        if (typeof openModal === 'function') {
+            openModal('add-modal');
+        } else {
+            modal.classList.add('open');
+        }
+    }
+
+    function closeMenuModal() {
+        const modal = document.getElementById('add-modal');
+
+        if (typeof closeModal === 'function') {
+            closeModal('add-modal');
+        } else {
+            modal.classList.remove('open');
+        }
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('modal-overlay')) {
+            closeMenuModal();
+        }
+    });
+
+    setupNav();
+    loadFoods();
 </script>
 </body>
 </html>
