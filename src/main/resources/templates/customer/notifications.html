@@ -1,162 +1,899 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications — FoodOrder</title>
+    <title>Notifications | KhoaFastFood</title>
+
     <link rel="stylesheet" href="/css/shared.css">
+
     <style>
-        .notif-item {
-          display:flex; align-items:flex-start; gap:1rem;
-          padding:1rem 1.25rem; border-bottom:1px solid var(--border);
-          transition:background 0.1s; cursor:pointer; text-decoration:none; color:inherit;
+        @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
+
+        :root {
+            --navy: #0A2947;
+            --cream: #F3E4C9;
+            --sage: #D3D4C0;
+            --brown: #8B5E3C;
+            --bg: #fffaf3;
+            --white: #ffffff;
+            --shadow: 0 20px 60px rgba(10, 41, 71, 0.13);
         }
-        .notif-item:last-child { border-bottom:none; }
-        .notif-item:hover { background:var(--surface2); }
-        .notif-item.unread { border-left:3px solid var(--accent); }
 
-        .notif-icon { width:40px; height:40px; border-radius:10px; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
-        .notif-body { flex:1; min-width:0; }
-        .notif-msg { font-size:0.875rem; font-weight:500; line-height:1.45; margin-bottom:0.3rem; }
-        .notif-meta { display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
-        .notif-time { font-size:0.72rem; color:var(--muted); }
-        .notif-unread-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:0.35rem; }
+        * {
+            box-sizing: border-box;
+        }
 
-        .tabs { display:flex; gap:0.4rem; margin-bottom:1.5rem; }
-        .tab { padding:0.35rem 0.85rem; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
-        .tab:hover { color:var(--text); }
-        .tab.active { background:var(--surface2); color:var(--text); border-color:var(--border2); }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            color: var(--navy);
+            background:
+                radial-gradient(circle at 2% 8%, rgba(139, 94, 60, 0.14), transparent 250px),
+                radial-gradient(circle at 96% 88%, rgba(10, 41, 71, 0.12), transparent 310px),
+                linear-gradient(135deg, #fffaf3 0%, #f3e4c9 100%);
+            -webkit-font-smoothing: antialiased;
+        }
 
-        .notif-header-actions { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
-        .unread-count { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:var(--muted); }
-        .unread-count strong { color:var(--accent); }
+        .page-shell {
+            width: min(1240px, calc(100% - 36px));
+            margin: 0 auto;
+            padding: 26px 0 60px;
+        }
+
+        .nav-wrap {
+            position: sticky;
+            top: 16px;
+            z-index: 20;
+            margin-bottom: 34px;
+        }
+
+        .local-nav {
+            min-height: 66px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            background: rgba(255, 250, 243, 0.9);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 18px 45px rgba(10, 41, 71, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--navy);
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: var(--brown);
+            color: var(--cream);
+            font-size: 22px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-link,
+        .nav-action {
+            min-height: 40px;
+            padding: 10px 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            color: var(--navy);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .nav-link.active {
+            color: var(--cream);
+            background: var(--navy);
+        }
+
+        .nav-action {
+            border-color: var(--sage);
+            background: #fffdf8;
+        }
+
+        .nav-user {
+            color: rgba(10, 41, 71, 0.55);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 320px;
+            padding: 44px 42px;
+            border-radius: 42px;
+            color: var(--cream);
+            background:
+                radial-gradient(circle at 88% -10%, rgba(255, 250, 243, 0.14), transparent 260px),
+                radial-gradient(circle at 76% 100%, rgba(255, 250, 243, 0.12), transparent 260px),
+                linear-gradient(135deg, #0A2947 0%, #8B5E3C 100%);
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 340px;
+            gap: 34px;
+            align-items: center;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.11);
+        }
+
+        .hero::before {
+            width: 220px;
+            height: 220px;
+            right: -50px;
+            top: -80px;
+        }
+
+        .hero::after {
+            width: 260px;
+            height: 260px;
+            right: 330px;
+            bottom: -150px;
+        }
+
+        .hero-content,
+        .hero-card {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            width: fit-content;
+            margin: 0 0 16px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.12);
+            border: 1px solid rgba(255, 250, 243, 0.18);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .hero-title {
+            max-width: 720px;
+            margin: 0;
+            font-size: clamp(40px, 5vw, 66px);
+            line-height: 1.08;
+            letter-spacing: -1.4px;
+            font-weight: 800;
+        }
+
+        .hero-text {
+            max-width: 650px;
+            margin: 18px 0 0;
+            color: rgba(243, 228, 201, 0.86);
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+
+        .hero-card {
+            padding: 24px;
+            border-radius: 30px;
+            background: rgba(255, 250, 243, 0.12);
+            border: 1px solid rgba(255, 250, 243, 0.18);
+            backdrop-filter: blur(12px);
+        }
+
+        .hero-card-icon {
+            width: 62px;
+            height: 62px;
+            display: grid;
+            place-items: center;
+            border-radius: 22px;
+            background: rgba(255, 250, 243, 0.16);
+            font-size: 30px;
+            margin-bottom: 18px;
+        }
+
+        .hero-card strong {
+            display: block;
+            font-size: 25px;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            color: #fff4dc;
+        }
+
+        .hero-card span {
+            display: block;
+            color: rgba(243, 228, 201, 0.82);
+            font-size: 14px;
+            line-height: 1.55;
+            font-weight: 600;
+        }
+
+        .toolbar {
+            margin: 26px 0 30px;
+            padding: 18px;
+            border-radius: 28px;
+            border: 1px solid rgba(211, 212, 192, 0.85);
+            background: rgba(255, 250, 243, 0.9);
+            box-shadow: 0 16px 40px rgba(10, 41, 71, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .tab-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn,
+        .btn {
+            min-height: 42px;
+            padding: 11px 18px;
+            border-radius: 999px;
+            border: 1px solid var(--sage);
+            background: #fffdf8;
+            color: var(--navy);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 800;
+            font-family: inherit;
+        }
+
+        .tab-btn.active,
+        .btn-primary {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: var(--cream);
+        }
+
+        .btn-ghost {
+            background: #fffdf8;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: clamp(30px, 4vw, 42px);
+            line-height: 1.1;
+            letter-spacing: -0.8px;
+            font-weight: 800;
+        }
+
+        .section-sub {
+            margin: 8px 0 0;
+            color: var(--brown);
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .count-chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--sage);
+            background: rgba(255, 250, 243, 0.9);
+            color: var(--brown);
+            font-size: 13px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .notification-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .notification-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: 58px minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: start;
+            padding: 18px;
+            border-radius: 26px;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            background: rgba(255, 250, 243, 0.92);
+            box-shadow: 0 14px 36px rgba(10, 41, 71, 0.07);
+        }
+
+        .notification-card.unread {
+            border-color: rgba(139, 94, 60, 0.45);
+            box-shadow: 0 18px 45px rgba(139, 94, 60, 0.13);
+        }
+
+        .notification-icon {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 20px;
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.12), rgba(139, 94, 60, 0.16));
+            font-size: 26px;
+        }
+
+        .notification-event {
+            margin: 0 0 8px;
+            color: var(--navy);
+            font-size: 17px;
+            line-height: 1.25;
+            font-weight: 800;
+        }
+
+        .notification-message {
+            margin: 0;
+            color: rgba(10, 41, 71, 0.72);
+            font-size: 14px;
+            line-height: 1.65;
+            font-weight: 600;
+        }
+
+        .notification-meta {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: rgba(10, 41, 71, 0.06);
+            color: var(--brown);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: end;
+        }
+
+        .small-btn {
+            min-height: 34px;
+            padding: 8px 11px;
+            border-radius: 999px;
+            border: 1px solid var(--sage);
+            background: #ffffff;
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .small-btn.primary {
+            background: var(--navy);
+            color: var(--cream);
+            border-color: var(--navy);
+        }
+
+        .empty,
+        .loading,
+        .error-box {
+            padding: 52px 24px;
+            text-align: center;
+            border-radius: 30px;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            background: rgba(255, 250, 243, 0.9);
+            box-shadow: 0 14px 36px rgba(10, 41, 71, 0.07);
+        }
+
+        .empty-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 18px;
+            display: grid;
+            place-items: center;
+            border-radius: 26px;
+            background: rgba(139, 94, 60, 0.12);
+            font-size: 36px;
+        }
+
+        .empty h3,
+        .loading h3,
+        .error-box h3 {
+            margin: 0 0 10px;
+            font-size: 26px;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .empty p,
+        .loading p,
+        .error-box p {
+            max-width: 520px;
+            margin: 0 auto;
+            color: var(--brown);
+            font-size: 14px;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+
+        #toast-container {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 90;
+            display: grid;
+            gap: 10px;
+        }
+
+        .toast {
+            min-width: 260px;
+            max-width: 360px;
+            padding: 13px 15px;
+            border-radius: 18px;
+            background: var(--navy);
+            color: var(--cream);
+            box-shadow: 0 18px 40px rgba(10, 41, 71, 0.18);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .toast.error {
+            background: #8B2E2E;
+        }
+
+        .toast.success {
+            background: #2E6B4F;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .local-nav {
+                border-radius: 30px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-shell {
+                width: min(100% - 24px, 1240px);
+                padding-top: 18px;
+            }
+
+            .hero {
+                padding: 30px 22px;
+                border-radius: 30px;
+            }
+
+            .hero-title {
+                font-size: 34px;
+            }
+
+            .toolbar,
+            .section-head {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .notification-card {
+                grid-template-columns: 1fr;
+            }
+
+            .card-actions {
+                align-items: stretch;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .small-btn {
+                flex: 1;
+                justify-content: center;
+                display: inline-flex;
+            }
+        }
     </style>
 </head>
+
 <body>
-<nav id="main-nav"></nav>
-<div id="toast-container"></div>
+<div class="page-shell">
+    <div class="nav-wrap">
+        <nav class="local-nav" id="main-nav">
+            <a class="nav-brand" href="/customer/menu">
+                <span class="brand-mark">🍔</span>
+                KhoaFastFood
+            </a>
 
-<div class="page page-md">
-    <div class="page-header">
-        <h1 class="page-title">Notifications</h1>
-        <p class="page-subtitle">Stay updated on your orders</p>
+            <div class="nav-links">
+                <a class="nav-link" href="/customer/menu">Menu</a>
+                <a class="nav-link" href="/customer/cart">Cart</a>
+                <a class="nav-link" href="/customer/orders">My Orders</a>
+                <a class="nav-link active" href="/customer/notifications">Notifications</a>
+                <span class="nav-user">Customer</span>
+                <button class="nav-action" type="button" onclick="handleLogout()">Sign out</button>
+            </div>
+        </nav>
     </div>
 
-    <div class="tabs">
-        <button class="tab active" data-type="USER">My notifications</button>
-        <button class="tab" data-type="KITCHEN" id="kitchen-tab" style="display:none">Kitchen</button>
-    </div>
-
-    <div class="card">
-        <div class="notif-header-actions" style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
-            <span class="unread-count" id="unread-label"></span>
-            <button class="btn btn-ghost btn-sm" onclick="markAllRead()" id="mark-all-btn" style="display:none">
-                Mark all read
-            </button>
+    <section class="hero">
+        <div class="hero-content">
+            <p class="eyebrow">🔔 Notification center</p>
+            <h1 class="hero-title">Thông báo đơn hàng, khỏi bỏ lỡ nhịp bếp.</h1>
+            <p class="hero-text">
+                Trang này hiển thị thông báo khi bạn đặt món, thanh toán hoặc khi trạng thái đơn hàng thay đổi.
+                Nếu chưa đặt đơn nào thì danh sách có thể đang trống.
+            </p>
         </div>
-        <div id="notif-list">
-            <div style="padding:3rem;text-align:center;color:var(--muted)">Loading notifications…</div>
+
+        <aside class="hero-card">
+            <div class="hero-card-icon">📬</div>
+            <strong id="hero-count">0 thông báo</strong>
+            <span>Theo dõi các cập nhật mới nhất từ bếp và hệ thống đặt món.</span>
+        </aside>
+    </section>
+
+    <section class="toolbar">
+        <div class="tab-list">
+            <button class="tab-btn active" type="button" data-tab="USER">Của tôi</button>
+            <button class="tab-btn" type="button" data-tab="KITCHEN" id="kitchen-tab" style="display:none">Bếp</button>
         </div>
-    </div>
+
+        <div class="tab-list">
+            <button class="btn btn-ghost" type="button" onclick="loadNotifications()">Làm mới</button>
+            <button class="btn btn-primary" type="button" onclick="markAllRead()">Đánh dấu đã đọc</button>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-head">
+            <div>
+                <h2 class="section-title" id="section-title">Thông báo của tôi</h2>
+                <p class="section-sub" id="section-sub">Các cập nhật liên quan đến đơn hàng của bạn.</p>
+            </div>
+            <div class="count-chip" id="count-chip">0 mục</div>
+        </div>
+
+        <div id="notification-list" class="notification-list">
+            <div class="loading">
+                <div class="empty-icon">⏳</div>
+                <h3>Đang tải thông báo...</h3>
+                <p>Đợi một chút, mình đang kéo tin từ backend về.</p>
+            </div>
+        </div>
+    </section>
 </div>
 
-<script src="/js/shared.js"></script>
-<script>
-    requireAuth();
-    renderNav('/customer/notifications');
+<div id="toast-container"></div>
 
-    const role = Auth.role();
-    let activeType = 'USER';
+<script src="/js/shared.js"></script>
+
+<script>
+    const PREVIEW_NOTIFICATIONS = [
+        {
+            id: 1,
+            orderId: 101,
+            type: 'USER',
+            event: 'ORDER_CREATED',
+            message: 'Your order #101 has been placed. Please wait for confirmation.',
+            isRead: false,
+            createdAt: new Date().toISOString()
+        },
+        {
+            id: 2,
+            orderId: 101,
+            type: 'USER',
+            event: 'ORDER_STATUS_CHANGED',
+            message: 'Your order #101 is now: PREPARING',
+            isRead: true,
+            createdAt: new Date(Date.now() - 1000 * 60 * 40).toISOString()
+        }
+    ];
+
+    let activeTab = 'USER';
     let notifications = [];
 
-    // Show kitchen tab for staff/manager
-    if (role === 'STAFF' || role === 'MANAGER') {
-      document.getElementById('kitchen-tab').style.display = '';
+    const notify = typeof toast === 'function'
+        ? toast
+        : function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const item = document.createElement('div');
+            item.className = `toast ${type}`;
+            item.textContent = message;
+            container.appendChild(item);
+
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(10px)';
+                item.style.transition = '0.25s ease';
+                setTimeout(() => item.remove(), 260);
+            }, 2600);
+        };
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
     }
 
-    const EVENT_ICON = {
-      ORDER_CREATED:'', ORDER_CONFIRMED:'', ORDER_STATUS_CHANGED:'',
-      ORDER_CANCELLED:'', ORDER_COMPLETED:'', ORDER_PAID:'', PAYMENT_SUCCESS:'',
-    };
-
-    async function load() {
-      try {
-        const endpoint = activeType === 'KITCHEN' ? '/notification/kitchen' : '/notification/my';
-        notifications = await GET(endpoint);
-        if (!Array.isArray(notifications)) notifications = [];
-        render();
-      } catch (ex) {
-        if (ex.message.includes('403')) {
-          notifications = [];
-          render();
-        } else {
-          document.getElementById('notif-list').innerHTML =
-            `<div style="padding:2rem;text-align:center;color:var(--red)">${ex.message}</div>`;
+    function handleLogout() {
+        if (window.Auth && typeof Auth.logout === 'function') {
+            Auth.logout();
+            return;
         }
-      }
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        location.href = '/signin';
     }
 
-    function render() {
-      const unread = notifications.filter(n => !n.isRead).length;
-      const label  = document.getElementById('unread-label');
-      const markBtn = document.getElementById('mark-all-btn');
+    function setupNav() {
+        const role = window.Auth && typeof Auth.role === 'function' ? Auth.role() : null;
 
-      label.innerHTML = `<strong>${unread}</strong> unread`;
-      markBtn.style.display = unread > 0 ? '' : 'none';
+        if ((role === 'STAFF' || role === 'MANAGER') && document.getElementById('kitchen-tab')) {
+            document.getElementById('kitchen-tab').style.display = 'inline-flex';
+        }
 
-      if (!notifications.length) {
-        document.getElementById('notif-list').innerHTML = `
-          <div class="empty"><h3>No notifications</h3><p>Your notification list is none</p></div>`;
-        return;
-      }
+        if (typeof requireAuth === 'function') {
+            const ok = requireAuth();
 
-      document.getElementById('notif-list').innerHTML = notifications.map(n => `
-        <div class="notif-item ${!n.isRead ? 'unread' : ''}" onclick="markRead(${n.id}, this)">
-          <div class="notif-body">
-            <div class="notif-msg">${n.message}</div>
-            <div class="notif-meta">
-              <span class="notif-time">${fmt.date(n.createdAt)}</span>
-              ${n.orderId ? `<span class="tag">Order #${n.orderId}</span>` : ''}
-              <span class="tag">${n.event}</span>
+            if (ok && typeof renderNav === 'function') {
+                renderNav('/customer/notifications');
+
+                const brand = document.querySelector('.nav-brand');
+                if (brand) brand.textContent = 'KhoaFastFood';
+            }
+        }
+    }
+
+    function setupTabs() {
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                activeTab = button.dataset.tab;
+
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn === button);
+                });
+
+                document.getElementById('section-title').textContent =
+                    activeTab === 'KITCHEN' ? 'Thông báo bếp' : 'Thông báo của tôi';
+
+                document.getElementById('section-sub').textContent =
+                    activeTab === 'KITCHEN'
+                        ? 'Các đơn mới, đơn đã thanh toán hoặc đơn bị hủy gửi về khu vực bếp.'
+                        : 'Các cập nhật liên quan đến đơn hàng của bạn.';
+
+                loadNotifications();
+            });
+        });
+    }
+
+    async function loadNotifications() {
+        const list = document.getElementById('notification-list');
+
+        list.innerHTML = `
+            <div class="loading">
+                <div class="empty-icon">⏳</div>
+                <h3>Đang tải thông báo...</h3>
+                <p>Đợi một chút, mình đang kéo tin từ backend về.</p>
             </div>
-          </div>
-          ${!n.isRead ? '<span class="notif-unread-dot"></span>' : ''}
-        </div>
-      `).join('');
+        `;
+
+        try {
+            if (typeof GET === 'function') {
+                const path = activeTab === 'KITCHEN' ? '/notification/kitchen' : '/notification/my';
+                notifications = await GET(path);
+            } else {
+                notifications = PREVIEW_NOTIFICATIONS;
+            }
+
+            renderNotifications();
+        } catch (ex) {
+            if (location.protocol === 'file:') {
+                notifications = PREVIEW_NOTIFICATIONS;
+                renderNotifications();
+                return;
+            }
+
+            list.innerHTML = `
+                <div class="error-box">
+                    <div class="empty-icon">⚠️</div>
+                    <h3>Không tải được thông báo</h3>
+                    <p>${escapeHtml(ex.message || 'Vui lòng thử lại sau.')}</p>
+                </div>
+            `;
+        }
     }
 
-    async function markRead(id, el) {
-      try {
-        await PATCH('/notification/' + id + '/read');
-        const n = notifications.find(x => x.id === id);
-        if (n) n.isRead = true;
-        el.classList.remove('unread');
-        el.querySelector('.notif-unread-dot')?.remove();
-        const unread = notifications.filter(n => !n.isRead).length;
-        document.getElementById('unread-label').innerHTML = `<strong>${unread}</strong> unread`;
-        document.getElementById('mark-all-btn').style.display = unread > 0 ? '' : 'none';
-      } catch (ex) { toast(ex.message, 'error'); }
+    function notificationIcon(event) {
+        const key = String(event || '').toUpperCase();
+
+        if (key.includes('PAID')) return '💳';
+        if (key.includes('CANCEL')) return '🛑';
+        if (key.includes('STATUS')) return '🔥';
+        if (key.includes('CREATED')) return '🧾';
+
+        return '🔔';
+    }
+
+    function eventLabel(event) {
+        const map = {
+            ORDER_CREATED: 'Đơn hàng mới',
+            ORDER_STATUS_CHANGED: 'Cập nhật trạng thái',
+            ORDER_CANCELLED: 'Đơn đã hủy',
+            ORDER_PAID: 'Thanh toán thành công'
+        };
+
+        return map[event] || String(event || 'Thông báo').replaceAll('_', ' ');
+    }
+
+    function formatTime(value) {
+        if (!value) return 'Không rõ thời gian';
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        return new Intl.DateTimeFormat('vi-VN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }).format(date);
+    }
+
+    function renderNotifications() {
+        const list = document.getElementById('notification-list');
+        const countChip = document.getElementById('count-chip');
+        const heroCount = document.getElementById('hero-count');
+
+        const unreadCount = notifications.filter(item => !item.isRead && !item.read).length;
+
+        countChip.textContent = `${notifications.length} mục • ${unreadCount} chưa đọc`;
+        heroCount.textContent = `${notifications.length} thông báo`;
+
+        if (!notifications.length) {
+            list.innerHTML = `
+                <div class="empty">
+                    <div class="empty-icon">📭</div>
+                    <h3>Chưa có thông báo nào</h3>
+                    <p>
+                        Khi bạn đặt món, thanh toán hoặc đơn hàng đổi trạng thái,
+                        thông báo sẽ xuất hiện ở đây.
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        list.innerHTML = notifications.map(item => {
+            const isRead = item.isRead === true || item.read === true;
+            const orderId = item.orderId || (item.order && item.order.id) || null;
+
+            return `
+                <article class="notification-card ${isRead ? '' : 'unread'}">
+                    <div class="notification-icon">${notificationIcon(item.event)}</div>
+
+                    <div>
+                        <h3 class="notification-event">${escapeHtml(eventLabel(item.event))}</h3>
+                        <p class="notification-message">${escapeHtml(item.message || 'Không có nội dung.')}</p>
+
+                        <div class="notification-meta">
+                            <span class="pill">🕒 ${escapeHtml(formatTime(item.createdAt))}</span>
+                            <span class="pill">${isRead ? '✅ Đã đọc' : '🟠 Chưa đọc'}</span>
+                            ${orderId ? `<span class="pill">#${escapeHtml(orderId)}</span>` : ''}
+                            ${item.type ? `<span class="pill">${escapeHtml(item.type)}</span>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        ${orderId ? `<a class="small-btn primary" href="/customer/tracking?orderId=${encodeURIComponent(orderId)}">Xem đơn</a>` : ''}
+                        ${isRead ? '' : `<button class="small-btn" type="button" onclick="markRead(${Number(item.id)})">Đã đọc</button>`}
+                    </div>
+                </article>
+            `;
+        }).join('');
+    }
+
+    async function markRead(id) {
+        if (!id) return;
+
+        try {
+            if (typeof PATCH === 'function') {
+                await PATCH(`/notification/${id}/read`);
+            }
+
+            notifications = notifications.map(item => {
+                if (Number(item.id) === Number(id)) {
+                    return { ...item, isRead: true, read: true };
+                }
+
+                return item;
+            });
+
+            renderNotifications();
+            notify('Đã đánh dấu thông báo là đã đọc.', 'success');
+        } catch (ex) {
+            notify(ex.message || 'Không thể đánh dấu đã đọc.', 'error');
+        }
     }
 
     async function markAllRead() {
-      try {
-        await PATCH('/notification/read-all');
-        notifications.forEach(n => n.isRead = true);
-        render();
-        toast('All marked as read', 'success');
-      } catch (ex) { toast(ex.message, 'error'); }
+        try {
+            if (activeTab === 'KITCHEN') {
+                notifications = notifications.map(item => ({ ...item, isRead: true, read: true }));
+                renderNotifications();
+                notify('Đã đánh dấu các thông báo đang hiển thị.', 'success');
+                return;
+            }
+
+            if (typeof PATCH === 'function') {
+                await PATCH('/notification/read-all');
+            }
+
+            notifications = notifications.map(item => ({ ...item, isRead: true, read: true }));
+            renderNotifications();
+            notify('Đã đánh dấu tất cả thông báo là đã đọc.', 'success');
+        } catch (ex) {
+            notify(ex.message || 'Không thể đánh dấu tất cả.', 'error');
+        }
     }
 
-    document.querySelectorAll('.tab').forEach(t => {
-      t.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
-        activeType = t.dataset.type;
-        load();
-      });
+    document.addEventListener('DOMContentLoaded', () => {
+        setupNav();
+        setupTabs();
+        loadNotifications();
     });
-
-    load();
 </script>
 </body>
 </html>

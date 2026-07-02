@@ -3,255 +3,1686 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Order — FoodOrder</title>
+    <title>Track Order | KhoaFastFood</title>
+
     <link rel="stylesheet" href="/css/shared.css">
+
     <style>
-        /* Stepper */
-        .stepper { display:flex; align-items:flex-start; margin:2rem 0; position:relative; }
-        .step { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; }
-        .step:not(:last-child)::after {
-          content:''; position:absolute; top:18px; left:50%; right:-50%;
-          height:2px; background:var(--border2); z-index:0; transition:background 0.4s;
+        @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
+
+        :root {
+            --navy: #0A2947;
+            --cream: #F3E4C9;
+            --sage: #D3D4C0;
+            --brown: #8B5E3C;
+            --bg: #fffaf3;
+            --surface: #fff7ec;
+            --white: #ffffff;
+            --red: #c94832;
+            --green: #2f7d4f;
+            --yellow: #d99a2b;
+            --blue: #276f9f;
+            --shadow: 0 24px 70px rgba(10, 41, 71, 0.16);
+            --shadow-soft: 0 14px 35px rgba(10, 41, 71, 0.10);
         }
-        .step.done:not(:last-child)::after { background:var(--green); }
-        .step.active:not(:last-child)::after { background:var(--border2); }
-        .step.cancelled:not(:last-child)::after { background:var(--red); }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            color: var(--navy);
+            background:
+                radial-gradient(circle at 10% 12%, rgba(139, 94, 60, 0.16), transparent 28rem),
+                radial-gradient(circle at 92% 88%, rgba(10, 41, 71, 0.13), transparent 32rem),
+                linear-gradient(135deg, #fffaf3 0%, #f3e4c9 100%);
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            z-index: 0;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        body::before {
+            width: 280px;
+            height: 280px;
+            left: -96px;
+            top: -92px;
+            background: rgba(139, 94, 60, 0.14);
+            filter: blur(2px);
+        }
+
+        body::after {
+            width: 320px;
+            height: 320px;
+            right: -120px;
+            bottom: -120px;
+            background: rgba(10, 41, 71, 0.12);
+            filter: blur(2px);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+        }
+
+        #main-nav {
+            position: relative;
+            z-index: 5;
+            width: min(1180px, calc(100% - 48px));
+            margin: 22px auto 0;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            border-radius: 28px;
+            background: rgba(255, 250, 243, 0.88);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px);
+        }
+
+        .nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .nav-brand::before {
+            content: "🍔";
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--brown);
+            box-shadow: var(--shadow-soft);
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 800;
+            transition: 0.18s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--cream);
+            background: var(--navy);
+        }
+
+        .nav-badge {
+            min-width: 20px;
+            height: 20px;
+            margin-left: 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            color: var(--cream);
+            background: var(--red);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            width: min(1180px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 34px 0 80px;
+        }
+
+        .tracking-hero {
+            position: relative;
+            min-height: 310px;
+            padding: 38px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            align-items: center;
+            gap: 28px;
+            border-radius: 42px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92)),
+                radial-gradient(circle at top right, rgba(243, 228, 201, 0.22), transparent 20rem);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .tracking-hero::before {
+            content: "";
+            position: absolute;
+            right: -100px;
+            top: -140px;
+            width: 320px;
+            height: 320px;
+            border-radius: 999px;
+            background: rgba(243, 228, 201, 0.13);
+        }
+
+        .tracking-hero::after {
+            content: "";
+            position: absolute;
+            left: 42%;
+            bottom: -120px;
+            width: 250px;
+            height: 250px;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.08);
+        }
+
+        .hero-copy,
+        .hero-track-card {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 14px;
+            padding: 8px 13px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(243, 228, 201, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.20);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .page-title {
+            margin: 0;
+            max-width: 700px;
+            font-size: clamp(44px, 5.2vw, 72px);
+            line-height: 0.95;
+            letter-spacing: -2.8px;
+            font-weight: 800;
+        }
+
+        .page-title span {
+            color: #fff2d7;
+        }
+
+        .hero-text {
+            max-width: 620px;
+            margin: 20px 0 0;
+            color: rgba(243, 228, 201, 0.78);
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .hero-track-card {
+            padding: 24px;
+            border-radius: 32px;
+            background: rgba(255, 250, 243, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.2);
+            backdrop-filter: blur(16px);
+        }
+
+        .hero-track-icon {
+            width: 68px;
+            height: 68px;
+            display: grid;
+            place-items: center;
+            border-radius: 24px;
+            background: rgba(243, 228, 201, 0.16);
+            font-size: 34px;
+        }
+
+        .hero-track-card span {
+            display: block;
+            margin-top: 18px;
+            color: rgba(243, 228, 201, 0.72);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .hero-track-card strong {
+            display: block;
+            margin-top: 8px;
+            color: var(--cream);
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 800;
+        }
+
+        .track-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 370px;
+            gap: 24px;
+            align-items: start;
+            margin-top: 26px;
+        }
+
+        .left-stack {
+            display: grid;
+            gap: 24px;
+        }
+
+        .panel,
+        .side-card {
+            border-radius: 34px;
+            background: rgba(255, 247, 236, 0.92);
+            border: 1px solid rgba(211, 212, 192, 0.88);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 1px solid rgba(211, 212, 192, 0.88);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--navy);
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .panel-title::before {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: rgba(243, 228, 201, 0.72);
+            font-size: 22px;
+        }
+
+        .panel-title.progress::before {
+            content: "🛵";
+        }
+
+        .panel-title.items::before {
+            content: "🍽️";
+        }
+
+        .panel-title.info::before {
+            content: "🧾";
+        }
+
+        .panel-body {
+            padding: 24px;
+        }
+
+        .stepper {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0;
+            padding: 10px 0 4px;
+        }
+
+        .step {
+            position: relative;
+            display: grid;
+            justify-items: center;
+            gap: 10px;
+            z-index: 1;
+        }
+
+        .step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 27px;
+            left: 50%;
+            width: 100%;
+            height: 4px;
+            background: rgba(211, 212, 192, 0.86);
+            z-index: -1;
+            border-radius: 999px;
+        }
+
+        .step.done:not(:last-child)::after {
+            background: var(--green);
+        }
+
+        .step.cancelled:not(:last-child)::after {
+            background: var(--red);
+        }
 
         .step-dot {
-          width:36px; height:36px; border-radius:50%;
-          border:2px solid var(--border2); background:var(--surface);
-          display:flex; align-items:center; justify-content:center;
-          font-size:0.9rem; position:relative; z-index:2; transition:all 0.3s;
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 22px;
+            color: var(--brown);
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            font-size: 24px;
+            box-shadow: 0 8px 18px rgba(10, 41, 71, 0.06);
+            transition: 0.22s ease;
         }
-        .step.done .step-dot   { border-color:var(--green); background:var(--green); }
-        .step.active .step-dot { border-color:var(--accent); box-shadow:0 0 0 4px rgba(232,108,47,0.2); }
-        .step.cancelled .step-dot { border-color:var(--red); background:var(--red); }
 
-        .step-label { font-size:0.68rem; font-weight:600; color:var(--muted); margin-top:0.5rem; text-align:center; text-transform:uppercase; letter-spacing:0.04em; transition:color 0.3s; }
-        .step.done .step-label, .step.active .step-label { color:var(--text); }
-        .step.cancelled .step-label { color:var(--red); }
+        .step.done .step-dot {
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(47, 125, 79, 0.96), rgba(10, 41, 71, 0.85));
+            border-color: rgba(47, 125, 79, 0.36);
+            box-shadow: var(--shadow-soft);
+        }
 
-        /* Status banner */
+        .step.active .step-dot {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 36px rgba(10, 41, 71, 0.18);
+        }
+
+        .step.cancelled .step-dot {
+            color: var(--white);
+            background:
+                linear-gradient(135deg, rgba(201, 72, 50, 0.96), rgba(139, 94, 60, 0.9));
+            border-color: rgba(201, 72, 50, 0.3);
+        }
+
+        .step-label {
+            color: var(--brown);
+            font-size: 12px;
+            font-weight: 800;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .step.done .step-label,
+        .step.active .step-label {
+            color: var(--navy);
+        }
+
+        .step.cancelled .step-label {
+            color: var(--red);
+        }
+
         .status-banner {
-          border-radius:var(--radius-lg); padding:1.25rem 1.5rem;
-          display:flex; align-items:center; gap:1rem;
-          margin-bottom:1.5rem; border:1px solid var(--border);
+            margin-top: 24px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-radius: 26px;
+            border: 1px solid rgba(211, 212, 192, 0.86);
+            background: rgba(243, 228, 201, 0.38);
         }
-        .status-banner.pending   { background:rgba(240,192,96,0.08); border-color:rgba(240,192,96,0.25); }
-        .status-banner.confirmed { background:rgba(76,175,125,0.08); border-color:rgba(76,175,125,0.25); }
-        .status-banner.preparing { background:rgba(232,108,47,0.08); border-color:rgba(232,108,47,0.25); }
-        .status-banner.ready     { background:rgba(76,175,125,0.1);  border-color:rgba(76,175,125,0.3); }
-        .status-banner.completed { background:rgba(76,175,125,0.08); border-color:rgba(76,175,125,0.2); }
-        .status-banner.cancelled { background:rgba(224,82,82,0.08);  border-color:rgba(224,82,82,0.2); }
 
-        .status-icon { font-size:2rem; flex-shrink:0; }
-        .status-msg  { font-weight:500; font-size:0.9rem; }
+        .status-banner.pending {
+            background: rgba(217, 154, 43, 0.12);
+            border-color: rgba(217, 154, 43, 0.26);
+        }
 
-        /* Poll dot */
-        .poll-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; }
-        .poll-dot { width:8px; height:8px; border-radius:50%; background:var(--green); animation:blink 1.6s ease-in-out infinite; }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
-        .poll-label { font-size:0.78rem; color:var(--muted); }
+        .status-banner.confirmed,
+        .status-banner.preparing {
+            background: rgba(139, 94, 60, 0.12);
+            border-color: rgba(139, 94, 60, 0.22);
+        }
 
-        /* Item list */
-        .item-row { display:flex; justify-content:space-between; padding:0.65rem 0; border-bottom:1px solid var(--border); font-size:0.875rem; }
-        .item-row:last-child { border-bottom:none; }
-        .item-left .name { font-weight:500; }
-        .item-left .toppings { font-size:0.75rem; color:var(--muted); margin-top:0.15rem; }
-        .item-price { color:var(--accent2); font-weight:600; }
+        .status-banner.ready,
+        .status-banner.completed {
+            background: rgba(47, 125, 79, 0.12);
+            border-color: rgba(47, 125, 79, 0.24);
+        }
 
-        .info-table td { padding:0.5rem 0; font-size:0.875rem; }
-        .info-table td:first-child { color:var(--muted); width:120px; }
-        .info-table td:last-child { font-weight:500; }
+        .status-banner.cancelled {
+            background: rgba(201, 72, 50, 0.10);
+            border-color: rgba(201, 72, 50, 0.2);
+        }
+
+        .status-icon {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 20px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            font-size: 27px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .status-banner.cancelled .status-icon {
+            background:
+                linear-gradient(135deg, rgba(201, 72, 50, 0.96), rgba(139, 94, 60, 0.9));
+        }
+
+        .status-text strong {
+            display: block;
+            color: var(--navy);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .status-text span {
+            display: block;
+            margin-top: 4px;
+            color: var(--brown);
+            font-size: 13px;
+            line-height: 1.55;
+            font-weight: 600;
+        }
+
+        .poll-row {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--brown);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .poll-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--green);
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.35;
+                transform: scale(0.7);
+            }
+        }
+
+        .action-row {
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 999px;
+            color: var(--cream);
+            background: linear-gradient(135deg, var(--navy), #123d64);
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 14px 30px rgba(10, 41, 71, 0.20);
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 38px rgba(10, 41, 71, 0.24);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-ghost {
+            color: var(--navy);
+            background: rgba(255, 250, 243, 0.72);
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            box-shadow: none;
+        }
+
+        .btn-ghost:hover {
+            color: var(--brown);
+            background: var(--white);
+        }
+
+        .btn-danger {
+            color: var(--white);
+            background: linear-gradient(135deg, var(--red), #a83424);
+        }
+
+        .btn-sm {
+            min-height: 38px;
+            padding: 9px 14px;
+            font-size: 13px;
+        }
+
+        .order-item {
+            display: grid;
+            grid-template-columns: 54px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(211, 212, 192, 0.78);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .order-item:first-child {
+            padding-top: 0;
+        }
+
+        .item-icon {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            border-radius: 20px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            box-shadow: var(--shadow-soft);
+            font-size: 25px;
+        }
+
+        .item-main {
+            min-width: 0;
+        }
+
+        .item-name {
+            color: var(--navy);
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-meta {
+            margin-top: 5px;
+            color: var(--brown);
+            font-size: 12px;
+            line-height: 1.45;
+            font-weight: 600;
+        }
+
+        .item-price {
+            color: var(--brown);
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .total-row {
+            margin-top: 18px;
+            padding-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-top: 1px solid rgba(139, 94, 60, 0.2);
+            color: var(--navy);
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .total-row strong {
+            color: var(--brown);
+            font-size: 24px;
+        }
+
+        .side-card {
+            position: sticky;
+            top: 24px;
+            padding: 24px;
+        }
+
+        .side-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .side-icon {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--brown);
+            font-size: 25px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .side-title {
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .side-subtitle {
+            margin-top: 3px;
+            color: var(--brown);
+            font-size: 13px;
+        }
+
+        .info-box {
+            padding: 16px;
+            border-radius: 24px;
+            background: rgba(243, 228, 201, 0.46);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 0;
+            color: var(--brown);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .info-row span:last-child {
+            color: var(--navy);
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 26px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            color: var(--brown);
+            background: rgba(243, 228, 201, 0.58);
+            border: 1px solid rgba(211, 212, 192, 0.88);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-PENDING {
+            color: #8a5a10;
+            background: rgba(217, 154, 43, 0.14);
+            border-color: rgba(217, 154, 43, 0.28);
+        }
+
+        .status-CONFIRMED,
+        .status-PREPARING {
+            color: #8b5e3c;
+            background: rgba(139, 94, 60, 0.14);
+            border-color: rgba(139, 94, 60, 0.24);
+        }
+
+        .status-READY,
+        .status-COMPLETED {
+            color: #2f7d4f;
+            background: rgba(47, 125, 79, 0.12);
+            border-color: rgba(47, 125, 79, 0.24);
+        }
+
+        .status-CANCELLED {
+            color: #c94832;
+            background: rgba(201, 72, 50, 0.10);
+            border-color: rgba(201, 72, 50, 0.18);
+        }
+
+        .timeline {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .timeline-dot {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(243, 228, 201, 0.72);
+            font-size: 18px;
+        }
+
+        .timeline-item.active .timeline-dot {
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+        }
+
+        .timeline-copy strong {
+            display: block;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .timeline-copy span {
+            display: block;
+            margin-top: 3px;
+            color: var(--brown);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .last-updated {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.56);
+            border: 1px dashed rgba(139, 94, 60, 0.32);
+            color: var(--brown);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .empty,
+        .loading,
+        .error-box {
+            padding: 54px 30px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 86px;
+            height: 86px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 18px;
+            border-radius: 30px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            font-size: 42px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .empty h3,
+        .loading h3,
+        .error-box h3 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .empty p,
+        .loading p,
+        .error-box p {
+            margin: 10px auto 0;
+            max-width: 520px;
+            color: var(--brown);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .error-box .empty-icon {
+            background:
+                linear-gradient(135deg, rgba(201, 72, 50, 0.95), rgba(139, 94, 60, 0.88));
+        }
+
+        #toast-container {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 9999;
+            display: grid;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 18px;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--navy);
+            box-shadow: var(--shadow);
+            font-weight: 700;
+        }
+
+        .toast.error {
+            background: var(--red);
+        }
+
+        .toast.success {
+            background: var(--green);
+        }
+
+        @media (max-width: 980px) {
+            #main-nav,
+            .page {
+                width: min(100% - 32px, 1180px);
+            }
+
+            #main-nav {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+            }
+
+            .tracking-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .track-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-card {
+                position: static;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .tracking-hero {
+                padding: 30px 24px;
+                border-radius: 34px;
+            }
+
+            .page-title {
+                font-size: 42px;
+                letter-spacing: -1.8px;
+            }
+
+            .stepper {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .step {
+                grid-template-columns: 58px 1fr;
+                justify-items: start;
+                align-items: center;
+            }
+
+            .step:not(:last-child)::after {
+                top: 58px;
+                left: 28px;
+                width: 4px;
+                height: 100%;
+            }
+
+            .step-label {
+                text-align: left;
+            }
+
+            .panel-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .order-item {
+                grid-template-columns: 52px minmax(0, 1fr);
+            }
+
+            .item-price {
+                grid-column: 2;
+            }
+        }
+
+        @media (max-width: 520px) {
+            #main-nav,
+            .page {
+                width: min(100% - 24px, 1180px);
+            }
+
+            .panel,
+            .side-card {
+                border-radius: 28px;
+            }
+
+            .panel-body,
+            .side-card {
+                padding: 20px;
+            }
+
+            .action-row .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
+
 <body>
 <nav id="main-nav"></nav>
 <div id="toast-container"></div>
 
-<div class="page page-md">
-    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;">
-        <div>
-            <h1 class="page-title">Track order</h1>
-            <p class="page-subtitle" id="order-id-label">Loading…</p>
+<div class="page">
+    <section class="tracking-hero">
+        <div class="hero-copy">
+            <p class="eyebrow">🛵 Live tracking</p>
+            <h1 class="page-title">Theo dõi đơn hàng, <span>từng bước lên bếp.</span></h1>
+            <p class="hero-text">
+                Xem đơn đang ở trạng thái nào: chờ xác nhận, đã xác nhận, đang chuẩn bị,
+                sẵn sàng hay hoàn tất. Mỗi bước là một tiếng “ting” nhỏ từ căn bếp.
+            </p>
         </div>
-        <a href="/customer/orders" class="btn btn-ghost">My orders</a>
-    </div>
 
-    <!-- Stepper -->
-    <div class="stepper" id="stepper">
-        <div class="step" data-s="PENDING">  <div class="step-dot"></div><div class="step-label">Pending</div></div>
-        <div class="step" data-s="CONFIRMED"><div class="step-dot"></div><div class="step-label">Confirmed</div></div>
-        <div class="step" data-s="PREPARING"><div class="step-dot"></div><div class="step-label">Preparing</div></div>
-        <div class="step" data-s="READY">    <div class="step-dot"></div><div class="step-label">Ready</div></div>
-        <div class="step" data-s="COMPLETED"><div class="step-dot"></div><div class="step-label">Done</div></div>
-    </div>
+        <aside class="hero-track-card">
+            <div class="hero-track-icon" id="hero-icon">🧾</div>
+            <span>Tracking order</span>
+            <strong id="hero-order-id">Order #—</strong>
+        </aside>
+    </section>
 
-    <!-- Status banner -->
-    <div class="status-banner" id="status-banner">
-        <span class="status-msg"  id="status-msg">Loading status…</span>
-    </div>
+    <section class="track-layout">
+        <div class="left-stack">
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title progress">Order progress</div>
+                    <a href="/customer/orders" class="btn btn-ghost btn-sm">Back to orders</a>
+                </div>
 
-    <!-- Poll indicator -->
-    <div class="poll-row" id="poll-row">
-        <span class="poll-dot" id="poll-dot"></span>
-        <span class="poll-label" id="poll-label">Live tracking active…</span>
-    </div>
+                <div class="panel-body">
+                    <div class="stepper" id="stepper">
+                        <div class="step" data-status="PENDING">
+                            <div class="step-dot">⏳</div>
+                            <div class="step-label">Pending</div>
+                        </div>
 
-    <!-- Actions -->
-    <div id="action-row" style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem;"></div>
+                        <div class="step" data-status="CONFIRMED">
+                            <div class="step-dot">✅</div>
+                            <div class="step-label">Confirmed</div>
+                        </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
-        <!-- Items -->
-        <div class="card">
-            <div class="card-header"><span class="card-title">Items ordered</span></div>
-            <div class="card-body">
-                <div id="item-list" style="padding:0"></div>
-                <div style="display:flex;justify-content:space-between;padding-top:0.75rem;border-top:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:800;">
-                    <span>Total</span>
-                    <span id="total-amt" style="color:var(--accent)">—</span>
+                        <div class="step" data-status="PREPARING">
+                            <div class="step-dot">🍳</div>
+                            <div class="step-label">Preparing</div>
+                        </div>
+
+                        <div class="step" data-status="READY">
+                            <div class="step-dot">📦</div>
+                            <div class="step-label">Ready</div>
+                        </div>
+
+                        <div class="step" data-status="COMPLETED">
+                            <div class="step-dot">🎉</div>
+                            <div class="step-label">Completed</div>
+                        </div>
+                    </div>
+
+                    <div class="status-banner pending" id="status-banner">
+                        <div class="status-icon" id="status-icon">⏳</div>
+                        <div class="status-text">
+                            <strong id="status-title">Loading status...</strong>
+                            <span id="status-msg">Đang lấy trạng thái đơn hàng.</span>
+                        </div>
+                    </div>
+
+                    <div class="poll-row">
+                        <span class="poll-dot" id="poll-dot"></span>
+                        <span id="poll-label">Live tracking active...</span>
+                    </div>
+
+                    <div class="action-row" id="action-row"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title items">Items ordered</div>
+                </div>
+
+                <div class="panel-body">
+                    <div id="item-list">
+                        <div class="loading">
+                            <div class="empty-icon">🍳</div>
+                            <h3>Loading items...</h3>
+                            <p>Đang lấy danh sách món trong đơn hàng.</p>
+                        </div>
+                    </div>
+
+                    <div class="total-row">
+                        <span>Total</span>
+                        <strong id="total-amount">—</strong>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Info -->
-        <div class="card">
-            <div class="card-header"><span class="card-title">Order info</span></div>
-            <div class="card-body">
-                <table class="info-table" style="width:100%;border-collapse:collapse">
-                    <tr><td>Order ID</td><td id="info-id">—</td></tr>
-                    <tr><td>Status</td><td id="info-status">—</td></tr>
-                    <tr><td>Placed at</td><td id="info-date">—</td></tr>
-                </table>
+        <aside class="side-card">
+            <div class="side-head">
+                <div class="side-icon">🧾</div>
+                <div>
+                    <div class="side-title">Order info</div>
+                    <div class="side-subtitle">Summary and timeline</div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <p style="text-align:right;font-size:0.72rem;color:var(--muted);margin-top:1rem">
-        Last updated: <span id="last-updated">—</span>
-    </p>
+            <div class="info-box">
+                <div class="info-row">
+                    <span>Order ID</span>
+                    <span id="info-id">—</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Status</span>
+                    <span id="info-status">—</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Placed at</span>
+                    <span id="info-date">—</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Items</span>
+                    <span id="info-items">0</span>
+                </div>
+            </div>
+
+            <div class="timeline" id="timeline">
+                <div class="timeline-item" data-status="PENDING">
+                    <div class="timeline-dot">⏳</div>
+                    <div class="timeline-copy">
+                        <strong>Pending</strong>
+                        <span>Đơn đã được tạo và đang chờ xác nhận.</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-status="CONFIRMED">
+                    <div class="timeline-dot">✅</div>
+                    <div class="timeline-copy">
+                        <strong>Confirmed</strong>
+                        <span>Nhà hàng đã xác nhận đơn.</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-status="PREPARING">
+                    <div class="timeline-dot">🍳</div>
+                    <div class="timeline-copy">
+                        <strong>Preparing</strong>
+                        <span>Bếp đang chuẩn bị món ăn.</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-status="READY">
+                    <div class="timeline-dot">📦</div>
+                    <div class="timeline-copy">
+                        <strong>Ready</strong>
+                        <span>Đơn đã sẵn sàng để nhận.</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-status="COMPLETED">
+                    <div class="timeline-dot">🎉</div>
+                    <div class="timeline-copy">
+                        <strong>Completed</strong>
+                        <span>Đơn hàng đã hoàn tất.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="last-updated">
+                Last updated:
+                <strong id="last-updated">—</strong>
+            </div>
+        </aside>
+    </section>
 </div>
 
 <script src="/js/shared.js"></script>
+
 <script>
-    requireAuth();
-    renderNav('/customer/orders');
-
-    const params = new URLSearchParams(location.search);
-    const orderId = params.get('orderId');
-    if (!orderId) location.href = '/customer/orders';
-
-    document.getElementById('order-id-label').textContent = 'Order #' + orderId;
-
-    const STATUSES = ['PENDING','CONFIRMED','PREPARING','READY','COMPLETED'];
-    const STATUS_CFG = {
-      PENDING:   { cls:'pending',   icon:'', msg:'Waiting for the restaurant to confirm your order…' },
-      CONFIRMED: { cls:'confirmed', icon:'', msg:'Order confirmed — waiting to start preparation.' },
-      PREPARING: { cls:'preparing', icon:'', msg:'Your food is being prepared right now!' },
-      READY:     { cls:'ready',     icon:'', msg:'Your order is ready! A staff member will bring it to you.' },
-      COMPLETED: { cls:'completed', icon:'', msg:'Order completed. Enjoy your meal!' },
-      CANCELLED: { cls:'cancelled', icon:'', msg:'This order has been cancelled.' },
+    const PREVIEW_ORDER = {
+        id: 1024,
+        status: 'PREPARING',
+        totalAmount: 242000,
+        createdAt: new Date(Date.now() - 1000 * 60 * 24).toISOString(),
+        items: [
+            {
+                foodName: 'Cheese Burger',
+                foodId: 1,
+                quantity: 2,
+                toppings: 'Extra cheese, BBQ sauce',
+                subtotal: 118000
+            },
+            {
+                foodName: 'Pepperoni Pizza',
+                foodId: 2,
+                quantity: 1,
+                toppings: 'Olives',
+                subtotal: 99000
+            },
+            {
+                foodName: 'Iced Lemon Tea',
+                foodId: 3,
+                quantity: 1,
+                toppings: '',
+                subtotal: 25000
+            }
+        ]
     };
 
+    const STATUS_FLOW = ['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'COMPLETED'];
+
+    const STATUS_CONFIG = {
+        PENDING: {
+            cls: 'pending',
+            icon: '⏳',
+            title: 'Pending',
+            message: 'Đơn hàng đang chờ xác nhận. Bạn có thể thanh toán hoặc hủy đơn ở bước này.'
+        },
+        CONFIRMED: {
+            cls: 'confirmed',
+            icon: '✅',
+            title: 'Confirmed',
+            message: 'Đơn đã được xác nhận. Bếp sắp bắt đầu chuẩn bị món cho bạn.'
+        },
+        PREPARING: {
+            cls: 'preparing',
+            icon: '🍳',
+            title: 'Preparing',
+            message: 'Món ăn đang được chuẩn bị. Căn bếp đang hoạt động hết công suất.'
+        },
+        READY: {
+            cls: 'ready',
+            icon: '📦',
+            title: 'Ready',
+            message: 'Đơn đã sẵn sàng. Bạn có thể đến nhận món hoặc chờ phục vụ.'
+        },
+        COMPLETED: {
+            cls: 'completed',
+            icon: '🎉',
+            title: 'Completed',
+            message: 'Đơn hàng đã hoàn tất. Chúc bạn ngon miệng!'
+        },
+        CANCELLED: {
+            cls: 'cancelled',
+            icon: '❌',
+            title: 'Cancelled',
+            message: 'Đơn hàng này đã bị hủy.'
+        }
+    };
+
+    const FOOD_EMOJI = {
+        pizza: '🍕',
+        burger: '🍔',
+        pasta: '🍝',
+        salad: '🥗',
+        soup: '🍲',
+        dessert: '🍰',
+        drink: '🥤',
+        food: '🍽️'
+    };
+
+    const Formatter = typeof fmt !== 'undefined'
+        ? fmt
+        : {
+            currency: n => new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                maximumFractionDigits: 0
+            }).format(Number(n || 0)),
+            date: d => d
+                ? new Intl.DateTimeFormat('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }).format(new Date(d))
+                : '—',
+            time: d => d
+                ? new Intl.DateTimeFormat('vi-VN', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                }).format(new Date(d))
+                : '—'
+        };
+
+    const notify = typeof toast === 'function'
+        ? toast
+        : function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const item = document.createElement('div');
+            item.className = `toast ${type}`;
+            item.textContent = message;
+            container.appendChild(item);
+
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(16px)';
+                item.style.transition = '0.25s ease';
+                setTimeout(() => item.remove(), 260);
+            }, 2600);
+        };
+
+    const params = new URLSearchParams(location.search);
+    let orderId = params.get('orderId');
+
+    let orderData = null;
     let lastStatus = null;
-    let pollTimer  = null;
+    let pollTimer = null;
     let pollActive = true;
 
-    function applyStatus(status) {
-      const cfg = STATUS_CFG[status] || STATUS_CFG.PENDING;
-
-      // Banner
-      const banner = document.getElementById('status-banner');
-      banner.className = 'status-banner ' + cfg.cls;
-      document.getElementById('status-msg').textContent  = cfg.msg;
-
-      // Info badge
-      document.getElementById('info-status').innerHTML = fmt.badge(status);
-
-      // Stepper
-      const idx = STATUSES.indexOf(status);
-      document.querySelectorAll('.stepper .step').forEach(step => {
-        const si = STATUSES.indexOf(step.dataset.s);
-        step.classList.remove('done','active','cancelled');
-        if (status === 'CANCELLED') { if (si === 0) step.classList.add('cancelled'); return; }
-        if (si < idx)  step.classList.add('done');
-        if (si === idx) step.classList.add('done','active');
-      });
-
-      // Actions
-      const row = document.getElementById('action-row');
-      row.innerHTML = '';
-      if (status === 'PENDING') {
-        row.innerHTML = `
-          <a href="/customer/payment?orderId=${orderId}" class="btn btn-primary">Pay now</a>
-          <button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;
-      } else if (status === 'CONFIRMED') {
-        row.innerHTML = `<button class="btn btn-ghost" onclick="cancelOrder()">Cancel order</button>`;
-      } else if (status === 'COMPLETED' || status === 'CANCELLED') {
-        row.innerHTML = `<a href="/customer/menu" class="btn btn-primary">Order again</a>`;
-        stopPolling('Order finalised.');
-      }
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
     }
 
-    function stopPolling(msg) {
-      pollActive = false;
-      clearTimeout(pollTimer);
-      const dot = document.getElementById('poll-dot');
-      dot.style.animation = 'none'; dot.style.background = 'var(--muted)';
-      document.getElementById('poll-label').textContent = msg;
+    function statusBadge(status) {
+        const safeStatus = escapeHtml(status || 'PENDING');
+        return `<span class="status-badge status-${safeStatus}">${escapeHtml(status || 'PENDING')}</span>`;
     }
 
-    async function poll() {
-      if (!pollActive) return;
-      try {
-        const data = await GET('/order/' + orderId);
-        document.getElementById('last-updated').textContent =
-          new Intl.DateTimeFormat('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
-        if (data.status !== lastStatus) {
-          lastStatus = data.status;
-          applyStatus(data.status);
+    function itemEmoji(item) {
+        const name = String(item.foodName || item.name || '').toLowerCase();
+
+        if (name.includes('pizza')) return FOOD_EMOJI.pizza;
+        if (name.includes('burger')) return FOOD_EMOJI.burger;
+        if (name.includes('pasta')) return FOOD_EMOJI.pasta;
+        if (name.includes('salad')) return FOOD_EMOJI.salad;
+        if (name.includes('soup')) return FOOD_EMOJI.soup;
+        if (name.includes('cake') || name.includes('dessert')) return FOOD_EMOJI.dessert;
+        if (name.includes('tea') || name.includes('drink') || name.includes('coke')) return FOOD_EMOJI.drink;
+
+        return FOOD_EMOJI.food;
+    }
+
+    function orderItemsCount(order) {
+        return (order.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+    }
+
+    function renderPreviewNav() {
+        const nav = document.getElementById('main-nav');
+        if (!nav) return;
+
+        nav.innerHTML = `
+            <a class="nav-brand" href="/customer/menu">KhoaFastFood</a>
+            <div class="nav-links">
+                <a class="nav-link" href="/customer/menu">Menu</a>
+                <a class="nav-link" href="/customer/cart">
+                    Cart
+                    <span class="nav-badge" id="cart-badge" style="display:none">0</span>
+                </a>
+                <a class="nav-link active" href="/customer/orders">My Orders</a>
+                <a class="nav-link" href="/customer/notifications">Notifications</a>
+            </div>
+        `;
+    }
+
+    function setupPage() {
+        if (typeof requireAuth === 'function') {
+            const ok = requireAuth();
+
+            if (!ok) {
+                return;
+            }
+
+            if (typeof renderNav === 'function') {
+                renderNav('/customer/orders');
+
+                const brand = document.querySelector('.nav-brand');
+                if (brand) brand.textContent = 'KhoaFastFood';
+            }
+        } else {
+            renderPreviewNav();
         }
-        if (['COMPLETED','CANCELLED'].includes(data.status)) return;
-      } catch (e) { console.warn('poll error:', e); }
-      pollTimer = setTimeout(poll, 5000);
+
+        if (!orderId && location.protocol !== 'file:') {
+            location.href = '/customer/orders';
+            return;
+        }
+
+        if (!orderId) {
+            orderId = String(PREVIEW_ORDER.id);
+        }
+
+        document.getElementById('hero-order-id').textContent = 'Order #' + orderId;
+
+        loadInitial();
     }
 
     async function loadInitial() {
-      try {
-        const data = await GET('/order/' + orderId);
-        lastStatus = data.status;
+        try {
+            if (typeof GET === 'function' && location.protocol !== 'file:') {
+                orderData = await GET('/order/' + orderId);
+            } else {
+                orderData = PREVIEW_ORDER;
+            }
 
-        document.getElementById('info-id').textContent   = '#' + data.id;
-        document.getElementById('info-date').textContent = fmt.date(data.createdAt);
-        document.getElementById('total-amt').textContent = fmt.currency(data.totalAmount);
+            lastStatus = orderData.status;
 
-        document.getElementById('item-list').innerHTML = (data.items || []).map(i => `
-          <div class="item-row">
-            <div class="item-left">
-              <div class="name">${i.foodName || 'Item #' + i.foodId} ×${i.quantity}</div>
-              ${i.toppings ? `<div class="toppings">${i.toppings}</div>` : ''}
-            </div>
-            <span class="item-price">${fmt.currency(i.subtotal)}</span>
-          </div>
-        `).join('');
+            renderOrder(orderData);
+            applyStatus(orderData.status);
 
-        applyStatus(data.status);
-        if (!['COMPLETED','CANCELLED'].includes(data.status)) pollTimer = setTimeout(poll, 5000);
-      } catch (ex) {
-        toast(ex.message, 'error');
-      }
+            if (location.protocol === 'file:') {
+                stopPolling('Preview mode. Run Spring Boot for live tracking.');
+                return;
+            }
+
+            if (!['COMPLETED', 'CANCELLED'].includes(orderData.status)) {
+                pollTimer = setTimeout(poll, 5000);
+            }
+        } catch (ex) {
+            renderLoadError(ex.message || 'Could not load order.');
+            notify(ex.message || 'Could not load order.', 'error');
+        }
+    }
+
+    async function poll() {
+        if (!pollActive) return;
+
+        try {
+            const data = await GET('/order/' + orderId);
+            orderData = data;
+
+            document.getElementById('last-updated').textContent = Formatter.time(new Date());
+
+            if (data.status !== lastStatus) {
+                lastStatus = data.status;
+                renderOrder(data);
+                applyStatus(data.status);
+                notify('Order status updated: ' + data.status, 'success');
+            }
+
+            if (['COMPLETED', 'CANCELLED'].includes(data.status)) {
+                stopPolling('Order finalised.');
+                return;
+            }
+        } catch (ex) {
+            console.warn('Tracking poll error:', ex);
+        }
+
+        pollTimer = setTimeout(poll, 5000);
+    }
+
+    function renderOrder(order) {
+        const count = orderItemsCount(order);
+        const total = Number(order.totalAmount || order.amount || 0);
+
+        document.getElementById('hero-order-id').textContent = 'Order #' + order.id;
+        document.getElementById('info-id').textContent = '#' + order.id;
+        document.getElementById('info-status').innerHTML = statusBadge(order.status);
+        document.getElementById('info-date').textContent = Formatter.date(order.createdAt);
+        document.getElementById('info-items').textContent = count + ' item' + (count !== 1 ? 's' : '');
+        document.getElementById('total-amount').textContent = Formatter.currency(total);
+        document.getElementById('last-updated').textContent = Formatter.time(new Date());
+
+        const items = order.items || [];
+        const list = document.getElementById('item-list');
+
+        if (!items.length) {
+            list.innerHTML = `
+                <div class="empty">
+                    <div class="empty-icon">📭</div>
+                    <h3>No item details</h3>
+                    <p>Không có chi tiết món trong đơn hàng này.</p>
+                </div>
+            `;
+            return;
+        }
+
+        list.innerHTML = items.map(item => {
+            const name = item.foodName || item.name || ('Item #' + (item.foodId || ''));
+            const quantity = Number(item.quantity || 1);
+            const toppings = Array.isArray(item.toppings)
+                ? item.toppings.join(', ')
+                : (item.toppings || '');
+            const subtotal = Number(item.subtotal || item.price || 0);
+
+            return `
+                <div class="order-item">
+                    <div class="item-icon">${itemEmoji(item)}</div>
+
+                    <div class="item-main">
+                        <div class="item-name">${escapeHtml(name)}</div>
+                        <div class="item-meta">
+                            ×${quantity}
+                            ${toppings ? ' · ' + escapeHtml(toppings) : ''}
+                        </div>
+                    </div>
+
+                    <div class="item-price">${Formatter.currency(subtotal)}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function applyStatus(status) {
+        const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.PENDING;
+
+        document.getElementById('hero-icon').textContent = cfg.icon;
+        document.getElementById('status-icon').textContent = cfg.icon;
+        document.getElementById('status-title').textContent = cfg.title;
+        document.getElementById('status-msg').textContent = cfg.message;
+
+        const banner = document.getElementById('status-banner');
+        banner.className = 'status-banner ' + cfg.cls;
+
+        renderStepper(status);
+        renderTimeline(status);
+        renderActions(status);
+
+        document.getElementById('info-status').innerHTML = statusBadge(status);
+
+        if (status === 'COMPLETED') {
+            stopPolling('Order completed.');
+        }
+
+        if (status === 'CANCELLED') {
+            stopPolling('Order cancelled.');
+        }
+    }
+
+    function renderStepper(status) {
+        const idx = STATUS_FLOW.indexOf(status);
+
+        document.querySelectorAll('.step').forEach(step => {
+            const stepStatus = step.dataset.status;
+            const stepIdx = STATUS_FLOW.indexOf(stepStatus);
+
+            step.classList.remove('done', 'active', 'cancelled');
+
+            if (status === 'CANCELLED') {
+                if (stepStatus === 'PENDING') {
+                    step.classList.add('cancelled', 'active');
+                }
+                return;
+            }
+
+            if (stepIdx < idx) {
+                step.classList.add('done');
+            }
+
+            if (stepIdx === idx) {
+                step.classList.add('done', 'active');
+            }
+        });
+    }
+
+    function renderTimeline(status) {
+        const idx = STATUS_FLOW.indexOf(status);
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            const itemIdx = STATUS_FLOW.indexOf(item.dataset.status);
+            item.classList.remove('active');
+
+            if (status === 'CANCELLED') {
+                if (item.dataset.status === 'PENDING') {
+                    item.classList.add('active');
+                }
+                return;
+            }
+
+            if (itemIdx <= idx) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    function renderActions(status) {
+        const row = document.getElementById('action-row');
+        const safeOrderId = encodeURIComponent(orderId);
+
+        if (status === 'PENDING') {
+            row.innerHTML = `
+                <a href="/customer/payment?orderId=${safeOrderId}" class="btn">
+                    Pay now
+                    <span>→</span>
+                </a>
+
+                <button class="btn btn-danger" onclick="cancelOrder()">
+                    Cancel order
+                </button>
+
+                <a href="/customer/orders" class="btn btn-ghost">
+                    My orders
+                </a>
+            `;
+            return;
+        }
+
+        if (status === 'CONFIRMED') {
+            row.innerHTML = `
+                <button class="btn btn-danger" onclick="cancelOrder()">
+                    Cancel order
+                </button>
+
+                <a href="/customer/orders" class="btn btn-ghost">
+                    My orders
+                </a>
+            `;
+            return;
+        }
+
+        if (status === 'COMPLETED' || status === 'CANCELLED') {
+            row.innerHTML = `
+                <a href="/customer/menu" class="btn">
+                    Order again
+                    <span>→</span>
+                </a>
+
+                <a href="/customer/orders" class="btn btn-ghost">
+                    My orders
+                </a>
+            `;
+            return;
+        }
+
+        row.innerHTML = `
+            <a href="/customer/orders" class="btn btn-ghost">
+                My orders
+            </a>
+        `;
+    }
+
+    function stopPolling(message) {
+        pollActive = false;
+        clearTimeout(pollTimer);
+
+        const dot = document.getElementById('poll-dot');
+        const label = document.getElementById('poll-label');
+
+        if (dot) {
+            dot.style.animation = 'none';
+            dot.style.background = 'var(--brown)';
+        }
+
+        if (label) {
+            label.textContent = message;
+        }
     }
 
     async function cancelOrder() {
-      if (!confirm('Cancel this order?')) return;
-      try {
-        await PATCH('/order/' + orderId + '/cancel');
-        applyStatus('CANCELLED');
-        stopPolling('Order cancelled.');
-      } catch (ex) { toast(ex.message, 'error'); }
+        if (!confirm('Cancel this order?')) {
+            return;
+        }
+
+        try {
+            if (typeof PATCH === 'function' && location.protocol !== 'file:') {
+                await PATCH('/order/' + orderId + '/cancel');
+            }
+
+            if (orderData) {
+                orderData.status = 'CANCELLED';
+            }
+
+            applyStatus('CANCELLED');
+            notify('Order cancelled.', 'info');
+        } catch (ex) {
+            notify(ex.message || 'Could not cancel order.', 'error');
+        }
     }
 
-    loadInitial();
+    function renderLoadError(message) {
+        document.querySelector('.track-layout').innerHTML = `
+            <div class="panel" style="grid-column:1 / -1">
+                <div class="error-box">
+                    <div class="empty-icon">⚠️</div>
+                    <h3>Could not load tracking</h3>
+                    <p>${escapeHtml(message)}</p>
+                    <a href="/customer/orders" class="btn" style="margin-top:22px">Back to orders</a>
+                </div>
+            </div>
+        `;
+    }
+
+    setupPage();
 </script>
 </body>
 </html>

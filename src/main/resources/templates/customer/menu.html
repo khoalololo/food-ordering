@@ -3,128 +3,1223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu — FoodOrder</title>
+    <title>Menu | KhoaFastFood</title>
+
     <link rel="stylesheet" href="/css/shared.css">
+
     <style>
-        .hero { padding:2.5rem 1.5rem 1.5rem; max-width:1200px; margin:0 auto; }
-        .hero-title { font-family:'Syne',sans-serif; font-weight:800; font-size:2.25rem; letter-spacing:-0.03em; line-height:1.15; }
-        .hero-title span { color:var(--accent); }
-        .hero-sub { color:var(--muted); margin-top:0.5rem; font-size:0.95rem; }
+        @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
 
-        .filters { max-width:1200px; margin:0 auto 1.5rem; padding:0 1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
-        .filter-btn { padding:0.4rem 1rem; border-radius:999px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:500; cursor:pointer; transition:all 0.15s; }
-        .filter-btn:hover { border-color:var(--border2); color:var(--text); }
-        .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
-        .filter-search { flex:1; min-width:180px; max-width:280px; }
+        :root {
+            --navy: #0A2947;
+            --cream: #F3E4C9;
+            --sage: #D3D4C0;
+            --brown: #8B5E3C;
+            --bg: #fffaf3;
+            --surface: #fff7ec;
+            --white: #ffffff;
+            --red: #c94832;
+            --green: #2f7d4f;
+            --yellow: #d99a2b;
+            --shadow: 0 24px 70px rgba(10, 41, 71, 0.16);
+            --shadow-soft: 0 14px 35px rgba(10, 41, 71, 0.10);
+        }
 
-        .food-grid { max-width:1200px; margin:0 auto; padding:0 1.5rem 4rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:1rem; }
+        * {
+            box-sizing: border-box;
+        }
 
-        .food-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; cursor:pointer; transition:border-color 0.15s, transform 0.15s; }
-        .food-card:hover { border-color:var(--accent); transform:translateY(-2px); }
-        .food-img { width:100%; height:150px; object-fit:cover; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:3rem; }
-        .food-img img { width:100%; height:100%; object-fit:cover; }
-        .food-body { padding:1rem; }
-        .food-type { font-size:0.7rem; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; }
-        .food-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; margin-bottom:0.5rem; line-height:1.3; }
-        .food-desc { font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; }
-        .food-footer { display:flex; align-items:center; justify-content:space-between; }
-        .food-price { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--accent2); }
-        .food-unavailable { opacity:0.45; pointer-events:none; }
-        .food-unavailable .food-name::after { content:' (Unavailable)'; font-size:0.7rem; color:var(--red); font-family:'DM Sans',sans-serif; }
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
 
-        /* Topping modal */
-        .topping-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
-        .topping-opt { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.75rem; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); cursor:pointer; transition:all 0.15s; }
-        .topping-opt:hover { border-color:var(--border2); }
-        .topping-opt.checked { border-color:var(--accent); background:rgba(232,108,47,0.08); }
-        .topping-opt input { display:none; }
-        .topping-name { font-size:0.825rem; font-weight:500; }
-        .topping-price { font-size:0.72rem; color:var(--accent2); margin-left:auto; }
+        body {
+            min-height: 100vh;
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            color: var(--navy);
+            background:
+                radial-gradient(circle at 10% 12%, rgba(139, 94, 60, 0.16), transparent 28rem),
+                radial-gradient(circle at 92% 88%, rgba(10, 41, 71, 0.13), transparent 32rem),
+                linear-gradient(135deg, #fffaf3 0%, #f3e4c9 100%);
+            overflow-x: hidden;
+        }
 
-        .qty-row { display:flex; align-items:center; gap:0.75rem; }
-        .qty-btn { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:1.1rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
-        .qty-btn:hover { border-color:var(--accent); color:var(--accent); }
-        .qty-val { font-family:'Syne',sans-serif; font-weight:700; font-size:1.1rem; min-width:24px; text-align:center; }
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            z-index: 0;
+            border-radius: 999px;
+            pointer-events: none;
+        }
 
-        .price-preview { background:rgba(232,108,47,0.08); border:1px solid rgba(232,108,47,0.2); border-radius:var(--radius); padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; }
-        .price-preview-label { font-size:0.825rem; color:var(--muted); }
-        .price-preview-val { font-family:'Syne',sans-serif; font-weight:800; font-size:1.15rem; color:var(--accent); }
+        body::before {
+            width: 280px;
+            height: 280px;
+            left: -96px;
+            top: -92px;
+            background: rgba(139, 94, 60, 0.14);
+            filter: blur(2px);
+        }
+
+        body::after {
+            width: 320px;
+            height: 320px;
+            right: -120px;
+            bottom: -120px;
+            background: rgba(10, 41, 71, 0.12);
+            filter: blur(2px);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+        }
+
+        #main-nav {
+            position: relative;
+            z-index: 5;
+            width: min(1180px, calc(100% - 48px));
+            margin: 22px auto 0;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            border-radius: 28px;
+            background: rgba(255, 250, 243, 0.88);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px);
+        }
+
+        .nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .nav-brand::before {
+            content: "🍔";
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--brown);
+            box-shadow: var(--shadow-soft);
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 800;
+            transition: 0.18s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--cream);
+            background: var(--navy);
+        }
+
+        .nav-badge {
+            min-width: 20px;
+            height: 20px;
+            margin-left: 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            color: var(--cream);
+            background: var(--red);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            width: min(1180px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 34px 0 80px;
+        }
+
+        .menu-hero {
+            position: relative;
+            min-height: 330px;
+            padding: 38px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 310px;
+            align-items: center;
+            gap: 28px;
+            border-radius: 42px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92)),
+                radial-gradient(circle at top right, rgba(243, 228, 201, 0.22), transparent 20rem);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .menu-hero::before {
+            content: "";
+            position: absolute;
+            right: -100px;
+            top: -140px;
+            width: 320px;
+            height: 320px;
+            border-radius: 999px;
+            background: rgba(243, 228, 201, 0.13);
+        }
+
+        .menu-hero::after {
+            content: "";
+            position: absolute;
+            left: 42%;
+            bottom: -120px;
+            width: 250px;
+            height: 250px;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.08);
+        }
+
+        .hero-copy,
+        .hero-food-card {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 14px;
+            padding: 8px 13px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(243, 228, 201, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.20);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .page-title {
+            margin: 0;
+            max-width: 680px;
+            font-size: clamp(46px, 5.6vw, 78px);
+            line-height: 0.95;
+            letter-spacing: -3px;
+            font-weight: 800;
+        }
+
+        .page-title span {
+            color: #fff2d7;
+        }
+
+        .hero-text {
+            max-width: 560px;
+            margin: 20px 0 0;
+            color: rgba(243, 228, 201, 0.78);
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 15px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(255, 250, 243, 0.12);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            font-size: 13px;
+            font-weight: 800;
+            backdrop-filter: blur(16px);
+        }
+
+        .hero-food-card {
+            padding: 22px;
+            border-radius: 34px;
+            background: rgba(255, 250, 243, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.2);
+            backdrop-filter: blur(16px);
+        }
+
+        .hero-food-emoji {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            border-radius: 26px;
+            background: rgba(243, 228, 201, 0.16);
+            font-size: 38px;
+        }
+
+        .hero-food-card h3 {
+            margin: 18px 0 8px;
+            color: var(--cream);
+            font-size: 24px;
+            line-height: 1.15;
+            letter-spacing: -0.8px;
+        }
+
+        .hero-food-card p {
+            margin: 0;
+            color: rgba(243, 228, 201, 0.72);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .filters-card {
+            position: relative;
+            z-index: 2;
+            margin-top: 26px;
+            padding: 18px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 16px;
+            align-items: center;
+            border-radius: 30px;
+            background: rgba(255, 250, 243, 0.88);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px);
+        }
+
+        .filter-list {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            min-height: 42px;
+            padding: 10px 15px;
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            border-radius: 999px;
+            color: var(--brown);
+            background: rgba(255, 255, 255, 0.54);
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--navy);
+            background: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .filter-btn.active {
+            color: var(--cream);
+            background: var(--navy);
+            border-color: var(--navy);
+            box-shadow: 0 12px 28px rgba(10, 41, 71, 0.18);
+        }
+
+        .search-shell {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brown);
+            pointer-events: none;
+        }
+
+        .filter-search {
+            width: 100%;
+            min-height: 48px;
+            padding: 13px 16px 13px 46px;
+            border-radius: 999px;
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            color: var(--navy);
+            background: rgba(255, 255, 255, 0.76);
+            font-size: 14px;
+            outline: none;
+            transition: 0.18s ease;
+        }
+
+        .filter-search:focus {
+            border-color: var(--brown);
+            background: var(--white);
+            box-shadow: 0 0 0 5px rgba(139, 94, 60, 0.12);
+        }
+
+        .section-head {
+            margin: 34px 0 18px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .section-title {
+            margin: 0;
+            color: var(--navy);
+            font-size: 32px;
+            line-height: 1;
+            letter-spacing: -1.2px;
+            font-weight: 800;
+        }
+
+        .section-sub {
+            margin: 7px 0 0;
+            color: var(--brown);
+            font-size: 14px;
+        }
+
+        .menu-count {
+            padding: 9px 13px;
+            border-radius: 999px;
+            color: var(--brown);
+            background: rgba(255, 250, 243, 0.82);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+            gap: 22px;
+        }
+
+        .food-card {
+            position: relative;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 32px;
+            background: rgba(255, 247, 236, 0.92);
+            border: 1px solid rgba(211, 212, 192, 0.88);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.22s ease;
+        }
+
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: rgba(139, 94, 60, 0.44);
+        }
+
+        .food-img {
+            position: relative;
+            height: 160px;
+            display: grid;
+            place-items: center;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            overflow: hidden;
+        }
+
+        .food-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .food-emoji {
+            width: 82px;
+            height: 82px;
+            display: grid;
+            place-items: center;
+            border-radius: 28px;
+            background: rgba(243, 228, 201, 0.14);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            font-size: 42px;
+            backdrop-filter: blur(14px);
+        }
+
+        .food-type {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(10, 41, 71, 0.72);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            backdrop-filter: blur(12px);
+        }
+
+        .food-body {
+            padding: 20px;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .food-name {
+            margin: 0;
+            color: var(--navy);
+            font-size: 21px;
+            line-height: 1.16;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .food-desc {
+            margin: 10px 0 0;
+            color: var(--brown);
+            font-size: 13px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .food-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .food-price {
+            color: var(--brown);
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 999px;
+            color: var(--cream);
+            background: linear-gradient(135deg, var(--navy), #123d64);
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 14px 30px rgba(10, 41, 71, 0.20);
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 38px rgba(10, 41, 71, 0.24);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-ghost {
+            color: var(--navy);
+            background: rgba(255, 250, 243, 0.72);
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            box-shadow: none;
+        }
+
+        .btn-ghost:hover {
+            color: var(--brown);
+            background: var(--white);
+        }
+
+        .btn-sm {
+            min-height: 38px;
+            padding: 9px 14px;
+            font-size: 13px;
+        }
+
+        .empty,
+        .loading {
+            grid-column: 1 / -1;
+            padding: 54px 30px;
+            text-align: center;
+            border-radius: 34px;
+            background: rgba(255, 247, 236, 0.92);
+            border: 1px solid rgba(211, 212, 192, 0.88);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .empty-icon {
+            width: 82px;
+            height: 82px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 18px;
+            border-radius: 30px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            font-size: 40px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .empty h3,
+        .loading h3 {
+            margin: 0;
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .empty p,
+        .loading p {
+            margin: 10px auto 0;
+            max-width: 460px;
+            color: var(--brown);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(10, 41, 71, 0.42);
+            backdrop-filter: blur(12px);
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(560px, 100%);
+            max-height: calc(100vh - 48px);
+            overflow: auto;
+            border-radius: 34px;
+            background: rgba(255, 247, 236, 0.98);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            box-shadow: 0 30px 90px rgba(10, 41, 71, 0.32);
+        }
+
+        .modal-header {
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 1px solid rgba(211, 212, 192, 0.84);
+        }
+
+        .modal-title {
+            margin: 0;
+            color: var(--navy);
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.9px;
+        }
+
+        .modal-body {
+            padding: 24px;
+            display: grid;
+            gap: 20px;
+        }
+
+        .modal-label {
+            margin: 0 0 10px;
+            color: var(--brown);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .modal-food-preview {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 24px;
+            background: rgba(243, 228, 201, 0.48);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .modal-food-icon {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 20px;
+            color: var(--cream);
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            font-size: 28px;
+        }
+
+        .modal-food-preview strong {
+            display: block;
+            color: var(--navy);
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .modal-food-preview span {
+            display: block;
+            margin-top: 4px;
+            color: var(--brown);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .topping-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .topping-opt {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 58px;
+            padding: 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .topping-opt:hover {
+            background: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .topping-opt.checked {
+            border-color: rgba(139, 94, 60, 0.58);
+            background: rgba(243, 228, 201, 0.6);
+            box-shadow: 0 10px 24px rgba(10, 41, 71, 0.08);
+        }
+
+        .topping-opt input {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--brown);
+        }
+
+        .topping-name {
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .topping-price {
+            margin-left: auto;
+            color: var(--brown);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .qty-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.78);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .qty-btn {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 0;
+            border-radius: 999px;
+            color: var(--navy);
+            background: rgba(243, 228, 201, 0.88);
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .qty-btn:hover {
+            color: var(--cream);
+            background: var(--navy);
+        }
+
+        .qty-val {
+            min-width: 34px;
+            text-align: center;
+            color: var(--navy);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .price-preview {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            border-radius: 24px;
+            background: rgba(243, 228, 201, 0.48);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .price-preview-label {
+            color: var(--brown);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .price-preview-val {
+            color: var(--brown);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .modal-footer {
+            padding: 20px 24px 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid rgba(211, 212, 192, 0.84);
+        }
+
+        #toast-container {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 9999;
+            display: grid;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 18px;
+            border-radius: 18px;
+            color: var(--cream);
+            background: var(--navy);
+            box-shadow: var(--shadow);
+            font-weight: 700;
+        }
+
+        .toast.error {
+            background: var(--red);
+        }
+
+        .toast.success {
+            background: var(--green);
+        }
+
+        @media (max-width: 980px) {
+            #main-nav,
+            .page {
+                width: min(100% - 32px, 1180px);
+            }
+
+            #main-nav {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+            }
+
+            .menu-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-food-card {
+                max-width: 420px;
+            }
+
+            .filters-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .page-title {
+                font-size: 42px;
+                letter-spacing: -1.8px;
+            }
+
+            .menu-hero {
+                padding: 30px 24px;
+                border-radius: 34px;
+            }
+
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topping-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 520px) {
+            #main-nav,
+            .page {
+                width: min(100% - 24px, 1180px);
+            }
+
+            .filters-card {
+                padding: 14px;
+            }
+
+            .food-card {
+                border-radius: 28px;
+            }
+
+            .modal {
+                border-radius: 28px;
+            }
+        }
     </style>
 </head>
+
 <body>
 <nav id="main-nav"></nav>
 <div id="toast-container"></div>
 
-<div class="hero">
-    <h1 class="hero-title">Order what you <span>crave</span></h1>
-    <p class="hero-sub">Fresh ingredients, fast delivery, made to order</p>
+<div class="page">
+    <section class="menu-hero">
+        <div class="hero-copy">
+            <p class="eyebrow">🍽️ Fresh menu</p>
+            <h1 class="page-title">Chọn món ngon, <span>thêm vào giỏ</span> thật nhanh.</h1>
+            <p class="hero-text">
+                Lướt menu, chọn topping, chỉnh số lượng và đưa món vào giỏ hàng.
+                Giao diện gọn như quầy bếp vừa lau xong, nhìn là muốn gọi món.
+            </p>
+
+            <div class="hero-actions">
+                <span class="hero-pill">⚡ Fast ordering</span>
+                <span class="hero-pill">🧾 Easy checkout</span>
+                <span class="hero-pill">🍔 Fresh food</span>
+            </div>
+        </div>
+
+        <aside class="hero-food-card">
+            <div class="hero-food-emoji">🍔</div>
+            <h3>Today’s pick</h3>
+            <p>
+                Burger, pizza, pasta, salad, soup, dessert và drink.
+                Chọn món đi, căn bếp đang bật đèn chờ bạn.
+            </p>
+        </aside>
+    </section>
+
+    <section class="filters-card">
+        <div class="filter-list">
+            <button class="filter-btn active" data-type="all">All</button>
+            <button class="filter-btn" data-type="pizza">Pizza</button>
+            <button class="filter-btn" data-type="burger">Burger</button>
+            <button class="filter-btn" data-type="pasta">Pasta</button>
+            <button class="filter-btn" data-type="salad">Salad</button>
+            <button class="filter-btn" data-type="soup">Soup</button>
+            <button class="filter-btn" data-type="dessert">Dessert</button>
+            <button class="filter-btn" data-type="drink">Drink</button>
+        </div>
+
+        <div class="search-shell">
+            <span class="search-icon">🔎</span>
+            <input class="filter-search" type="search" id="search-input" placeholder="Search menu...">
+        </div>
+    </section>
+
+    <section class="section-head">
+        <div>
+            <h2 class="section-title">Menu items</h2>
+            <p class="section-sub">Chọn món bạn thích rồi thêm topping trong modal.</p>
+        </div>
+        <div class="menu-count" id="menu-count">0 items</div>
+    </section>
+
+    <section class="food-grid" id="food-grid">
+        <div class="loading">
+            <div class="empty-icon">🍳</div>
+            <h3>Loading menu...</h3>
+            <p>Đang mở bếp và chuẩn bị danh sách món ăn.</p>
+        </div>
+    </section>
 </div>
 
-<div class="filters">
-    <button class="filter-btn active" data-type="all">All</button>
-    <button class="filter-btn" data-type="pizza">Pizza</button>
-    <button class="filter-btn" data-type="burger">Burger</button>
-    <button class="filter-btn" data-type="pasta">Pasta</button>
-    <button class="filter-btn" data-type="salad">Salad</button>
-    <button class="filter-btn" data-type="soup">Soup</button>
-    <button class="filter-btn" data-type="dessert">Dessert</button>
-    <button class="filter-btn" data-type="drink">Drink</button>
-    <input class="form-input filter-search" type="search" id="search-input" placeholder="Search menu…">
-</div>
-
-<div class="food-grid" id="food-grid">
-    <div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--muted)">Loading menu…</div>
-</div>
-
-<!-- Topping / Add to cart modal -->
 <div class="modal-overlay" id="add-modal">
     <div class="modal">
         <div class="modal-header">
             <h2 class="modal-title" id="modal-food-name">Customise order</h2>
-            <button class="btn btn-ghost btn-sm" onclick="closeModal('add-modal')">Close</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeMenuModal()">Close</button>
         </div>
+
         <div class="modal-body">
+            <div class="modal-food-preview">
+                <div class="modal-food-icon" id="modal-food-icon">🍽️</div>
+                <div>
+                    <strong id="modal-food-title">Food name</strong>
+                    <span id="modal-food-desc">Pick toppings and quantity before adding to cart.</span>
+                </div>
+            </div>
+
             <div id="modal-toppings-section">
-                <p style="font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem">Toppings</p>
+                <p class="modal-label">Toppings</p>
                 <div class="topping-grid" id="modal-toppings"></div>
             </div>
-            <hr class="divider">
+
             <div>
-                <p style="font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem">Quantity</p>
+                <p class="modal-label">Quantity</p>
                 <div class="qty-row">
                     <button class="qty-btn" onclick="changeQty(-1)">−</button>
                     <span class="qty-val" id="qty-val">1</span>
                     <button class="qty-btn" onclick="changeQty(1)">+</button>
                 </div>
             </div>
+
             <div class="price-preview">
-                <span class="price-preview-label">Total</span>
+                <span class="price-preview-label">Estimated total</span>
                 <span class="price-preview-val" id="price-preview">0₫</span>
             </div>
         </div>
+
         <div class="modal-footer">
-            <button class="btn btn-ghost" onclick="closeModal('add-modal')">Cancel</button>
-            <button class="btn btn-primary" onclick="confirmAdd()">Add to cart</button>
+            <button class="btn btn-ghost" onclick="closeMenuModal()">Cancel</button>
+            <button class="btn" onclick="confirmAdd()">Add to cart <span>→</span></button>
         </div>
     </div>
 </div>
 
 <script src="/js/shared.js"></script>
-<script>
-    requireAuth();
-    renderNav('/customer/menu');
 
+<script>
     const TOPPINGS_BY_TYPE = {
-      pizza:   [{ key:'extraCheese', label:'Extra Cheese', price:10000 }, { key:'extraSauce', label:'Extra Sauce', price:5000 }, { key:'extraMeat', label:'Extra Meat', price:20000 }, { key:'spicy', label:'Spicy', price:0 }],
-      burger:  [{ key:'extraCheese', label:'Extra Cheese', price:10000 }, { key:'extraMeat', label:'Extra Meat', price:20000 }, { key:'extraVeggies', label:'Extra Veggies', price:8000 }, { key:'noOnion', label:'No Onion', price:0 }],
-      pasta:   [{ key:'extraCheese', label:'Extra Cheese', price:10000 }, { key:'extraSauce', label:'Extra Sauce', price:5000 }, { key:'spicy', label:'Spicy', price:0 }],
-      salad:   [{ key:'extraVeggies', label:'Extra Veggies', price:8000 }, { key:'noDressing', label:'No Dressing', price:0 }],
-      soup:    [{ key:'extraMeat', label:'Extra Meat', price:20000 }, { key:'spicy', label:'Spicy', price:0 }],
-      drink:   [{ key:'extraIce', label:'Extra Ice', price:0 }, { key:'noSugar', label:'No Sugar', price:0 }],
-      dessert: [{ key:'noSugar', label:'No Sugar', price:0 }],
+        pizza: [
+            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+            { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
+            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+            { key: 'spicy', label: 'Spicy', price: 0 }
+        ],
+        burger: [
+            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+            { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
+            { key: 'noOnion', label: 'No Onion', price: 0 }
+        ],
+        pasta: [
+            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+            { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
+            { key: 'spicy', label: 'Spicy', price: 0 }
+        ],
+        salad: [
+            { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
+            { key: 'noDressing', label: 'No Dressing', price: 0 }
+        ],
+        soup: [
+            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+            { key: 'spicy', label: 'Spicy', price: 0 }
+        ],
+        drink: [
+            { key: 'extraIce', label: 'Extra Ice', price: 0 },
+            { key: 'noSugar', label: 'No Sugar', price: 0 }
+        ],
+        dessert: [
+            { key: 'noSugar', label: 'No Sugar', price: 0 }
+        ]
     };
 
-    const EMOJI = { pizza:'', burger:'', pasta:'', salad:'', soup:'', dessert:'', drink:'', food:'' };
+    const FOOD_EMOJI = {
+        pizza: '🍕',
+        burger: '🍔',
+        pasta: '🍝',
+        salad: '🥗',
+        soup: '🍲',
+        dessert: '🍰',
+        drink: '🥤',
+        food: '🍽️'
+    };
+
+    const PREVIEW_FOODS = [
+        {
+            id: 1,
+            name: 'Cheese Burger',
+            type: 'burger',
+            description: 'Juicy beef patty, melted cheese, fresh lettuce and signature sauce.',
+            basePrice: 59000,
+            available: true
+        },
+        {
+            id: 2,
+            name: 'Pepperoni Pizza',
+            type: 'pizza',
+            description: 'Crispy crust, tomato sauce, mozzarella cheese and pepperoni.',
+            basePrice: 99000,
+            available: true
+        },
+        {
+            id: 3,
+            name: 'Creamy Pasta',
+            type: 'pasta',
+            description: 'Soft pasta tossed in creamy sauce with herbs and parmesan.',
+            basePrice: 79000,
+            available: true
+        },
+        {
+            id: 4,
+            name: 'Fresh Garden Salad',
+            type: 'salad',
+            description: 'Crisp vegetables, light dressing and a fresh green finish.',
+            basePrice: 49000,
+            available: true
+        },
+        {
+            id: 5,
+            name: 'Hot Mushroom Soup',
+            type: 'soup',
+            description: 'Warm mushroom soup for a cozy meal starter.',
+            basePrice: 39000,
+            available: true
+        },
+        {
+            id: 6,
+            name: 'Chocolate Cake',
+            type: 'dessert',
+            description: 'Soft chocolate cake with a rich sweet finish.',
+            basePrice: 45000,
+            available: true
+        },
+        {
+            id: 7,
+            name: 'Iced Lemon Tea',
+            type: 'drink',
+            description: 'Cool lemon tea with a bright citrus taste.',
+            basePrice: 25000,
+            available: true
+        }
+    ];
+
+    const PreviewCart = {
+        _items: [],
+        add(food, qty, toppings = []) {
+            const key = food.id + ':' + toppings.join(',');
+            const existing = this._items.find(item => item.key === key);
+
+            if (existing) {
+                existing.quantity += qty;
+                existing.subtotal = existing.unitPrice * existing.quantity;
+            } else {
+                this._items.push({
+                    key,
+                    foodId: food.id,
+                    name: food.name,
+                    type: food.type,
+                    unitPrice: food.basePrice,
+                    quantity: qty,
+                    toppings,
+                    subtotal: food.basePrice * qty
+                });
+            }
+
+            updatePreviewBadge();
+        },
+        count() {
+            return this._items.reduce((sum, item) => sum + item.quantity, 0);
+        }
+    };
+
+    const Formatter = typeof fmt !== 'undefined'
+        ? fmt
+        : {
+            currency: n => new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                maximumFractionDigits: 0
+            }).format(n)
+        };
+
+    const CartStore = typeof Cart !== 'undefined' ? Cart : PreviewCart;
+
+    const notify = typeof toast === 'function'
+        ? toast
+        : function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const item = document.createElement('div');
+            item.className = `toast ${type}`;
+            item.textContent = message;
+            container.appendChild(item);
+
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(16px)';
+                item.style.transition = '0.25s ease';
+                setTimeout(() => item.remove(), 260);
+            }, 2600);
+        };
 
     let allFoods = [];
     let currentFood = null;
@@ -132,124 +1227,272 @@
     let activeType = 'all';
     let searchQuery = '';
 
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function foodEmoji(type) {
+        return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
+    }
+
+    function isAvailable(food) {
+        if (food.isAvailable === false) return false;
+        if (food.available === false) return false;
+        return true;
+    }
+
+    function renderPreviewNav() {
+        const nav = document.getElementById('main-nav');
+        if (!nav) return;
+
+        nav.innerHTML = `
+            <a class="nav-brand" href="/customer/menu">KhoaFastFood</a>
+            <div class="nav-links">
+                <a class="nav-link active" href="/customer/menu">Menu</a>
+                <a class="nav-link" href="/customer/cart">
+                    Cart
+                    <span class="nav-badge" id="cart-badge" style="display:none">0</span>
+                </a>
+                <a class="nav-link" href="/customer/orders">My Orders</a>
+                <a class="nav-link" href="/customer/notifications">Notifications</a>
+            </div>
+        `;
+    }
+
+    function updatePreviewBadge() {
+        const badge = document.getElementById('cart-badge');
+        if (!badge) return;
+
+        const count = CartStore.count ? CartStore.count() : 0;
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-flex' : 'none';
+    }
+
+    function setupNav() {
+        if (typeof requireAuth === 'function') {
+            const ok = requireAuth();
+
+            if (ok && typeof renderNav === 'function') {
+                renderNav('/customer/menu');
+
+                const brand = document.querySelector('.nav-brand');
+                if (brand) brand.textContent = 'KhoaFastFood';
+            }
+        } else {
+            renderPreviewNav();
+        }
+
+        updatePreviewBadge();
+    }
+
     async function loadFoods() {
-      try {
-        allFoods = await GET('/food');
-        renderGrid();
-      } catch (ex) {
-        document.getElementById('food-grid').innerHTML =
-          `<div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--red)">${ex.message}</div>`;
-      }
+        try {
+            if (typeof GET === 'function') {
+                allFoods = await GET('/food');
+            } else {
+                allFoods = PREVIEW_FOODS;
+            }
+
+            renderGrid();
+        } catch (ex) {
+            if (location.protocol === 'file:') {
+                allFoods = PREVIEW_FOODS;
+                renderGrid();
+                return;
+            }
+
+            document.getElementById('food-grid').innerHTML = `
+                <div class="empty">
+                    <div class="empty-icon">⚠️</div>
+                    <h3>Could not load menu</h3>
+                    <p>${escapeHtml(ex.message || 'Please try again later.')}</p>
+                </div>
+            `;
+        }
     }
 
     function renderGrid() {
-      const q = searchQuery.toLowerCase();
-      const foods = allFoods.filter(f => {
-        if (!f.isAvailable && !f.available) return false;
-        if (activeType !== 'all' && f.type !== activeType) return false;
-        if (q && !f.name.toLowerCase().includes(q)) return false;
-        return true;
-      });
+        const q = searchQuery.trim().toLowerCase();
 
-      const grid = document.getElementById('food-grid');
-      if (!foods.length) {
-        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><h3>No items found</h3><p>Try a different filter or search</p></div>`;
-        return;
-      }
+        const foods = allFoods.filter(food => {
+            if (!isAvailable(food)) return false;
+            if (activeType !== 'all' && String(food.type).toLowerCase() !== activeType) return false;
+            if (q && !String(food.name).toLowerCase().includes(q)) return false;
+            return true;
+        });
 
-      grid.innerHTML = foods.map(f => `
-        <div class="food-card ${f.isAvailable === false ? 'food-unavailable' : ''}" onclick="openAddModal(${f.id})">
-          <div class="food-img">
-            ${f.imageUrl ? `<img src="${f.imageUrl}" alt="${f.name}" onerror="this.parentElement.innerHTML=''">` : ''}
-          </div>
-          <div class="food-body">
-            <div class="food-type">${f.type}</div>
-            <div class="food-name">${f.name}</div>
-            ${f.description ? `<div class="food-desc">${f.description}</div>` : ''}
-            <div class="food-footer">
-              <span class="food-price">${fmt.currency(f.basePrice)}</span>
-              <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openAddModal(${f.id})">+ Add</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
+        const grid = document.getElementById('food-grid');
+        const count = document.getElementById('menu-count');
+
+        count.textContent = foods.length + ' item' + (foods.length !== 1 ? 's' : '');
+
+        if (!foods.length) {
+            grid.innerHTML = `
+                <div class="empty">
+                    <div class="empty-icon">🔎</div>
+                    <h3>No items found</h3>
+                    <p>Thử đổi loại món hoặc nhập từ khóa khác để tìm menu phù hợp hơn.</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = foods.map(food => `
+            <article class="food-card" onclick="openAddModal(${food.id})">
+                <div class="food-img">
+                    ${food.imageUrl
+                        ? `<img src="${escapeHtml(food.imageUrl)}" alt="${escapeHtml(food.name)}" onerror="this.remove(); this.parentElement.querySelector('.food-emoji').style.display='grid';">`
+                        : ''
+                    }
+                    <div class="food-emoji" style="${food.imageUrl ? 'display:none' : ''}">
+                        ${foodEmoji(food.type)}
+                    </div>
+                    <div class="food-type">${escapeHtml(food.type || 'food')}</div>
+                </div>
+
+                <div class="food-body">
+                    <h3 class="food-name">${escapeHtml(food.name)}</h3>
+
+                    ${food.description
+                        ? `<p class="food-desc">${escapeHtml(food.description)}</p>`
+                        : `<p class="food-desc">Freshly prepared and ready to add to your cart.</p>`
+                    }
+
+                    <div class="food-footer">
+                        <span class="food-price">${Formatter.currency(food.basePrice || 0)}</span>
+                        <button class="btn btn-sm" onclick="event.stopPropagation(); openAddModal(${food.id})">
+                            + Add
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `).join('');
     }
 
-    // Filters
     document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeType = btn.dataset.type;
-        renderGrid();
-      });
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(item => item.classList.remove('active'));
+            btn.classList.add('active');
+            activeType = btn.dataset.type;
+            renderGrid();
+        });
     });
 
     document.getElementById('search-input').addEventListener('input', e => {
-      searchQuery = e.target.value;
-      renderGrid();
+        searchQuery = e.target.value;
+        renderGrid();
     });
 
-    // Add to cart modal
     function openAddModal(foodId) {
-      currentFood = allFoods.find(f => f.id === foodId);
-      if (!currentFood) return;
-      currentQty = 1;
+        currentFood = allFoods.find(food => Number(food.id) === Number(foodId));
+        if (!currentFood) return;
 
-      document.getElementById('modal-food-name').textContent = currentFood.name;
-      document.getElementById('qty-val').textContent = '1';
+        currentQty = 1;
 
-      const toppings = TOPPINGS_BY_TYPE[currentFood.type] || [];
-      const tSection = document.getElementById('modal-toppings-section');
-      tSection.style.display = toppings.length ? '' : 'none';
+        document.getElementById('modal-food-name').textContent = currentFood.name;
+        document.getElementById('modal-food-title').textContent = currentFood.name;
+        document.getElementById('modal-food-desc').textContent = currentFood.description || 'Pick toppings and quantity before adding to cart.';
+        document.getElementById('modal-food-icon').textContent = foodEmoji(currentFood.type);
+        document.getElementById('qty-val').textContent = '1';
 
-      document.getElementById('modal-toppings').innerHTML = toppings.map(t => `
-        <label class="topping-opt" id="top-${t.key}">
-          <input type="checkbox" value="${t.key}" onchange="recalcPrice()">
-          <span class="topping-name">${t.label}</span>
-          ${t.price > 0 ? `<span class="topping-price">+${fmt.currency(t.price)}</span>` : '<span class="topping-price" style="color:var(--muted)">Free</span>'}
-        </label>
-      `).join('');
+        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+        const toppingSection = document.getElementById('modal-toppings-section');
+        const toppingGrid = document.getElementById('modal-toppings');
 
-      // checkbox toggle styling
-      document.getElementById('modal-toppings').querySelectorAll('.topping-opt').forEach(el => {
-        el.addEventListener('click', function() {
-          const cb = this.querySelector('input');
-          cb.checked = !cb.checked;
-          this.classList.toggle('checked', cb.checked);
-          recalcPrice();
-        });
-      });
+        toppingSection.style.display = toppings.length ? 'block' : 'none';
 
-      recalcPrice();
-      openModal('add-modal');
+        toppingGrid.innerHTML = toppings.map(topping => `
+            <label class="topping-opt">
+                <input type="checkbox" value="${escapeHtml(topping.key)}" onchange="handleToppingChange(this)">
+                <span class="topping-name">${escapeHtml(topping.label)}</span>
+                <span class="topping-price">
+                    ${topping.price > 0 ? '+' + Formatter.currency(topping.price) : 'Free'}
+                </span>
+            </label>
+        `).join('');
+
+        recalcPrice();
+        openMenuModal();
+    }
+
+    function handleToppingChange(input) {
+        input.closest('.topping-opt')?.classList.toggle('checked', input.checked);
+        recalcPrice();
+    }
+
+    function selectedToppingKeys() {
+        return [...document.querySelectorAll('#modal-toppings input:checked')].map(input => input.value);
     }
 
     function recalcPrice() {
-      if (!currentFood) return;
-      const checked = [...document.querySelectorAll('#modal-toppings input:checked')].map(i => i.value);
-      const toppings = TOPPINGS_BY_TYPE[currentFood.type] || [];
-      const extra = checked.reduce((s, k) => s + (toppings.find(t=>t.key===k)?.price || 0), 0);
-      const total = (currentFood.basePrice + extra) * currentQty;
-      document.getElementById('price-preview').textContent = fmt.currency(total);
+        if (!currentFood) return;
+
+        const checked = selectedToppingKeys();
+        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+
+        const extra = checked.reduce((sum, key) => {
+            return sum + (toppings.find(topping => topping.key === key)?.price || 0);
+        }, 0);
+
+        const total = (Number(currentFood.basePrice || 0) + extra) * currentQty;
+        document.getElementById('price-preview').textContent = Formatter.currency(total);
     }
 
     function changeQty(delta) {
-      currentQty = Math.max(1, Math.min(20, currentQty + delta));
-      document.getElementById('qty-val').textContent = currentQty;
-      recalcPrice();
+        currentQty = Math.max(1, Math.min(20, currentQty + delta));
+        document.getElementById('qty-val').textContent = currentQty;
+        recalcPrice();
     }
 
     function confirmAdd() {
-      if (!currentFood) return;
-      const checked = [...document.querySelectorAll('#modal-toppings input:checked')].map(i => i.value);
-      const toppings = TOPPINGS_BY_TYPE[currentFood.type] || [];
-      const toppingLabels = checked.map(k => toppings.find(t=>t.key===k)?.label).filter(Boolean);
-      Cart.add(currentFood, currentQty, toppingLabels);
-      closeModal('add-modal');
-      toast(`${currentFood.name} added to cart`, 'success');
+        if (!currentFood) return;
+
+        const checked = selectedToppingKeys();
+        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+
+        const toppingLabels = checked
+            .map(key => toppings.find(topping => topping.key === key)?.label)
+            .filter(Boolean);
+
+        CartStore.add(currentFood, currentQty, toppingLabels);
+
+        closeMenuModal();
+        updatePreviewBadge();
+        notify(`${currentFood.name} added to cart`, 'success');
     }
 
+    function openMenuModal() {
+        const modal = document.getElementById('add-modal');
+
+        if (typeof openModal === 'function') {
+            openModal('add-modal');
+        } else {
+            modal.classList.add('open');
+        }
+    }
+
+    function closeMenuModal() {
+        const modal = document.getElementById('add-modal');
+
+        if (typeof closeModal === 'function') {
+            closeModal('add-modal');
+        } else {
+            modal.classList.remove('open');
+        }
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('modal-overlay')) {
+            closeMenuModal();
+        }
+    });
+
+    setupNav();
     loadFoods();
 </script>
 </body>
