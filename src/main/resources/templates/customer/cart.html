@@ -602,8 +602,6 @@
             display: grid !important;
             grid-template-columns: 18px minmax(0, 1fr) auto !important;
             align-items: center !important;
-            gap18px minmax(0, 1fr) auto !important;
-            align-items: center !important;
             gap: 9px !important;
             border-radius: 16px !important;
             background: rgba(255, 250, 243, 0.94) !important;
@@ -697,7 +695,8 @@
 
             <div class="cart-bottom">
                 <div class="pending-note" id="pending-note">
-                    You have a pending order that hasn't been paid yet. Click "Checkout" to return to the payment page for
+                    You have a pending order that hasn't been paid yet. Click "Checkout" to return to the payment page
+                    for
                     that order.
                 </div>
 
@@ -851,6 +850,65 @@
             food: '🍽️'
         };
 
+        function clearPendingCheckout() {
+            localStorage.removeItem('pendingOrderId');
+            localStorage.removeItem('pendingOrderCart');
+        }
+
+        function markCartChangedAfterPending() {
+            if (localStorage.getItem('pendingOrderId')) {
+                localStorage.setItem('cartChangedAfterPending', '1');
+            }
+
+            clearPendingCheckout();
+        }
+
+        function normalizeToppingList(toppings) {
+            if (Array.isArray(toppings)) {
+                return toppings
+                    .map(topping => String(topping || '').trim())
+                    .filter(Boolean)
+                    .sort();
+            }
+
+            return String(toppings || '')
+                .split(',')
+                .map(topping => topping.trim())
+                .filter(Boolean)
+                .sort();
+        }
+
+        function cartSnapshot(items = getItems()) {
+            return JSON.stringify(
+                items.map(item => ({
+                    foodId: Number(item.foodId),
+                    quantity: Number(item.quantity || 1),
+                    toppings: normalizeToppingList(item.toppings),
+                    toppingTotal: Number(item.toppingTotal || 0),
+                    unitPrice: Number(item.unitPrice || 0),
+                    subtotal: Number(item.subtotal || 0)
+                }))
+            );
+        }
+
+        function getValidPendingOrderId(items = getItems()) {
+            const pendingOrderId = localStorage.getItem('pendingOrderId');
+            const pendingCart = localStorage.getItem('pendingOrderCart');
+            const cartChanged = localStorage.getItem('cartChangedAfterPending') === '1';
+
+            if (!pendingOrderId || cartChanged) {
+                clearPendingCheckout();
+                return null;
+            }
+
+            if (pendingCart === cartSnapshot(items)) {
+                return pendingOrderId;
+            }
+
+            clearPendingCheckout();
+            return null;
+        }
+
         function foodEmoji(type) {
             return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
         }
@@ -864,13 +922,8 @@
                 .replaceAll("'", '&#039;');
         }
 
-        function clearPendingCheckout() {
-            localStorage.removeItem('pendingOrderId');
-            localStorage.removeItem('pendingOrderCart');
-        }
-
         function currentPendingOrderId() {
-            return localStorage.getItem('pendingOrderId');
+            return getValidPendingOrderId();
         }
 
         function getItems() {
@@ -935,7 +988,7 @@
         }
 
         function updateItemTopping(key, toppingKey, checked) {
-            clearPendingCheckout();
+            markCartChangedAfterPending();
 
             const items = getItems();
             const item = items.find(i => String(i.key) === String(key));
@@ -1092,13 +1145,13 @@
         }
 
         function updateQty(key, qty) {
-            clearPendingCheckout();
+            markCartChangedAfterPending();
             CartStore.update(key, qty);
             render();
         }
 
         function removeItem(key) {
-            clearPendingCheckout();
+            markCartChangedAfterPending();
             CartStore.remove(key);
             render();
             notify('Đã xóa món khỏi giỏ hàng.', 'info');
@@ -1116,7 +1169,7 @@
                 return;
             }
 
-            clearPendingCheckout();
+            markCartChangedAfterPending();
 
             if (typeof CartStore.clear === 'function') {
                 CartStore.clear();
@@ -1136,7 +1189,7 @@
                 return;
             }
 
-            const pendingOrderId = currentPendingOrderId();
+            const pendingOrderId = getValidPendingOrderId(items);
 
             if (pendingOrderId) {
                 location.href = `/customer/payment?orderId=${pendingOrderId}`;
@@ -1163,7 +1216,8 @@
                 const order = await POST('/order', payload);
 
                 localStorage.setItem('pendingOrderId', String(order.id));
-                localStorage.setItem('pendingOrderCart', JSON.stringify(items));
+                localStorage.setItem('pendingOrderCart', cartSnapshot(items));
+                localStorage.removeItem('cartChangedAfterPending');
 
                 notify('Đơn đã tạo, chuyển sang thanh toán.', 'success');
 
