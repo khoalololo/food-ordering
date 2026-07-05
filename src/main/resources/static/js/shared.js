@@ -152,20 +152,20 @@ const fmt = {
 
   date: d => d
     ? new Intl.DateTimeFormat('vi-VN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }).format(new Date(d))
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date(d))
     : '—',
 
   time: d => d
     ? new Intl.DateTimeFormat('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }).format(new Date(d))
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).format(new Date(d))
     : '—',
 
   status: s => ({
@@ -226,7 +226,27 @@ const Cart = {
     Cart.updateBadge();
   },
 
+  normalizeToppings(toppings = []) {
+    return toppings.map(topping => {
+      if (typeof topping === 'string') {
+        return {
+          label: topping,
+          price: 0
+        };
+      }
+
+      return {
+        key: topping.key || '',
+        label: topping.label || topping.name || '',
+        price: Number(topping.price || 0)
+      };
+    }).filter(topping => topping.label);
+  },
+
   add(food, qty, toppings = []) {
+    localStorage.removeItem('pendingOrderId');
+    localStorage.removeItem('pendingOrderCart');
+
     const items = this.items;
     const key = food.id + ':' + toppings.join(',');
 
@@ -234,6 +254,7 @@ const Cart = {
 
     if (existing) {
       existing.quantity += qty;
+      existing.imageUrl = existing.imageUrl || food.imageUrl || food.image_url || food.image || '';
       existing.subtotal = existing.unitPrice * existing.quantity;
     } else {
       items.push({
@@ -241,6 +262,7 @@ const Cart = {
         foodId: food.id,
         name: food.name,
         type: food.type,
+        imageUrl: food.imageUrl || food.image_url || food.image || '',
         unitPrice: food.basePrice,
         quantity: qty,
         toppings,
@@ -267,7 +289,7 @@ const Cart = {
     }
 
     item.quantity = qty;
-    item.subtotal = item.unitPrice * qty;
+    item.subtotal = Number(item.unitPrice || 0) * qty;
 
     this.save(items);
   },
@@ -278,11 +300,11 @@ const Cart = {
   },
 
   total() {
-    return this.items.reduce((sum, item) => sum + item.subtotal, 0);
+    return this.items.reduce((sum, item) => sum + Number(item.subtotal || 0), 0);
   },
 
   count() {
-    return this.items.reduce((sum, item) => sum + item.quantity, 0);
+    return this.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
   },
 
   updateBadge() {

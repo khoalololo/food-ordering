@@ -987,6 +987,71 @@
                 grid-column: auto;
             }
         }
+
+        /* =====================================================
+   MANAGER STAFF STATS FIX
+   Bỏ icon Total users / Staff / Managers
+   Cho số to giống Staff Orders
+   ===================================================== */
+
+.hero-stats .stat-icon,
+.stat-card .stat-icon,
+.staff-stat .stat-icon,
+.dashboard-stat .stat-icon,
+.metric-card .stat-icon {
+    display: none !important;
+}
+
+.hero-stats .stat-card,
+.stat-card,
+.staff-stat,
+.dashboard-stat,
+.metric-card {
+    min-height: 92px !important;
+    padding: 22px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    border-radius: 28px !important;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 250, 243, 0.16),
+            rgba(255, 250, 243, 0.08)
+        ) !important;
+    border: 1px solid rgba(243, 228, 201, 0.24) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 250, 243, 0.12) !important;
+}
+
+.hero-stats .stat-card span,
+.stat-card span,
+.staff-stat span,
+.dashboard-stat span,
+.metric-card span {
+    display: block !important;
+    color: rgba(243, 228, 201, 0.76) !important;
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.2px !important;
+}
+
+.hero-stats .stat-card strong,
+.stat-card strong,
+.staff-stat strong,
+.dashboard-stat strong,
+.metric-card strong,
+.stat-value {
+    display: block !important;
+    margin-top: 10px !important;
+    color: var(--cream) !important;
+    font-size: clamp(34px, 3.2vw, 48px) !important;
+    line-height: 0.95 !important;
+    font-weight: 900 !important;
+    letter-spacing: -1.6px !important;
+}
     </style>
 </head>
 
@@ -997,11 +1062,11 @@
 <div class="page">
     <section class="manager-hero">
         <div class="hero-copy">
-            <p class="eyebrow">👥 Manager dashboard</p>
-            <h1 class="page-title">Quản lý nhân sự, <span>phân quyền rõ ràng.</span></h1>
+            <p class="eyebrow"> Manager dashboard</p>
+            <h1 class="page-title">Manage staff, <span>clear role assignment.</span></h1>
             <p class="hero-text">
-                Xem danh sách tài khoản, thêm nhân viên, chỉnh thông tin và thay đổi role.
-                Staff phụ trách xử lý đơn, Manager quản lý menu và nhân sự.
+                View user list, add staff members, edit information, and change roles.
+                Staff handle order processing, Managers oversee menu and staff management.
             </p>
 
             <div class="hero-actions">
@@ -1069,7 +1134,7 @@
     <section class="section-head">
         <div>
             <h2 class="section-title">Team members</h2>
-            <p class="section-sub">Remove không xóa tài khoản, chỉ chuyển role về CUSTOMER để giữ lịch sử đơn hàng.</p>
+            <p class="section-sub">Remove not delete accounts, only change role to CUSTOMER to retain order history.</p>
         </div>
 
         <span class="result-chip" id="staff-count">
@@ -1081,7 +1146,7 @@
         <div class="loading">
             <div class="empty-icon">🍳</div>
             <h3>Loading members...</h3>
-            <p>Đang lấy danh sách tài khoản.</p>
+            <p>Loading staff list...</p>
         </div>
     </section>
 </div>

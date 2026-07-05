@@ -420,3 +420,19 @@ div {
     font-size: 12px !important;
   }
 }
+
+/* =====================================================
+   BRAND LOGO
+   Thay icon burger cũ bằng logo KFF
+   ===================================================== */
+
+.nav-brand::before {
+    content: "" !important;
+    width: 48px !important;
+    height: 48px !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+    border-radius: 16px !important;
+    background: #ffffff url("/images/logo/logo-kff.png") center / cover no-repeat !important;
+    box-shadow: 0 10px 24px rgba(10, 41, 71, 0.14) !important;
+}

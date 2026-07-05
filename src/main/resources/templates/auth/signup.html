@@ -545,6 +545,144 @@
                 font-size: 31px;
             }
         }
+
+        /* =====================================================
+   SIGN UP LOGO + FOOD SHOWCASE
+   Đồng bộ signup với signin
+   ===================================================== */
+
+.brand-logo-img {
+    background: #ffffff url("/images/logo/logo-kff.png") center / contain no-repeat !important;
+    color: transparent !important;
+    border-radius: 50% !important;
+}
+
+.signin-food-showcase {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 540px;
+    margin-top: 44px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(145px, 0.8fr);
+    gap: 16px;
+}
+
+.signup-food-showcase {
+    margin-top: 44px;
+}
+
+.showcase-side {
+    display: grid;
+    gap: 16px;
+}
+
+.showcase-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    background: rgba(255, 250, 243, 0.12);
+    border: 1px solid rgba(243, 228, 201, 0.22);
+    box-shadow: 0 20px 46px rgba(0, 0, 0, 0.20);
+}
+
+.showcase-main {
+    min-height: 250px;
+}
+
+.showcase-mini {
+    min-height: 117px;
+}
+
+.showcase-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: scale(1.02);
+}
+
+.showcase-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(10, 41, 71, 0.02) 0%,
+            rgba(10, 41, 71, 0.14) 42%,
+            rgba(10, 41, 71, 0.88) 100%
+        );
+}
+
+.showcase-content {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 17px;
+    z-index: 2;
+}
+
+.showcase-tag {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    color: var(--cream);
+    background: rgba(139, 94, 60, 0.88);
+    border: 1px solid rgba(243, 228, 201, 0.22);
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.showcase-content strong {
+    display: block;
+    color: var(--cream);
+    font-size: 22px;
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.36);
+}
+
+.showcase-content p {
+    margin: 8px 0 0;
+    max-width: 260px;
+    color: rgba(243, 228, 201, 0.86);
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 700;
+}
+
+.showcase-mini .showcase-content {
+    left: 13px;
+    right: 13px;
+    bottom: 13px;
+}
+
+.showcase-mini .showcase-tag {
+    margin-bottom: 6px;
+    padding: 5px 8px;
+    font-size: 10px;
+}
+
+.showcase-mini .showcase-content strong {
+    font-size: 15px;
+    line-height: 1.16;
+}
+
+@media (max-width: 980px) {
+    .signin-food-showcase {
+        display: none;
+    }
+}
     </style>
 </head>
 
@@ -554,7 +692,7 @@
 <main class="auth-page">
     <section class="hero-panel">
         <div class="brand-row">
-            <div class="brand-icon">🍔</div>
+            <div class="brand-icon brand-logo-img"></div>
             <div>
                 <h2 class="brand-name">KhoaFastFood</h2>
                 <p class="brand-sub">Fast order, fresh mood</p>
@@ -562,52 +700,54 @@
         </div>
 
         <div class="hero-content">
-            <p class="eyebrow">🍟 Customer account</p>
-            <h1 class="hero-title">Đăng ký nhanh, đặt món ngon.</h1>
+            <p class="eyebrow"> Customer account</p>
+            <h1 class="hero-title">Sign up fast, order delicious food.</h1>
             <p class="hero-text">
-                Tạo tài khoản để lưu thông tin, đặt món nhanh hơn và theo dõi đơn hàng dễ dàng.
-                Một tài khoản nhỏ, menu mở ra như chiếc cửa bếp thơm nức.
+                Create an account to save your information, order faster, and track your orders easily.
+                A small account, a big menu waiting for you.
             </p>
 
-            <div class="benefit-list">
-                <div class="benefit-item">
-                    <div class="benefit-icon">⚡</div>
-                    <div>
-                        <strong>Order faster</strong>
-                        <span>Lưu thông tin để đặt món nhanh hơn.</span>
-                    </div>
-                </div>
+            <div class="signin-food-showcase signup-food-showcase">
+    <div class="showcase-card showcase-main">
+        <img src="/images/foods/pepperoni-pizza.webp" alt="Pepperoni Pizza">
+        <div class="showcase-content">
+            <span class="showcase-tag">Join & order</span>
+            <strong>Pepperoni Pizza</strong>
+            <p>Pizza pepperoni phô mai béo thơm, đế giòn và vị đậm đà.</p>
+        </div>
+    </div>
 
-                <div class="benefit-item">
-                    <div class="benefit-icon">🧾</div>
-                    <div>
-                        <strong>Track orders</strong>
-                        <span>Xem trạng thái đơn hàng dễ dàng.</span>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">🍕</div>
-                    <div>
-                        <strong>Enjoy menu</strong>
-                        <span>Khám phá menu trong giao diện đẹp hơn.</span>
-                    </div>
-                </div>
+    <div class="showcase-side">
+        <div class="showcase-card showcase-mini">
+            <img src="/images/foods/double-cheese-burger.webp" alt="Double Cheese Burger">
+            <div class="showcase-content">
+                <span class="showcase-tag">Burger</span>
+                <strong>Double Cheese</strong>
             </div>
         </div>
+
+        <div class="showcase-card showcase-mini">
+            <img src="/images/foods/coca-cola.jpg" alt="Coca Cola">
+            <div class="showcase-content">
+                <span class="showcase-tag">Drink</span>
+                <strong>Fresh refill</strong>
+            </div>
+        </div>
+    </div>
+</div>
     </section>
 
     <section class="auth-wrap">
         <div class="auth-card">
             <div class="auth-logo-mobile">
-                <div class="mark">🍔</div>
+                <div class="mark brand-logo-img"></div>
                 <h1>KhoaFastFood</h1>
-                <p>Tạo tài khoản để đặt món nhanh hơn</p>
+                <p>Create an account to order faster</p>
             </div>
 
             <h1 class="auth-title">Create account</h1>
             <p class="auth-desc">
-                Tạo tài khoản khách hàng để lưu thông tin, đặt món nhanh và theo dõi đơn hàng dễ hơn.
+                Create a customer account to save your information, order faster, and track your orders easily.
             </p>
 
             <div id="error-msg" class="error-msg"></div>
@@ -675,7 +815,7 @@
                             autocomplete="new-password"
                         >
                     </div>
-                    <p class="password-note">Password nên có ít nhất 6 ký tự để tạo tài khoản.</p>
+                    <p class="password-note">Password should have at least 6 characters to create an account.</p>
                 </div>
 
                 <div class="form-group">

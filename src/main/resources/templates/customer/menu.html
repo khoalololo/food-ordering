@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,16 +112,14 @@
         }
 
         .nav-brand::before {
-            content: "🍔";
+            content: "";
             width: 48px;
             height: 48px;
             display: grid;
             place-items: center;
-            border-radius: 18px;
-            color: var(--cream);
-            background: var(--brown);
+            border-radius: 16px;
+            background: #ffffff url("/images/logo/logo-kff.png") center / cover no-repeat;
             box-shadow: var(--shadow-soft);
-            font-size: 24px;
         }
 
         .nav-links {
@@ -446,19 +445,20 @@
 
         .food-img {
             position: relative;
-            height: 160px;
+            height: 190px;
             display: grid;
             place-items: center;
             color: var(--cream);
-            background:
-                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            background: #fffaf3;
             overflow: hidden;
         }
 
         .food-img img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            object-position: center;
+            background: #fffaf3;
         }
 
         .food-emoji {
@@ -681,41 +681,84 @@
         }
 
         .modal-food-preview {
-            padding: 16px;
-            display: flex;
-            align-items: center;
+            padding: 14px;
+            display: grid;
             gap: 14px;
-            border-radius: 24px;
+            border-radius: 26px;
             background: rgba(243, 228, 201, 0.48);
             border: 1px solid rgba(211, 212, 192, 0.9);
         }
 
-        .modal-food-icon {
-            width: 58px;
-            height: 58px;
-            display: grid;
-            place-items: center;
-            flex-shrink: 0;
-            border-radius: 20px;
-            color: var(--cream);
-            background:
-                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
-            font-size: 28px;
+        .modal-food-showcase {
+            overflow: hidden;
         }
 
-        .modal-food-preview strong {
+        .modal-food-photo {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 22px;
+            background:
+                linear-gradient(135deg, rgba(10, 41, 71, 0.96), rgba(139, 94, 60, 0.88));
+            box-shadow: 0 16px 34px rgba(10, 41, 71, 0.14);
+        }
+
+        .modal-food-photo img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .modal-food-type {
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            z-index: 2;
+            padding: 7px 11px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(10, 41, 71, 0.76);
+            border: 1px solid rgba(243, 228, 201, 0.22);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            backdrop-filter: blur(12px);
+        }
+
+        .modal-food-info {
+            padding: 2px 4px 4px;
+        }
+
+        .modal-food-info strong {
             display: block;
             color: var(--navy);
-            font-size: 16px;
+            font-size: 22px;
+            line-height: 1.18;
+            letter-spacing: -0.7px;
             font-weight: 800;
         }
 
-        .modal-food-preview span {
+        .modal-food-info span {
             display: block;
-            margin-top: 4px;
+            margin-top: 8px;
             color: var(--brown);
-            font-size: 13px;
-            line-height: 1.45;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        @media (max-width: 520px) {
+            .modal-food-photo {
+                height: 180px;
+                border-radius: 20px;
+            }
+
+            .modal-food-info strong {
+                font-size: 19px;
+            }
         }
 
         .topping-grid {
@@ -865,6 +908,7 @@
         }
 
         @media (max-width: 980px) {
+
             #main-nav,
             .page {
                 width: min(100% - 32px, 1180px);
@@ -926,6 +970,7 @@
         }
 
         @media (max-width: 520px) {
+
             #main-nav,
             .page {
                 width: min(100% - 24px, 1180px);
@@ -943,314 +988,751 @@
                 border-radius: 28px;
             }
         }
+
+        /* =====================================================
+   MENU TODAY'S PICK CARD
+   Card món hot có ảnh thật trong hero menu
+   ===================================================== */
+
+        .hero-pick-card {
+            padding: 18px !important;
+            display: grid !important;
+            gap: 16px !important;
+            align-self: stretch !important;
+            background: rgba(255, 250, 243, 0.14) !important;
+            border: 1px solid rgba(243, 228, 201, 0.24) !important;
+            box-shadow: 0 22px 54px rgba(0, 0, 0, 0.18) !important;
+        }
+
+        .hero-pick-image {
+            position: relative;
+            width: 100%;
+            height: 170px;
+            overflow: hidden;
+            border-radius: 26px;
+            background: rgba(255, 250, 243, 0.12);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+        }
+
+        .hero-pick-image img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+            transition: 0.25s ease;
+        }
+
+        .hero-pick-card:hover .hero-pick-image img {
+            transform: scale(1.05);
+        }
+
+        .hero-pick-badge {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 2;
+            padding: 7px 11px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(10, 41, 71, 0.82);
+            border: 1px solid rgba(243, 228, 201, 0.22);
+            font-size: 11px;
+            line-height: 1;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(12px);
+        }
+
+        .hero-pick-info {
+            display: grid;
+            gap: 8px;
+        }
+
+        .hero-pick-label {
+            width: fit-content;
+            padding: 7px 11px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(243, 228, 201, 0.13);
+            border: 1px solid rgba(243, 228, 201, 0.18);
+            font-size: 11px;
+            line-height: 1;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .hero-pick-card h3 {
+            margin: 0 !important;
+            color: var(--cream) !important;
+            font-size: 24px !important;
+            line-height: 1.12 !important;
+            letter-spacing: -0.8px !important;
+            font-weight: 800 !important;
+        }
+
+        .hero-pick-card p {
+            margin: 0 !important;
+            color: rgba(243, 228, 201, 0.76) !important;
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+        }
+
+        .hero-pick-link {
+            width: fit-content;
+            margin-top: 4px;
+            padding: 10px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 999px;
+            color: var(--navy);
+            background: var(--cream);
+            font-family: "Be Vietnam Pro", Arial, sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .hero-pick-link:hover {
+            transform: translateY(-2px);
+            background: #fff6dd;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+        }
+
+        .hero-food-emoji {
+            display: none !important;
+        }
+
+        @media (max-width: 980px) {
+            .hero-pick-card {
+                max-width: 430px;
+            }
+
+            .hero-pick-image {
+                height: 190px;
+            }
+        }
+
+        /* =====================================================
+   PRODUCT MODAL 2 COLUMNS
+   Modal giống app đặt món: ảnh lớn bên trái, tuỳ chọn bên phải
+   ===================================================== */
+
+        .menu-product-modal {
+            position: relative;
+            width: min(1080px, calc(100vw - 44px));
+            max-height: calc(100vh - 44px);
+            display: grid;
+            grid-template-columns: minmax(360px, 0.95fr) minmax(430px, 1.05fr);
+            overflow: hidden;
+            border-radius: 30px;
+            background: #fffaf3;
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            box-shadow: 0 34px 100px rgba(10, 41, 71, 0.34);
+        }
+
+        .product-modal-close {
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            z-index: 5;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            border-radius: 999px;
+            color: var(--navy);
+            background: rgba(255, 250, 243, 0.86);
+            font-size: 30px;
+            line-height: 1;
+            cursor: pointer;
+            transition: 0.18s ease;
+            box-shadow: 0 10px 24px rgba(10, 41, 71, 0.12);
+        }
+
+        .product-modal-close:hover {
+            color: var(--cream);
+            background: var(--navy);
+            transform: rotate(90deg);
+        }
+
+        .product-modal-left {
+            position: relative;
+            min-height: 620px;
+            padding: 38px 34px;
+            display: grid;
+            align-content: center;
+            gap: 26px;
+            background:
+                radial-gradient(circle at 34% 32%, rgba(243, 228, 201, 0.42), transparent 17rem),
+                linear-gradient(135deg, #ffffff 0%, #fff7ec 100%);
+        }
+
+        .product-image-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 34px;
+            background: #ffffff;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            box-shadow: 0 22px 54px rgba(10, 41, 71, 0.12);
+        }
+
+        .product-image-wrap img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            object-position: center;
+            background: #ffffff;
+        }
+
+        .product-type-badge {
+            position: absolute;
+            left: 18px;
+            top: 18px;
+            z-index: 2;
+            padding: 8px 13px;
+            border-radius: 999px;
+            color: var(--cream);
+            background: rgba(10, 41, 71, 0.82);
+            border: 1px solid rgba(243, 228, 201, 0.28);
+            font-size: 12px;
+            line-height: 1;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            backdrop-filter: blur(12px);
+        }
+
+        .product-price-large {
+            text-align: center;
+            color: var(--red);
+            font-size: clamp(30px, 4vw, 44px);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .product-modal-right {
+            min-height: 620px;
+            padding: 34px;
+            overflow: auto;
+            background:
+                linear-gradient(135deg, rgba(255, 250, 243, 0.94), rgba(243, 228, 201, 0.44));
+        }
+
+        .product-info-card {
+            min-height: 100%;
+            padding: 34px;
+            display: grid;
+            align-content: start;
+            gap: 20px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.56);
+            border: 1px solid rgba(211, 212, 192, 0.78);
+            box-shadow: 0 18px 48px rgba(10, 41, 71, 0.08);
+        }
+
+        .product-accent {
+            width: 34px;
+            height: 3px;
+            border-radius: 999px;
+            background: var(--green);
+        }
+
+        .product-modal-title {
+            margin: 0;
+            color: var(--navy);
+            font-size: clamp(28px, 3vw, 40px);
+            line-height: 1.08;
+            letter-spacing: -1.4px;
+            font-weight: 800;
+        }
+
+        .product-modal-subtitle {
+            margin: -6px 0 0;
+            color: var(--brown);
+            font-size: 16px;
+            line-height: 1.65;
+        }
+
+        .product-base-info {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            border-radius: 20px;
+            color: var(--navy);
+            background: rgba(243, 228, 201, 0.46);
+            border: 1px solid rgba(211, 212, 192, 0.9);
+        }
+
+        .product-base-info span {
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .product-base-info strong {
+            color: var(--brown);
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .product-section {
+            display: grid;
+            gap: 10px;
+        }
+
+        .product-qty-line {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 14px;
+            align-items: center;
+        }
+
+        .product-add-btn {
+            width: 100%;
+            min-height: 58px;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 0;
+            border-radius: 16px;
+            color: var(--cream);
+            background: linear-gradient(135deg, #087a42, #0b8f4f);
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 18px 36px rgba(8, 122, 66, 0.22);
+            transition: 0.2s ease;
+        }
+
+        .product-add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 44px rgba(8, 122, 66, 0.28);
+        }
+
+        .menu-product-modal .topping-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .menu-product-modal .topping-opt {
+            min-height: 64px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.74);
+        }
+
+        .menu-product-modal .price-preview {
+            padding: 13px 16px;
+            border-radius: 18px;
+        }
+
+        .menu-product-modal .price-preview-val {
+            font-size: 22px;
+        }
+
+        @media (max-width: 980px) {
+            .menu-product-modal {
+                grid-template-columns: 1fr;
+                overflow: auto;
+            }
+
+            .product-modal-left,
+            .product-modal-right {
+                min-height: unset;
+            }
+
+            .product-modal-left {
+                padding: 28px 26px 18px;
+            }
+
+            .product-image-wrap {
+                max-width: 420px;
+                margin: 0 auto;
+            }
+
+            .product-price-large {
+                font-size: 34px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .menu-product-modal {
+                width: min(100vw - 24px, 560px);
+                border-radius: 26px;
+            }
+
+            .product-modal-left,
+            .product-modal-right {
+                padding: 20px;
+            }
+
+            .product-info-card {
+                padding: 22px;
+                border-radius: 24px;
+            }
+
+            .menu-product-modal .topping-grid,
+            .product-qty-line {
+                grid-template-columns: 1fr;
+            }
+
+            .product-modal-close {
+                right: 12px;
+                top: 12px;
+            }
+        }
     </style>
 </head>
 
 <body>
-<nav id="main-nav"></nav>
-<div id="toast-container"></div>
+    <nav id="main-nav"></nav>
+    <div id="toast-container"></div>
 
-<div class="page">
-    <section class="menu-hero">
-        <div class="hero-copy">
-            <p class="eyebrow">🍽️ Fresh menu</p>
-            <h1 class="page-title">Chọn món ngon, <span>thêm vào giỏ</span> thật nhanh.</h1>
-            <p class="hero-text">
-                Lướt menu, chọn topping, chỉnh số lượng và đưa món vào giỏ hàng.
-                Giao diện gọn như quầy bếp vừa lau xong, nhìn là muốn gọi món.
-            </p>
+    <div class="page">
+        <section class="menu-hero">
+            <div class="hero-copy">
+                <p class="eyebrow"> Varied menu</p>
+                <h1 class="page-title">Choose your favorite, <span>add to cart</span> quickly.</h1>
+                <p class="hero-text">
+                    Browse the menu, select toppings, adjust quantities, and add items to your cart.
+                    The interface is compact like a freshly cleaned kitchen counter, making it easy to order.
+                </p>
 
-            <div class="hero-actions">
-                <span class="hero-pill">⚡ Fast ordering</span>
-                <span class="hero-pill">🧾 Easy checkout</span>
-                <span class="hero-pill">🍔 Fresh food</span>
-            </div>
-        </div>
-
-        <aside class="hero-food-card">
-            <div class="hero-food-emoji">🍔</div>
-            <h3>Today’s pick</h3>
-            <p>
-                Burger, pizza, pasta, salad, soup, dessert và drink.
-                Chọn món đi, căn bếp đang bật đèn chờ bạn.
-            </p>
-        </aside>
-    </section>
-
-    <section class="filters-card">
-        <div class="filter-list">
-            <button class="filter-btn active" data-type="all">All</button>
-            <button class="filter-btn" data-type="pizza">Pizza</button>
-            <button class="filter-btn" data-type="burger">Burger</button>
-            <button class="filter-btn" data-type="pasta">Pasta</button>
-            <button class="filter-btn" data-type="salad">Salad</button>
-            <button class="filter-btn" data-type="soup">Soup</button>
-            <button class="filter-btn" data-type="dessert">Dessert</button>
-            <button class="filter-btn" data-type="drink">Drink</button>
-        </div>
-
-        <div class="search-shell">
-            <span class="search-icon">🔎</span>
-            <input class="filter-search" type="search" id="search-input" placeholder="Search menu...">
-        </div>
-    </section>
-
-    <section class="section-head">
-        <div>
-            <h2 class="section-title">Menu items</h2>
-            <p class="section-sub">Chọn món bạn thích rồi thêm topping trong modal.</p>
-        </div>
-        <div class="menu-count" id="menu-count">0 items</div>
-    </section>
-
-    <section class="food-grid" id="food-grid">
-        <div class="loading">
-            <div class="empty-icon">🍳</div>
-            <h3>Loading menu...</h3>
-            <p>Đang mở bếp và chuẩn bị danh sách món ăn.</p>
-        </div>
-    </section>
-</div>
-
-<div class="modal-overlay" id="add-modal">
-    <div class="modal">
-        <div class="modal-header">
-            <h2 class="modal-title" id="modal-food-name">Customise order</h2>
-            <button class="btn btn-ghost btn-sm" onclick="closeMenuModal()">Close</button>
-        </div>
-
-        <div class="modal-body">
-            <div class="modal-food-preview">
-                <div class="modal-food-icon" id="modal-food-icon">🍽️</div>
-                <div>
-                    <strong id="modal-food-title">Food name</strong>
-                    <span id="modal-food-desc">Pick toppings and quantity before adding to cart.</span>
+                <div class="hero-actions">
+                    <span class="hero-pill"> Fast ordering</span>
+                    <span class="hero-pill"> Easy checkout</span>
+                    <span class="hero-pill"> Fresh food</span>
                 </div>
             </div>
 
-            <div id="modal-toppings-section">
-                <p class="modal-label">Toppings</p>
-                <div class="topping-grid" id="modal-toppings"></div>
+            <aside class="hero-food-card hero-pick-card">
+                <div class="hero-pick-image">
+                    <img src="/images/foods/pepperoni-pizza.webp" alt="Pepperoni Pizza">
+                    <span class="hero-pick-badge">Hot pick</span>
+                </div>
+
+                <div class="hero-pick-info">
+                    <span class="hero-pick-label">Today’s pick</span>
+                    <h3>Pepperoni Pizza</h3>
+                    <p>
+                        Pizza pepperoni phủ phô mai mozzarella, sốt cà chua và lát xúc xích cay nhẹ.
+                        Một lựa chọn tròn vị cho chiếc bụng đang réo chuông.
+                    </p>
+
+                    <button type="button" class="hero-pick-link" onclick="openTodayPick()">
+                        Order now
+                        <span>→</span>
+                    </button>
+                </div>
+            </aside>
+        </section>
+
+        <section class="filters-card">
+            <div class="filter-list">
+                <button class="filter-btn active" data-type="all">All</button>
+                <button class="filter-btn" data-type="pizza">Pizza</button>
+                <button class="filter-btn" data-type="burger">Burger</button>
+                <button class="filter-btn" data-type="pasta">Pasta</button>
+                <button class="filter-btn" data-type="salad">Salad</button>
+                <button class="filter-btn" data-type="soup">Soup</button>
+                <button class="filter-btn" data-type="dessert">Dessert</button>
+                <button class="filter-btn" data-type="drink">Drink</button>
             </div>
 
+            <div class="search-shell">
+                <span class="search-icon">🔎</span>
+                <input class="filter-search" type="search" id="search-input" placeholder="Search menu...">
+            </div>
+        </section>
+
+        <section class="section-head">
             <div>
-                <p class="modal-label">Quantity</p>
-                <div class="qty-row">
-                    <button class="qty-btn" onclick="changeQty(-1)">−</button>
-                    <span class="qty-val" id="qty-val">1</span>
-                    <button class="qty-btn" onclick="changeQty(1)">+</button>
+                <h2 class="section-title">Menu items</h2>
+                <p class="section-sub">Choose the items you like and add toppings in the modal.</p>
+            </div>
+            <div class="menu-count" id="menu-count">0 items</div>
+        </section>
+
+        <section class="food-grid" id="food-grid">
+            <div class="loading">
+                <div class="empty-icon">🍳</div>
+                <h3>Loading menu...</h3>
+                <p>Loading menu items for customers.</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal-overlay" id="add-modal">
+        <div class="menu-product-modal">
+            <button class="product-modal-close" type="button" onclick="closeMenuModal()">×</button>
+
+            <div class="product-modal-left">
+                <div class="product-image-wrap">
+                    <img id="modal-food-image" src="" alt="Food image">
+                    <span class="product-type-badge" id="modal-food-type">Food</span>
+                </div>
+
+                <div class="product-price-large" id="modal-left-price">0₫</div>
+            </div>
+
+            <div class="product-modal-right">
+                <div class="product-info-card">
+                    <div class="product-accent"></div>
+
+                    <h2 class="product-modal-title" id="modal-food-name">Customise order</h2>
+
+                    <p class="product-modal-subtitle" id="modal-food-desc">
+                        Pick toppings and quantity before adding to cart.
+                    </p>
+
+                    <div class="product-base-info">
+                        <span id="modal-food-title">Food name</span>
+                        <strong id="modal-base-price">0₫</strong>
+                    </div>
+
+                    <div id="modal-toppings-section" class="product-section">
+                        <p class="modal-label">Toppings</p>
+                        <div class="topping-grid" id="modal-toppings"></div>
+                    </div>
+
+                    <div class="product-section">
+                        <p class="modal-label">Quantity</p>
+
+                        <div class="product-qty-line">
+                            <div class="qty-row">
+                                <button class="qty-btn" type="button" onclick="changeQty(-1)">−</button>
+                                <span class="qty-val" id="qty-val">1</span>
+                                <button class="qty-btn" type="button" onclick="changeQty(1)">+</button>
+                            </div>
+
+                            <div class="price-preview">
+                                <span class="price-preview-label">Estimated total</span>
+                                <span class="price-preview-val" id="price-preview">0₫</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="product-add-btn" type="button" onclick="confirmAdd()">
+                        Add to cart
+                        <span>→</span>
+                    </button>
                 </div>
             </div>
-
-            <div class="price-preview">
-                <span class="price-preview-label">Estimated total</span>
-                <span class="price-preview-val" id="price-preview">0₫</span>
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-ghost" onclick="closeMenuModal()">Cancel</button>
-            <button class="btn" onclick="confirmAdd()">Add to cart <span>→</span></button>
         </div>
     </div>
-</div>
 
-<script src="/js/shared.js"></script>
+    <script src="/js/shared.js"></script>
 
-<script>
-    const TOPPINGS_BY_TYPE = {
-        pizza: [
-            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
-            { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
-            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
-            { key: 'spicy', label: 'Spicy', price: 0 }
-        ],
-        burger: [
-            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
-            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
-            { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
-            { key: 'noOnion', label: 'No Onion', price: 0 }
-        ],
-        pasta: [
-            { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
-            { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
-            { key: 'spicy', label: 'Spicy', price: 0 }
-        ],
-        salad: [
-            { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
-            { key: 'noDressing', label: 'No Dressing', price: 0 }
-        ],
-        soup: [
-            { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
-            { key: 'spicy', label: 'Spicy', price: 0 }
-        ],
-        drink: [
-            { key: 'extraIce', label: 'Extra Ice', price: 0 },
-            { key: 'noSugar', label: 'No Sugar', price: 0 }
-        ],
-        dessert: [
-            { key: 'noSugar', label: 'No Sugar', price: 0 }
-        ]
-    };
+    <script>
+        const TOPPINGS_BY_TYPE = {
+            pizza: [
+                { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+                { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
+                { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+                { key: 'spicy', label: 'Spicy', price: 0 }
+            ],
+            burger: [
+                { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+                { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+                { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
+                { key: 'noOnion', label: 'No Onion', price: 0 }
+            ],
+            pasta: [
+                { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
+                { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
+                { key: 'spicy', label: 'Spicy', price: 0 }
+            ],
+            salad: [
+                { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
+                { key: 'noDressing', label: 'No Dressing', price: 0 }
+            ],
+            soup: [
+                { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
+                { key: 'spicy', label: 'Spicy', price: 0 }
+            ],
+            drink: [
+                { key: 'extraIce', label: 'Extra Ice', price: 0 },
+                { key: 'noSugar', label: 'No Sugar', price: 0 }
+            ],
+            dessert: [
+                { key: 'noSugar', label: 'No Sugar', price: 0 }
+            ]
+        };
 
-    const FOOD_EMOJI = {
-        pizza: '🍕',
-        burger: '🍔',
-        pasta: '🍝',
-        salad: '🥗',
-        soup: '🍲',
-        dessert: '🍰',
-        drink: '🥤',
-        food: '🍽️'
-    };
+        const FOOD_EMOJI = {
+            pizza: '🍕',
+            burger: '🍔',
+            pasta: '🍝',
+            salad: '🥗',
+            soup: '🍲',
+            dessert: '🍰',
+            drink: '🥤',
+            food: '🍽️'
+        };
 
-    const PREVIEW_FOODS = [
-        {
-            id: 1,
-            name: 'Cheese Burger',
-            type: 'burger',
-            description: 'Juicy beef patty, melted cheese, fresh lettuce and signature sauce.',
-            basePrice: 59000,
-            available: true
-        },
-        {
-            id: 2,
-            name: 'Pepperoni Pizza',
-            type: 'pizza',
-            description: 'Crispy crust, tomato sauce, mozzarella cheese and pepperoni.',
-            basePrice: 99000,
-            available: true
-        },
-        {
-            id: 3,
-            name: 'Creamy Pasta',
-            type: 'pasta',
-            description: 'Soft pasta tossed in creamy sauce with herbs and parmesan.',
-            basePrice: 79000,
-            available: true
-        },
-        {
-            id: 4,
-            name: 'Fresh Garden Salad',
-            type: 'salad',
-            description: 'Crisp vegetables, light dressing and a fresh green finish.',
-            basePrice: 49000,
-            available: true
-        },
-        {
-            id: 5,
-            name: 'Hot Mushroom Soup',
-            type: 'soup',
-            description: 'Warm mushroom soup for a cozy meal starter.',
-            basePrice: 39000,
-            available: true
-        },
-        {
-            id: 6,
-            name: 'Chocolate Cake',
-            type: 'dessert',
-            description: 'Soft chocolate cake with a rich sweet finish.',
-            basePrice: 45000,
-            available: true
-        },
-        {
-            id: 7,
-            name: 'Iced Lemon Tea',
-            type: 'drink',
-            description: 'Cool lemon tea with a bright citrus taste.',
-            basePrice: 25000,
-            available: true
-        }
-    ];
-
-    const PreviewCart = {
-        _items: [],
-        add(food, qty, toppings = []) {
-            const key = food.id + ':' + toppings.join(',');
-            const existing = this._items.find(item => item.key === key);
-
-            if (existing) {
-                existing.quantity += qty;
-                existing.subtotal = existing.unitPrice * existing.quantity;
-            } else {
-                this._items.push({
-                    key,
-                    foodId: food.id,
-                    name: food.name,
-                    type: food.type,
-                    unitPrice: food.basePrice,
-                    quantity: qty,
-                    toppings,
-                    subtotal: food.basePrice * qty
-                });
+        const PREVIEW_FOODS = [
+            {
+                id: 1,
+                name: 'Cheese Burger',
+                type: 'burger',
+                description: 'Juicy beef patty, melted cheese, fresh lettuce and signature sauce.',
+                basePrice: 59000,
+                available: true
+            },
+            {
+                id: 2,
+                name: 'Pepperoni Pizza',
+                type: 'pizza',
+                description: 'Crispy crust, tomato sauce, mozzarella cheese and pepperoni.',
+                basePrice: 99000,
+                available: true
+            },
+            {
+                id: 3,
+                name: 'Creamy Pasta',
+                type: 'pasta',
+                description: 'Soft pasta tossed in creamy sauce with herbs and parmesan.',
+                basePrice: 79000,
+                available: true
+            },
+            {
+                id: 4,
+                name: 'Fresh Garden Salad',
+                type: 'salad',
+                description: 'Crisp vegetables, light dressing and a fresh green finish.',
+                basePrice: 49000,
+                available: true
+            },
+            {
+                id: 5,
+                name: 'Hot Mushroom Soup',
+                type: 'soup',
+                description: 'Warm mushroom soup for a cozy meal starter.',
+                basePrice: 39000,
+                available: true
+            },
+            {
+                id: 6,
+                name: 'Chocolate Cake',
+                type: 'dessert',
+                description: 'Soft chocolate cake with a rich sweet finish.',
+                basePrice: 45000,
+                available: true
+            },
+            {
+                id: 7,
+                name: 'Iced Lemon Tea',
+                type: 'drink',
+                description: 'Cool lemon tea with a bright citrus taste.',
+                basePrice: 25000,
+                available: true
             }
+        ];
 
-            updatePreviewBadge();
-        },
-        count() {
-            return this._items.reduce((sum, item) => sum + item.quantity, 0);
+        const PreviewCart = {
+            _items: [],
+            add(food, qty, toppings = []) {
+                const key = food.id + ':' + toppings.join(',');
+                const existing = this._items.find(item => item.key === key);
+
+                if (existing) {
+                    existing.quantity += qty;
+                    existing.subtotal = existing.unitPrice * existing.quantity;
+                } else {
+                    this._items.push({
+                        key,
+                        foodId: food.id,
+                        name: food.name,
+                        type: food.type,
+                        unitPrice: food.basePrice,
+                        quantity: qty,
+                        toppings,
+                        subtotal: food.basePrice * qty
+                    });
+                }
+
+                updatePreviewBadge();
+            },
+            count() {
+                return this._items.reduce((sum, item) => sum + item.quantity, 0);
+            }
+        };
+
+        const Formatter = typeof fmt !== 'undefined'
+            ? fmt
+            : {
+                currency: n => new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    maximumFractionDigits: 0
+                }).format(n)
+            };
+
+        const CartStore = typeof Cart !== 'undefined' ? Cart : PreviewCart;
+
+        const notify = typeof toast === 'function'
+            ? toast
+            : function (message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const item = document.createElement('div');
+                item.className = `toast ${type}`;
+                item.textContent = message;
+                container.appendChild(item);
+
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(16px)';
+                    item.style.transition = '0.25s ease';
+                    setTimeout(() => item.remove(), 260);
+                }, 2600);
+            };
+
+        let allFoods = [];
+        let currentFood = null;
+        let currentQty = 1;
+        let activeType = 'all';
+        let searchQuery = '';
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
         }
-    };
 
-    const Formatter = typeof fmt !== 'undefined'
-        ? fmt
-        : {
-            currency: n => new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                maximumFractionDigits: 0
-            }).format(n)
-        };
+        function foodEmoji(type) {
+            return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
+        }
 
-    const CartStore = typeof Cart !== 'undefined' ? Cart : PreviewCart;
+        function isAvailable(food) {
+            if (food.isAvailable === false) return false;
+            if (food.available === false) return false;
+            return true;
+        }
 
-    const notify = typeof toast === 'function'
-        ? toast
-        : function(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const item = document.createElement('div');
-            item.className = `toast ${type}`;
-            item.textContent = message;
-            container.appendChild(item);
+        function renderPreviewNav() {
+            const nav = document.getElementById('main-nav');
+            if (!nav) return;
 
-            setTimeout(() => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(16px)';
-                item.style.transition = '0.25s ease';
-                setTimeout(() => item.remove(), 260);
-            }, 2600);
-        };
-
-    let allFoods = [];
-    let currentFood = null;
-    let currentQty = 1;
-    let activeType = 'all';
-    let searchQuery = '';
-
-    function escapeHtml(value) {
-        return String(value ?? '')
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#039;');
-    }
-
-    function foodEmoji(type) {
-        return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
-    }
-
-    function isAvailable(food) {
-        if (food.isAvailable === false) return false;
-        if (food.available === false) return false;
-        return true;
-    }
-
-    function renderPreviewNav() {
-        const nav = document.getElementById('main-nav');
-        if (!nav) return;
-
-        nav.innerHTML = `
+            nav.innerHTML = `
             <a class="nav-brand" href="/customer/menu">KhoaFastFood</a>
             <div class="nav-links">
                 <a class="nav-link active" href="/customer/menu">Menu</a>
@@ -1262,93 +1744,93 @@
                 <a class="nav-link" href="/customer/notifications">Notifications</a>
             </div>
         `;
-    }
-
-    function updatePreviewBadge() {
-        const badge = document.getElementById('cart-badge');
-        if (!badge) return;
-
-        const count = CartStore.count ? CartStore.count() : 0;
-        badge.textContent = count;
-        badge.style.display = count > 0 ? 'inline-flex' : 'none';
-    }
-
-    function setupNav() {
-        if (typeof requireAuth === 'function') {
-            const ok = requireAuth();
-
-            if (ok && typeof renderNav === 'function') {
-                renderNav('/customer/menu');
-
-                const brand = document.querySelector('.nav-brand');
-                if (brand) brand.textContent = 'KhoaFastFood';
-            }
-        } else {
-            renderPreviewNav();
         }
 
-        updatePreviewBadge();
-    }
+        function updatePreviewBadge() {
+            const badge = document.getElementById('cart-badge');
+            if (!badge) return;
 
-    async function loadFoods() {
-        try {
-            if (typeof GET === 'function') {
-                allFoods = await GET('/food');
+            const count = CartStore.count ? CartStore.count() : 0;
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'inline-flex' : 'none';
+        }
+
+        function setupNav() {
+            if (typeof requireAuth === 'function') {
+                const ok = requireAuth();
+
+                if (ok && typeof renderNav === 'function') {
+                    renderNav('/customer/menu');
+
+                    const brand = document.querySelector('.nav-brand');
+                    if (brand) brand.textContent = 'KhoaFastFood';
+                }
             } else {
-                allFoods = PREVIEW_FOODS;
+                renderPreviewNav();
             }
 
-            renderGrid();
-        } catch (ex) {
-            if (location.protocol === 'file:') {
-                allFoods = PREVIEW_FOODS;
+            updatePreviewBadge();
+        }
+
+        async function loadFoods() {
+            try {
+                if (typeof GET === 'function') {
+                    allFoods = await GET('/food');
+                } else {
+                    allFoods = PREVIEW_FOODS;
+                }
+
                 renderGrid();
-                return;
-            }
+            } catch (ex) {
+                if (location.protocol === 'file:') {
+                    allFoods = PREVIEW_FOODS;
+                    renderGrid();
+                    return;
+                }
 
-            document.getElementById('food-grid').innerHTML = `
+                document.getElementById('food-grid').innerHTML = `
                 <div class="empty">
                     <div class="empty-icon">⚠️</div>
                     <h3>Could not load menu</h3>
                     <p>${escapeHtml(ex.message || 'Please try again later.')}</p>
                 </div>
             `;
+            }
         }
-    }
 
-    function renderGrid() {
-        const q = searchQuery.trim().toLowerCase();
+        function renderGrid() {
+            const q = searchQuery.trim().toLowerCase();
 
-        const foods = allFoods.filter(food => {
-            if (!isAvailable(food)) return false;
-            if (activeType !== 'all' && String(food.type).toLowerCase() !== activeType) return false;
-            if (q && !String(food.name).toLowerCase().includes(q)) return false;
-            return true;
-        });
+            const foods = allFoods.filter(food => {
+                if (!isAvailable(food)) return false;
+                if (activeType !== 'all' && String(food.type).toLowerCase() !== activeType) return false;
+                if (q && !String(food.name).toLowerCase().includes(q)) return false;
+                return true;
+            });
 
-        const grid = document.getElementById('food-grid');
-        const count = document.getElementById('menu-count');
+            const grid = document.getElementById('food-grid');
+            const count = document.getElementById('menu-count');
 
-        count.textContent = foods.length + ' item' + (foods.length !== 1 ? 's' : '');
+            count.textContent = foods.length + ' item' + (foods.length !== 1 ? 's' : '');
 
-        if (!foods.length) {
-            grid.innerHTML = `
+            if (!foods.length) {
+                grid.innerHTML = `
                 <div class="empty">
                     <div class="empty-icon">🔎</div>
                     <h3>No items found</h3>
                     <p>Thử đổi loại món hoặc nhập từ khóa khác để tìm menu phù hợp hơn.</p>
                 </div>
             `;
-            return;
-        }
+                return;
+            }
 
-        grid.innerHTML = foods.map(food => `
+            grid.innerHTML = foods.map(food => `
             <article class="food-card" onclick="openAddModal(${food.id})">
                 <div class="food-img">
                     ${food.imageUrl
-                        ? `<img src="${escapeHtml(food.imageUrl)}" alt="${escapeHtml(food.name)}" onerror="this.remove(); this.parentElement.querySelector('.food-emoji').style.display='grid';">`
-                        : ''
-                    }
+                    ? `<img src="${escapeHtml(food.imageUrl)}" alt="${escapeHtml(food.name)}" onerror="this.remove(); this.parentElement.querySelector('.food-emoji').style.display='grid';">`
+                    : ''
+                }
                     <div class="food-emoji" style="${food.imageUrl ? 'display:none' : ''}">
                         ${foodEmoji(food.type)}
                     </div>
@@ -1359,9 +1841,9 @@
                     <h3 class="food-name">${escapeHtml(food.name)}</h3>
 
                     ${food.description
-                        ? `<p class="food-desc">${escapeHtml(food.description)}</p>`
-                        : `<p class="food-desc">Freshly prepared and ready to add to your cart.</p>`
-                    }
+                    ? `<p class="food-desc">${escapeHtml(food.description)}</p>`
+                    : `<p class="food-desc">Freshly prepared and ready to add to your cart.</p>`
+                }
 
                     <div class="food-footer">
                         <span class="food-price">${Formatter.currency(food.basePrice || 0)}</span>
@@ -1372,128 +1854,170 @@
                 </div>
             </article>
         `).join('');
-    }
+        }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(item => item.classList.remove('active'));
-            btn.classList.add('active');
-            activeType = btn.dataset.type;
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(item => item.classList.remove('active'));
+                btn.classList.add('active');
+                activeType = btn.dataset.type;
+                renderGrid();
+            });
+        });
+
+        document.getElementById('search-input').addEventListener('input', e => {
+            searchQuery = e.target.value;
             renderGrid();
         });
-    });
 
-    document.getElementById('search-input').addEventListener('input', e => {
-        searchQuery = e.target.value;
-        renderGrid();
-    });
+        function addFoodThenGoCart(foodId) {
+            const food = allFoods.find(food => Number(food.id) === Number(foodId));
 
-    function openAddModal(foodId) {
-        currentFood = allFoods.find(food => Number(food.id) === Number(foodId));
-        if (!currentFood) return;
+            if (!food) {
+                notify('Món này chưa tải xong, thử lại sau nhé.', 'info');
+                return;
+            }
 
-        currentQty = 1;
+            CartStore.add(food, 1, []);
+            updatePreviewBadge();
 
-        document.getElementById('modal-food-name').textContent = currentFood.name;
-        document.getElementById('modal-food-title').textContent = currentFood.name;
-        document.getElementById('modal-food-desc').textContent = currentFood.description || 'Pick toppings and quantity before adding to cart.';
-        document.getElementById('modal-food-icon').textContent = foodEmoji(currentFood.type);
-        document.getElementById('qty-val').textContent = '1';
-
-        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
-        const toppingSection = document.getElementById('modal-toppings-section');
-        const toppingGrid = document.getElementById('modal-toppings');
-
-        toppingSection.style.display = toppings.length ? 'block' : 'none';
-
-        toppingGrid.innerHTML = toppings.map(topping => `
-            <label class="topping-opt">
-                <input type="checkbox" value="${escapeHtml(topping.key)}" onchange="handleToppingChange(this)">
-                <span class="topping-name">${escapeHtml(topping.label)}</span>
-                <span class="topping-price">
-                    ${topping.price > 0 ? '+' + Formatter.currency(topping.price) : 'Free'}
-                </span>
-            </label>
-        `).join('');
-
-        recalcPrice();
-        openMenuModal();
-    }
-
-    function handleToppingChange(input) {
-        input.closest('.topping-opt')?.classList.toggle('checked', input.checked);
-        recalcPrice();
-    }
-
-    function selectedToppingKeys() {
-        return [...document.querySelectorAll('#modal-toppings input:checked')].map(input => input.value);
-    }
-
-    function recalcPrice() {
-        if (!currentFood) return;
-
-        const checked = selectedToppingKeys();
-        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
-
-        const extra = checked.reduce((sum, key) => {
-            return sum + (toppings.find(topping => topping.key === key)?.price || 0);
-        }, 0);
-
-        const total = (Number(currentFood.basePrice || 0) + extra) * currentQty;
-        document.getElementById('price-preview').textContent = Formatter.currency(total);
-    }
-
-    function changeQty(delta) {
-        currentQty = Math.max(1, Math.min(20, currentQty + delta));
-        document.getElementById('qty-val').textContent = currentQty;
-        recalcPrice();
-    }
-
-    function confirmAdd() {
-        if (!currentFood) return;
-
-        const checked = selectedToppingKeys();
-        const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
-
-        const toppingLabels = checked
-            .map(key => toppings.find(topping => topping.key === key)?.label)
-            .filter(Boolean);
-
-        CartStore.add(currentFood, currentQty, toppingLabels);
-
-        closeMenuModal();
-        updatePreviewBadge();
-        notify(`${currentFood.name} added to cart`, 'success');
-    }
-
-    function openMenuModal() {
-        const modal = document.getElementById('add-modal');
-
-        if (typeof openModal === 'function') {
-            openModal('add-modal');
-        } else {
-            modal.classList.add('open');
+            location.href = '/customer/cart';
         }
-    }
 
-    function closeMenuModal() {
-        const modal = document.getElementById('add-modal');
+        function addFoodToCartOnly(foodId) {
+            const food = allFoods.find(item => Number(item.id) === Number(foodId));
 
-        if (typeof closeModal === 'function') {
-            closeModal('add-modal');
-        } else {
-            modal.classList.remove('open');
+            if (!food) {
+                toast('Món này chưa tải xong, thử lại sau nhé.', 'info');
+                return;
+            }
+
+            // Nếu trước đó đã tạo order nhưng chưa thanh toán,
+            // mà người dùng quay lại menu add thêm món,
+            // thì không dùng order cũ nữa.
+            localStorage.removeItem('pendingOrderId');
+            localStorage.removeItem('pendingOrderCart');
+
+            CartStore.add(food, 1, []);
+
+            if (typeof updatePreviewBadge === 'function') {
+                updatePreviewBadge();
+            }
+
+            toast(`Đã thêm ${food.name} vào giỏ hàng.`, 'success');
         }
-    }
 
-    document.addEventListener('click', e => {
-        if (e.target.classList.contains('modal-overlay')) {
+        function openAddModal(foodId) {
+            addFoodToCartOnly(foodId);
+        }
+
+        function addFoodThenGoCart(foodId) {
+            addFoodToCartOnly(foodId);
+        }
+
+        function handleToppingChange(input) {
+            input.closest('.topping-opt')?.classList.toggle('checked', input.checked);
+            recalcPrice();
+        }
+
+        function selectedToppingKeys() {
+            return [...document.querySelectorAll('#modal-toppings input:checked')].map(input => input.value);
+        }
+
+        function recalcPrice() {
+            if (!currentFood) return;
+
+            const checked = selectedToppingKeys();
+            const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+
+            const extra = checked.reduce((sum, key) => {
+                return sum + (toppings.find(topping => topping.key === key)?.price || 0);
+            }, 0);
+
+            const total = (Number(currentFood.basePrice || 0) + extra) * currentQty;
+            document.getElementById('price-preview').textContent = Formatter.currency(total);
+            document.getElementById('modal-left-price').textContent = Formatter.currency(total);
+        }
+
+        function changeQty(delta) {
+            currentQty = Math.max(1, Math.min(20, currentQty + delta));
+            document.getElementById('qty-val').textContent = currentQty;
+            recalcPrice();
+        }
+
+        function confirmAdd() {
+            if (!currentFood) return;
+
+            const checked = selectedToppingKeys();
+            const toppings = TOPPINGS_BY_TYPE[String(currentFood.type || '').toLowerCase()] || [];
+
+            const selectedToppings = checked
+                .map(key => toppings.find(topping => topping.key === key))
+                .filter(Boolean)
+                .map(topping => ({
+                    key: topping.key,
+                    label: topping.label,
+                    price: Number(topping.price || 0)
+                }));
+
+            CartStore.add(currentFood, currentQty, selectedToppings);
+
             closeMenuModal();
+            updatePreviewBadge();
+            notify(`${currentFood.name} added to cart`, 'success');
         }
-    });
 
-    setupNav();
-    loadFoods();
-</script>
+        function openMenuModal() {
+            const modal = document.getElementById('add-modal');
+
+            if (typeof openModal === 'function') {
+                openModal('add-modal');
+            } else {
+                modal.classList.add('open');
+            }
+        }
+
+        function closeMenuModal() {
+            const modal = document.getElementById('add-modal');
+
+            if (typeof closeModal === 'function') {
+                closeModal('add-modal');
+            } else {
+                modal.classList.remove('open');
+            }
+        }
+
+        document.addEventListener('click', e => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeMenuModal();
+            }
+        });
+        function openTodayPick() {
+            const target = allFoods.find(food =>
+                String(food.name || '').toLowerCase() === 'pepperoni pizza'
+            );
+
+            if (target) {
+                addFoodThenGoCart(target.id);
+                return;
+            }
+
+            notify('Pepperoni Pizza is still loading. Please try again in a second.', 'info');
+
+            const pizzaFilter = document.querySelector('.filter-btn[data-type="pizza"]');
+            if (pizzaFilter) {
+                pizzaFilter.click();
+            }
+
+            document.getElementById('food-grid')?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        setupNav();
+        loadFoods();
+    </script>
 </body>
+
 </html>

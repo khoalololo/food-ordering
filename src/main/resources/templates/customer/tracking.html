@@ -109,18 +109,15 @@
             font-weight: 800;
             letter-spacing: -0.8px;
         }
-
         .nav-brand::before {
-            content: "🍔";
+            content: "";
             width: 48px;
             height: 48px;
-            display: grid;
-            place-items: center;
-            border-radius: 18px;
-            color: var(--cream);
-            background: var(--brown);
+            display: inline-block;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #ffffff url("/images/logo/logo-kff.png") center / contain no-repeat;
             box-shadow: var(--shadow-soft);
-            font-size: 24px;
         }
 
         .nav-links {
@@ -341,7 +338,9 @@
         }
 
         .panel-title.items::before {
-            content: "🍽️";
+            content: "";
+            background: #ffffff url("/images/foods/pepperoni-pizza.webp") center / cover no-repeat;
+            box-shadow: var(--shadow-soft);
         }
 
         .panel-title.info::before {
@@ -600,10 +599,10 @@
 
         .order-item {
             display: grid;
-            grid-template-columns: 54px minmax(0, 1fr) auto;
-            gap: 14px;
+            grid-template-columns: 96px minmax(0, 1fr) auto;
+            gap: 18px;
             align-items: center;
-            padding: 15px 0;
+            padding: 18px 0;
             border-bottom: 1px solid rgba(211, 212, 192, 0.78);
         }
 
@@ -616,17 +615,24 @@
             padding-top: 0;
         }
 
-        .item-icon {
-            width: 52px;
-            height: 52px;
+        .item-thumb {
+            width: 88px;
+            height: 88px;
             display: grid;
             place-items: center;
-            border-radius: 20px;
-            color: var(--cream);
-            background:
-                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            overflow: hidden;
+            border-radius: 24px;
+            background: #ffffff;
+            border: 1px solid rgba(211, 212, 192, 0.9);
             box-shadow: var(--shadow-soft);
-            font-size: 25px;
+        }
+
+        .item-thumb img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
         }
 
         .item-main {
@@ -635,25 +641,27 @@
 
         .item-name {
             color: var(--navy);
-            font-size: 15px;
+            font-size: 17px;
+            line-height: 1.25;
             font-weight: 800;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: unset;
         }
 
         .item-meta {
-            margin-top: 5px;
+            margin-top: 6px;
             color: var(--brown);
-            font-size: 12px;
-            line-height: 1.45;
-            font-weight: 600;
+            font-size: 13px;
+            line-height: 1.55;
+            font-weight: 650;
+            word-break: break-word;
         }
 
         .item-price {
             color: var(--brown);
-            font-size: 15px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 900;
             white-space: nowrap;
         }
 
@@ -970,7 +978,14 @@
             }
 
             .order-item {
-                grid-template-columns: 52px minmax(0, 1fr);
+                grid-template-columns: 82px minmax(0, 1fr);
+                gap: 14px;
+            }
+
+            .item-thumb {
+                width: 76px;
+                height: 76px;
+                border-radius: 22px;
             }
 
             .item-price {
@@ -1008,7 +1023,7 @@
 <div class="page">
     <section class="tracking-hero">
         <div class="hero-copy">
-            <p class="eyebrow">🛵 Live tracking</p>
+            <p class="eyebrow"> Live tracking</p>
             <h1 class="page-title">Theo dõi đơn hàng, <span>từng bước lên bếp.</span></h1>
             <p class="hero-text">
                 Xem đơn đang ở trạng thái nào: chờ xác nhận, đã xác nhận, đang chuẩn bị,
@@ -1343,6 +1358,56 @@
         return FOOD_EMOJI.food;
     }
 
+    function itemImage(item) {
+        const directImage = item.imageUrl
+            || item.foodImage
+            || item.image
+            || item.image_url
+            || item.food?.imageUrl
+            || item.food?.image_url;
+
+        if (directImage) {
+            return directImage;
+        }
+
+        const name = String(item.foodName || item.name || item.food?.name || '').trim().toLowerCase();
+
+        const imageMap = {
+            'cheese burger': '/images/foods/classic-beef-burger.jpeg',
+            'chicken burger': '/images/foods/chicken-burger.jpg',
+            'classic beef burger': '/images/foods/classic-beef-burger.jpeg',
+            'double cheese burger': '/images/foods/double-cheese-burger.webp',
+            'caramel pudding': '/images/foods/caramel-pudding.jpg',
+            'chocolate cake': '/images/foods/chocolate-cake.jpg',
+            'coca cola': '/images/foods/coca-cola.jpg',
+            'iced lemon tea': '/images/foods/iced-lemon-tea.webp',
+            'orange juice': '/images/foods/orange-juice.webp',
+            'creamy carbonara pasta': '/images/foods/creamy-carbonara-pasta.jpg',
+            'spaghetti bolognese': '/images/foods/spaghetti-bolognese.jpg',
+            'margherita pizza': '/images/foods/margherita-pizza.webp',
+            'pepperoni pizza': '/images/foods/pepperoni-pizza.webp',
+            'seafood pizza': '/images/foods/seafood-pizza.webp',
+            'caesar salad': '/images/foods/caesar-salad.webp',
+            'fresh garden salad': '/images/foods/fresh-garden-salad.webp',
+            'hot mushroom soup': '/images/foods/hot-mushroom-soup.jpg',
+            'pumpkin soup': '/images/foods/pumpkin-soup.jpg'
+        };
+
+        if (imageMap[name]) {
+            return imageMap[name];
+        }
+
+        if (name.includes('burger')) return '/images/foods/classic-beef-burger.jpeg';
+        if (name.includes('pizza')) return '/images/foods/pepperoni-pizza.webp';
+        if (name.includes('pasta') || name.includes('spaghetti')) return '/images/foods/creamy-carbonara-pasta.jpg';
+        if (name.includes('salad')) return '/images/foods/fresh-garden-salad.webp';
+        if (name.includes('soup')) return '/images/foods/pumpkin-soup.jpg';
+        if (name.includes('cake') || name.includes('dessert') || name.includes('pudding')) return '/images/foods/chocolate-cake.jpg';
+        if (name.includes('tea') || name.includes('cola') || name.includes('drink') || name.includes('juice')) return '/images/foods/coca-cola.jpg';
+
+        return '/images/logo/logo-kff.png';
+    }
+
     function orderItemsCount(order) {
         return (order.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0);
     }
@@ -1484,16 +1549,19 @@
                 ? item.toppings.join(', ')
                 : (item.toppings || '');
             const subtotal = Number(item.subtotal || item.price || 0);
+            const image = itemImage(item);
 
             return `
                 <div class="order-item">
-                    <div class="item-icon">${itemEmoji(item)}</div>
+                    <div class="item-thumb">
+                        <img src="${escapeHtml(image)}" alt="${escapeHtml(name)}">
+                    </div>
 
                     <div class="item-main">
                         <div class="item-name">${escapeHtml(name)}</div>
                         <div class="item-meta">
                             ×${quantity}
-                            ${toppings ? ' · ' + escapeHtml(toppings) : ''}
+                            ${toppings ? '<br>' + escapeHtml(toppings) : '<br>Không có topping'}
                         </div>
                     </div>
 

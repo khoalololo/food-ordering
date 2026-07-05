@@ -562,47 +562,47 @@
 
     <section class="hero">
         <div class="hero-content">
-            <p class="eyebrow">🔔 Notification center</p>
-            <h1 class="hero-title">Thông báo đơn hàng, khỏi bỏ lỡ nhịp bếp.</h1>
+            <p class="eyebrow"> Notification center</p>
+            <h1 class="hero-title">Order notifications, never miss a beat.</h1>
             <p class="hero-text">
-                Trang này hiển thị thông báo khi bạn đặt món, thanh toán hoặc khi trạng thái đơn hàng thay đổi.
-                Nếu chưa đặt đơn nào thì danh sách có thể đang trống.
+                This page displays notifications when you place an order, make a payment, or when your order status changes.
+                If you haven't placed any orders yet, the list may be empty.
             </p>
         </div>
 
         <aside class="hero-card">
             <div class="hero-card-icon">📬</div>
-            <strong id="hero-count">0 thông báo</strong>
-            <span>Theo dõi các cập nhật mới nhất từ bếp và hệ thống đặt món.</span>
+            <strong id="hero-count">0 notifications</strong>
+            <span>Stay updated with the latest news from the kitchen and ordering system.</span>
         </aside>
     </section>
 
     <section class="toolbar">
         <div class="tab-list">
-            <button class="tab-btn active" type="button" data-tab="USER">Của tôi</button>
-            <button class="tab-btn" type="button" data-tab="KITCHEN" id="kitchen-tab" style="display:none">Bếp</button>
+            <button class="tab-btn active" type="button" data-tab="USER">My Notifications</button>
+            <button class="tab-btn" type="button" data-tab="KITCHEN" id="kitchen-tab" style="display:none">Kitchen</button>
         </div>
 
         <div class="tab-list">
-            <button class="btn btn-ghost" type="button" onclick="loadNotifications()">Làm mới</button>
-            <button class="btn btn-primary" type="button" onclick="markAllRead()">Đánh dấu đã đọc</button>
+            <button class="btn btn-ghost" type="button" onclick="loadNotifications()">Refresh</button>
+            <button class="btn btn-primary" type="button" onclick="markAllRead()">Mark all as Read</button>
         </div>
     </section>
 
     <section>
         <div class="section-head">
             <div>
-                <h2 class="section-title" id="section-title">Thông báo của tôi</h2>
-                <p class="section-sub" id="section-sub">Các cập nhật liên quan đến đơn hàng của bạn.</p>
+                <h2 class="section-title" id="section-title">My Notifications</h2>
+                <p class="section-sub" id="section-sub">Updates related to your orders.</p>
             </div>
-            <div class="count-chip" id="count-chip">0 mục</div>
+            <div class="count-chip" id="count-chip">0 items</div>
         </div>
 
         <div id="notification-list" class="notification-list">
             <div class="loading">
                 <div class="empty-icon">⏳</div>
-                <h3>Đang tải thông báo...</h3>
-                <p>Đợi một chút, mình đang kéo tin từ backend về.</p>
+                <h3>Loading notifications...</h3>
+                <p>Give us a moment, we're fetching the latest updates from the backend.</p>
             </div>
         </div>
     </section>
@@ -703,12 +703,12 @@
                 });
 
                 document.getElementById('section-title').textContent =
-                    activeTab === 'KITCHEN' ? 'Thông báo bếp' : 'Thông báo của tôi';
+                    activeTab === 'KITCHEN' ? 'Kitchen Notifications' : 'My Notifications';
 
                 document.getElementById('section-sub').textContent =
                     activeTab === 'KITCHEN'
-                        ? 'Các đơn mới, đơn đã thanh toán hoặc đơn bị hủy gửi về khu vực bếp.'
-                        : 'Các cập nhật liên quan đến đơn hàng của bạn.';
+                        ? 'New orders, paid orders, or cancelled orders sent to the kitchen area.'
+                        : 'Updates related to your orders.';
 
                 loadNotifications();
             });
@@ -721,8 +721,8 @@
         list.innerHTML = `
             <div class="loading">
                 <div class="empty-icon">⏳</div>
-                <h3>Đang tải thông báo...</h3>
-                <p>Đợi một chút, mình đang kéo tin từ backend về.</p>
+                <h3>Loading notifications...</h3>
+                <p>Give us a moment, we're fetching the latest updates from the backend.</p>
             </div>
         `;
 
@@ -745,8 +745,8 @@
             list.innerHTML = `
                 <div class="error-box">
                     <div class="empty-icon">⚠️</div>
-                    <h3>Không tải được thông báo</h3>
-                    <p>${escapeHtml(ex.message || 'Vui lòng thử lại sau.')}</p>
+                    <h3>Cannot load notifications</h3>
+                    <p>${escapeHtml(ex.message || 'Please try again later.')}</p>
                 </div>
             `;
         }
@@ -765,17 +765,17 @@
 
     function eventLabel(event) {
         const map = {
-            ORDER_CREATED: 'Đơn hàng mới',
-            ORDER_STATUS_CHANGED: 'Cập nhật trạng thái',
-            ORDER_CANCELLED: 'Đơn đã hủy',
-            ORDER_PAID: 'Thanh toán thành công'
+            ORDER_CREATED: 'New order',
+            ORDER_STATUS_CHANGED: 'Status update',
+            ORDER_CANCELLED: 'Order cancelled',
+            ORDER_PAID: 'Payment successful'
         };
 
-        return map[event] || String(event || 'Thông báo').replaceAll('_', ' ');
+        return map[event] || String(event || 'Notification').replaceAll('_', ' ');
     }
 
     function formatTime(value) {
-        if (!value) return 'Không rõ thời gian';
+        if (!value) return 'Time not specified';
 
         const date = new Date(value);
 
@@ -799,17 +799,17 @@
 
         const unreadCount = notifications.filter(item => !item.isRead && !item.read).length;
 
-        countChip.textContent = `${notifications.length} mục • ${unreadCount} chưa đọc`;
-        heroCount.textContent = `${notifications.length} thông báo`;
+        countChip.textContent = `${notifications.length} items • ${unreadCount} unread`;
+        heroCount.textContent = `${notifications.length} notifications`;
 
         if (!notifications.length) {
             list.innerHTML = `
                 <div class="empty">
                     <div class="empty-icon">📭</div>
-                    <h3>Chưa có thông báo nào</h3>
+                    <h3>No notifications yet</h3>
                     <p>
-                        Khi bạn đặt món, thanh toán hoặc đơn hàng đổi trạng thái,
-                        thông báo sẽ xuất hiện ở đây.
+                        When you place an order, make a payment, or an order's status changes,
+                        notifications will appear here.
                     </p>
                 </div>
             `;
@@ -826,19 +826,19 @@
 
                     <div>
                         <h3 class="notification-event">${escapeHtml(eventLabel(item.event))}</h3>
-                        <p class="notification-message">${escapeHtml(item.message || 'Không có nội dung.')}</p>
+                        <p class="notification-message">${escapeHtml(item.message || 'No content available.')}</p>
 
                         <div class="notification-meta">
                             <span class="pill">🕒 ${escapeHtml(formatTime(item.createdAt))}</span>
-                            <span class="pill">${isRead ? '✅ Đã đọc' : '🟠 Chưa đọc'}</span>
+                            <span class="pill">${isRead ? '✅ Read' : '🟠 Unread'}</span>
                             ${orderId ? `<span class="pill">#${escapeHtml(orderId)}</span>` : ''}
                             ${item.type ? `<span class="pill">${escapeHtml(item.type)}</span>` : ''}
                         </div>
                     </div>
 
                     <div class="card-actions">
-                        ${orderId ? `<a class="small-btn primary" href="/customer/tracking?orderId=${encodeURIComponent(orderId)}">Xem đơn</a>` : ''}
-                        ${isRead ? '' : `<button class="small-btn" type="button" onclick="markRead(${Number(item.id)})">Đã đọc</button>`}
+                        ${orderId ? `<a class="small-btn primary" href="/customer/tracking?orderId=${encodeURIComponent(orderId)}">View Order</a>` : ''}
+                        ${isRead ? '' : `<button class="small-btn" type="button" onclick="markRead(${Number(item.id)})">Mark as Read</button>`}
                     </div>
                 </article>
             `;
@@ -862,9 +862,9 @@
             });
 
             renderNotifications();
-            notify('Đã đánh dấu thông báo là đã đọc.', 'success');
+            notify('Notification marked as read.', 'success');
         } catch (ex) {
-            notify(ex.message || 'Không thể đánh dấu đã đọc.', 'error');
+            notify(ex.message || 'Failed to mark as read.', 'error');
         }
     }
 
@@ -873,7 +873,7 @@
             if (activeTab === 'KITCHEN') {
                 notifications = notifications.map(item => ({ ...item, isRead: true, read: true }));
                 renderNotifications();
-                notify('Đã đánh dấu các thông báo đang hiển thị.', 'success');
+                notify('Notification marked as read.', 'success');
                 return;
             }
 
@@ -883,9 +883,9 @@
 
             notifications = notifications.map(item => ({ ...item, isRead: true, read: true }));
             renderNotifications();
-            notify('Đã đánh dấu tất cả thông báo là đã đọc.', 'success');
+            notify('Notification marked as read.', 'success');
         } catch (ex) {
-            notify(ex.message || 'Không thể đánh dấu tất cả.', 'error');
+            notify(ex.message || 'Failed to mark all as read.', 'error');
         }
     }
 
