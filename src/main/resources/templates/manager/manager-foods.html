@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -855,6 +856,7 @@
         }
 
         @media (max-width: 980px) {
+
             #main-nav,
             .page {
                 width: min(100% - 32px, 1180px);
@@ -922,6 +924,7 @@
         }
 
         @media (max-width: 520px) {
+
             #main-nav,
             .page {
                 width: min(100% - 24px, 1180px);
@@ -943,344 +946,407 @@
                 grid-column: auto;
             }
         }
+
+        /* =====================================================
+   MANAGER FOOD STATS FIX
+   Bỏ icon Total foods / Available / Hidden
+   Cho số to giống Staff Orders
+   ===================================================== */
+
+        .hero-stats .stat-icon,
+        .stat-card .stat-icon,
+        .food-stat .stat-icon,
+        .dashboard-stat .stat-icon,
+        .metric-card .stat-icon {
+            display: none !important;
+        }
+
+        .hero-stats .stat-card,
+        .stat-card,
+        .food-stat,
+        .dashboard-stat,
+        .metric-card {
+            min-height: 92px !important;
+            padding: 22px 24px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            justify-content: center !important;
+            gap: 0 !important;
+            border-radius: 28px !important;
+            background:
+                linear-gradient(135deg,
+                    rgba(255, 250, 243, 0.16),
+                    rgba(255, 250, 243, 0.08)) !important;
+            border: 1px solid rgba(243, 228, 201, 0.24) !important;
+            box-shadow: inset 0 1px 0 rgba(255, 250, 243, 0.12) !important;
+        }
+
+        .hero-stats .stat-card span,
+        .stat-card span,
+        .food-stat span,
+        .dashboard-stat span,
+        .metric-card span {
+            display: block !important;
+            color: rgba(243, 228, 201, 0.76) !important;
+            font-size: 13px !important;
+            line-height: 1.2 !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.2px !important;
+        }
+
+        .hero-stats .stat-card strong,
+        .stat-card strong,
+        .food-stat strong,
+        .dashboard-stat strong,
+        .metric-card strong,
+        .stat-value {
+            display: block !important;
+            margin-top: 10px !important;
+            color: var(--cream) !important;
+            font-size: clamp(34px, 3.2vw, 48px) !important;
+            line-height: 0.95 !important;
+            font-weight: 900 !important;
+            letter-spacing: -1.6px !important;
+        }
     </style>
 </head>
 
 <body>
-<nav id="main-nav"></nav>
-<div id="toast-container"></div>
+    <nav id="main-nav"></nav>
+    <div id="toast-container"></div>
 
-<div class="page">
-    <section class="manager-hero">
-        <div class="hero-copy">
-            <p class="eyebrow">🍽️ Manager dashboard</p>
-            <h1 class="page-title">Quản lý menu, <span>giữ căn bếp gọn gàng.</span></h1>
-            <p class="hero-text">
-                Thêm món mới, chỉnh giá, đổi trạng thái hiển thị hoặc xóa món khỏi hệ thống.
-                Đây là khu vực quản lý menu dành cho Manager.
-            </p>
+    <div class="page">
+        <section class="manager-hero">
+            <div class="hero-copy">
+                <p class="eyebrow"> Manager dashboard</p>
+                <h1 class="page-title">Manage menu, <span>keep the kitchen organized.</span></h1>
+                <p class="hero-text">
+                    Add new items, adjust prices, change visibility status, or remove items from the system.
+                    This is the menu management area for Managers.
+                </p>
 
-            <div class="hero-actions">
-                <button class="btn btn-light" onclick="openCreate()">
-                    + Add food
-                </button>
+                <div class="hero-actions">
+                    <button class="btn btn-light" onclick="openCreate()">
+                        + Add food
+                    </button>
 
-                <button class="btn btn-ghost" onclick="loadFoods()">
-                    Refresh
-                </button>
-            </div>
-        </div>
-
-        <aside class="hero-stats">
-            <div class="stat-card">
-                <div class="stat-icon">📋</div>
-                <div>
-                    <span>Total foods</span>
-                    <strong id="stat-total">0</strong>
+                    <button class="btn btn-ghost" onclick="loadFoods()">
+                        Refresh
+                    </button>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon">✅</div>
-                <div>
-                    <span>Available</span>
-                    <strong id="stat-available">0</strong>
+            <aside class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div>
+                        <span>Total foods</span>
+                        <strong id="stat-total">0</strong>
+                    </div>
                 </div>
-            </div>
 
-            <div class="stat-card">
-                <div class="stat-icon">🙈</div>
-                <div>
-                    <span>Hidden</span>
-                    <strong id="stat-hidden">0</strong>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div>
+                        <span>Available</span>
+                        <strong id="stat-available">0</strong>
+                    </div>
                 </div>
-            </div>
-        </aside>
-    </section>
 
-    <section class="toolbar">
-        <div class="input-shell">
-            <span class="input-icon">🔎</span>
-            <input class="form-input" type="search" id="search-input" placeholder="Search food by name...">
-        </div>
-
-        <select class="form-select" id="type-filter">
-            <option value="">All types</option>
-            <option value="pizza">Pizza</option>
-            <option value="burger">Burger</option>
-            <option value="pasta">Pasta</option>
-            <option value="salad">Salad</option>
-            <option value="soup">Soup</option>
-            <option value="dessert">Dessert</option>
-            <option value="drink">Drink</option>
-            <option value="food">Other</option>
-        </select>
-
-        <select class="form-select" id="avail-filter">
-            <option value="">All items</option>
-            <option value="true">Available only</option>
-            <option value="false">Unavailable only</option>
-        </select>
-
-        <button class="btn" onclick="openCreate()">
-            + Add food
-        </button>
-    </section>
-
-    <section class="section-head">
-        <div>
-            <h2 class="section-title">Food list</h2>
-            <p class="section-sub">Chọn Edit để sửa thông tin, Hide/Show để ẩn hoặc hiện món trên menu.</p>
-        </div>
-
-        <span class="result-chip" id="food-count">
-            <strong>0</strong> items shown
-        </span>
-    </section>
-
-    <section class="food-grid" id="food-grid">
-        <div class="loading">
-            <div class="empty-icon">🍳</div>
-            <h3>Loading foods...</h3>
-            <p>Đang lấy danh sách món ăn.</p>
-        </div>
-    </section>
-</div>
-
-<div class="modal-overlay" id="food-modal">
-    <div class="modal">
-        <div class="modal-header">
-            <h2 class="modal-title" id="modal-title">Add food</h2>
-            <button class="btn btn-ghost btn-sm" onclick="closeFoodModal()">Close</button>
-        </div>
-
-        <div class="modal-body">
-            <input type="hidden" id="f-id">
-
-            <div class="preview-card">
-                <div class="preview-icon" id="preview-icon">🍽️</div>
-                <div>
-                    <strong id="preview-name">Food preview</strong>
-                    <span id="preview-desc">Fill the form below to update this food item.</span>
+                <div class="stat-card">
+                    <div class="stat-icon">🙈</div>
+                    <div>
+                        <span>Hidden</span>
+                        <strong id="stat-hidden">0</strong>
+                    </div>
                 </div>
+            </aside>
+        </section>
+
+        <section class="toolbar">
+            <div class="input-shell">
+                <span class="input-icon">🔎</span>
+                <input class="form-input" type="search" id="search-input" placeholder="Search food by name...">
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="f-name">Name *</label>
-                <input class="form-input" id="f-name" placeholder="e.g. Margherita Pizza">
+            <select class="form-select" id="type-filter">
+                <option value="">All types</option>
+                <option value="pizza">Pizza</option>
+                <option value="burger">Burger</option>
+                <option value="pasta">Pasta</option>
+                <option value="salad">Salad</option>
+                <option value="soup">Soup</option>
+                <option value="dessert">Dessert</option>
+                <option value="drink">Drink</option>
+                <option value="food">Other</option>
+            </select>
+
+            <select class="form-select" id="avail-filter">
+                <option value="">All items</option>
+                <option value="true">Available only</option>
+                <option value="false">Unavailable only</option>
+            </select>
+
+            <button class="btn" onclick="openCreate()">
+                + Add food
+            </button>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2 class="section-title">Food list</h2>
+                <p class="section-sub">Choose Edit to edit information, Hide/Show to hide or show items on the menu.</p>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label" for="f-price">Base price (VND) *</label>
-                    <input class="form-input" id="f-price" type="number" min="0" placeholder="75000">
+            <span class="result-chip" id="food-count">
+                <strong>0</strong> items shown
+            </span>
+        </section>
+
+        <section class="food-grid" id="food-grid">
+            <div class="loading">
+                <div class="empty-icon">🍳</div>
+                <h3>Loading foods...</h3>
+                <p>Đang lấy danh sách món ăn.</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal-overlay" id="food-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Add food</h2>
+                <button class="btn btn-ghost btn-sm" onclick="closeFoodModal()">Close</button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="f-id">
+
+                <div class="preview-card">
+                    <div class="preview-icon" id="preview-icon">🍽️</div>
+                    <div>
+                        <strong id="preview-name">Food preview</strong>
+                        <span id="preview-desc">Fill the form below to update this food item.</span>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="f-type">Type *</label>
-                    <select class="form-select" id="f-type">
-                        <option value="food">Other</option>
-                        <option value="pizza">Pizza</option>
-                        <option value="burger">Burger</option>
-                        <option value="pasta">Pasta</option>
-                        <option value="salad">Salad</option>
-                        <option value="soup">Soup</option>
-                        <option value="dessert">Dessert</option>
-                        <option value="drink">Drink</option>
-                    </select>
+                    <label class="form-label" for="f-name">Name *</label>
+                    <input class="form-input" id="f-name" placeholder="e.g. Margherita Pizza">
                 </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="f-price">Base price (VND) *</label>
+                        <input class="form-input" id="f-price" type="number" min="0" placeholder="75000">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="f-type">Type *</label>
+                        <select class="form-select" id="f-type">
+                            <option value="food">Other</option>
+                            <option value="pizza">Pizza</option>
+                            <option value="burger">Burger</option>
+                            <option value="pasta">Pasta</option>
+                            <option value="salad">Salad</option>
+                            <option value="soup">Soup</option>
+                            <option value="dessert">Dessert</option>
+                            <option value="drink">Drink</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="f-image">Image URL</label>
+                    <input class="form-input" id="f-image" type="url" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="f-desc">Description</label>
+                    <textarea class="form-textarea" id="f-desc" placeholder="Short description..."></textarea>
+                </div>
+
+                <label class="form-check">
+                    <input type="checkbox" id="f-available" checked>
+                    Available on customer menu
+                </label>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="f-image">Image URL</label>
-                <input class="form-input" id="f-image" type="url" placeholder="https://...">
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeFoodModal()">Cancel</button>
+                <button class="btn" id="save-btn" onclick="saveFood()">Save food</button>
             </div>
-
-            <div class="form-group">
-                <label class="form-label" for="f-desc">Description</label>
-                <textarea class="form-textarea" id="f-desc" placeholder="Short description..."></textarea>
-            </div>
-
-            <label class="form-check">
-                <input type="checkbox" id="f-available" checked>
-                Available on customer menu
-            </label>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-ghost" onclick="closeFoodModal()">Cancel</button>
-            <button class="btn" id="save-btn" onclick="saveFood()">Save food</button>
         </div>
     </div>
-</div>
 
-<div class="modal-overlay" id="delete-modal">
-    <div class="modal modal-sm">
-        <div class="modal-header">
-            <h2 class="modal-title">Delete food?</h2>
-            <button class="btn btn-ghost btn-sm" onclick="closeDeleteModal()">Close</button>
-        </div>
-
-        <div class="modal-body">
-            <div class="preview-card">
-                <div class="preview-icon">🗑️</div>
-                <div>
-                    <strong id="delete-name">Food item</strong>
-                    <span>This action cannot be undone.</span>
-                </div>
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h2 class="modal-title">Delete food?</h2>
+                <button class="btn btn-ghost btn-sm" onclick="closeDeleteModal()">Close</button>
             </div>
 
-            <p class="delete-copy">
-                Are you sure you want to permanently delete
-                <strong id="delete-name-inline">this food</strong>
-                from the menu?
-            </p>
-        </div>
+            <div class="modal-body">
+                <div class="preview-card">
+                    <div class="preview-icon">🗑️</div>
+                    <div>
+                        <strong id="delete-name">Food item</strong>
+                        <span>This action cannot be undone.</span>
+                    </div>
+                </div>
 
-        <div class="modal-footer">
-            <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
-            <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDelete()">Delete</button>
+                <p class="delete-copy">
+                    Are you sure you want to permanently delete
+                    <strong id="delete-name-inline">this food</strong>
+                    from the menu?
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDelete()">Delete</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="/js/shared.js"></script>
+    <script src="/js/shared.js"></script>
 
-<script>
-    const PREVIEW_FOODS = [
-        {
-            id: 1,
-            name: 'Cheese Burger',
-            type: 'burger',
-            description: 'Juicy beef patty, melted cheese, fresh lettuce and signature sauce.',
-            basePrice: 59000,
-            imageUrl: null,
-            isAvailable: true
-        },
-        {
-            id: 2,
-            name: 'Pepperoni Pizza',
-            type: 'pizza',
-            description: 'Crispy crust, tomato sauce, mozzarella cheese and pepperoni.',
-            basePrice: 99000,
-            imageUrl: null,
-            isAvailable: true
-        },
-        {
-            id: 3,
-            name: 'Creamy Pasta',
-            type: 'pasta',
-            description: 'Soft pasta tossed in creamy sauce with herbs and parmesan.',
-            basePrice: 79000,
-            imageUrl: null,
-            isAvailable: true
-        },
-        {
-            id: 4,
-            name: 'Fresh Garden Salad',
-            type: 'salad',
-            description: 'Crisp vegetables, light dressing and a fresh green finish.',
-            basePrice: 49000,
-            imageUrl: null,
-            isAvailable: false
-        },
-        {
-            id: 5,
-            name: 'Hot Mushroom Soup',
-            type: 'soup',
-            description: 'Warm mushroom soup for a cozy meal starter.',
-            basePrice: 39000,
-            imageUrl: null,
-            isAvailable: true
-        },
-        {
-            id: 6,
-            name: 'Chocolate Cake',
-            type: 'dessert',
-            description: 'Soft chocolate cake with a rich sweet finish.',
-            basePrice: 45000,
-            imageUrl: null,
-            isAvailable: false
-        },
-        {
-            id: 7,
-            name: 'Iced Lemon Tea',
-            type: 'drink',
-            description: 'Cool lemon tea with a bright citrus taste.',
-            basePrice: 25000,
-            imageUrl: null,
-            isAvailable: true
+    <script>
+        const PREVIEW_FOODS = [
+            {
+                id: 1,
+                name: 'Cheese Burger',
+                type: 'burger',
+                description: 'Juicy beef patty, melted cheese, fresh lettuce and signature sauce.',
+                basePrice: 59000,
+                imageUrl: null,
+                isAvailable: true
+            },
+            {
+                id: 2,
+                name: 'Pepperoni Pizza',
+                type: 'pizza',
+                description: 'Crispy crust, tomato sauce, mozzarella cheese and pepperoni.',
+                basePrice: 99000,
+                imageUrl: null,
+                isAvailable: true
+            },
+            {
+                id: 3,
+                name: 'Creamy Pasta',
+                type: 'pasta',
+                description: 'Soft pasta tossed in creamy sauce with herbs and parmesan.',
+                basePrice: 79000,
+                imageUrl: null,
+                isAvailable: true
+            },
+            {
+                id: 4,
+                name: 'Fresh Garden Salad',
+                type: 'salad',
+                description: 'Crisp vegetables, light dressing and a fresh green finish.',
+                basePrice: 49000,
+                imageUrl: null,
+                isAvailable: false
+            },
+            {
+                id: 5,
+                name: 'Hot Mushroom Soup',
+                type: 'soup',
+                description: 'Warm mushroom soup for a cozy meal starter.',
+                basePrice: 39000,
+                imageUrl: null,
+                isAvailable: true
+            },
+            {
+                id: 6,
+                name: 'Chocolate Cake',
+                type: 'dessert',
+                description: 'Soft chocolate cake with a rich sweet finish.',
+                basePrice: 45000,
+                imageUrl: null,
+                isAvailable: false
+            },
+            {
+                id: 7,
+                name: 'Iced Lemon Tea',
+                type: 'drink',
+                description: 'Cool lemon tea with a bright citrus taste.',
+                basePrice: 25000,
+                imageUrl: null,
+                isAvailable: true
+            }
+        ];
+
+        const FOOD_EMOJI = {
+            pizza: '🍕',
+            burger: '🍔',
+            pasta: '🍝',
+            salad: '🥗',
+            soup: '🍲',
+            dessert: '🍰',
+            drink: '🥤',
+            food: '🍽️'
+        };
+
+        const Formatter = typeof fmt !== 'undefined'
+            ? fmt
+            : {
+                currency: n => new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    maximumFractionDigits: 0
+                }).format(Number(n || 0))
+            };
+
+        const notify = typeof toast === 'function'
+            ? toast
+            : function (message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const item = document.createElement('div');
+                item.className = `toast ${type}`;
+                item.textContent = message;
+                container.appendChild(item);
+
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(16px)';
+                    item.style.transition = '0.25s ease';
+                    setTimeout(() => item.remove(), 260);
+                }, 2600);
+            };
+
+        let allFoods = [];
+        let deleteId = null;
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
         }
-    ];
 
-    const FOOD_EMOJI = {
-        pizza: '🍕',
-        burger: '🍔',
-        pasta: '🍝',
-        salad: '🥗',
-        soup: '🍲',
-        dessert: '🍰',
-        drink: '🥤',
-        food: '🍽️'
-    };
+        function foodEmoji(type) {
+            return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
+        }
 
-    const Formatter = typeof fmt !== 'undefined'
-        ? fmt
-        : {
-            currency: n => new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                maximumFractionDigits: 0
-            }).format(Number(n || 0))
-        };
+        function available(food) {
+            return food.isAvailable ?? food.available ?? true;
+        }
 
-    const notify = typeof toast === 'function'
-        ? toast
-        : function(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const item = document.createElement('div');
-            item.className = `toast ${type}`;
-            item.textContent = message;
-            container.appendChild(item);
+        function nextPreviewId() {
+            return Math.max(0, ...allFoods.map(food => Number(food.id || 0))) + 1;
+        }
 
-            setTimeout(() => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(16px)';
-                item.style.transition = '0.25s ease';
-                setTimeout(() => item.remove(), 260);
-            }, 2600);
-        };
+        function renderPreviewNav() {
+            const nav = document.getElementById('main-nav');
 
-    let allFoods = [];
-    let deleteId = null;
+            if (!nav) return;
 
-    function escapeHtml(value) {
-        return String(value ?? '')
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#039;');
-    }
-
-    function foodEmoji(type) {
-        return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
-    }
-
-    function available(food) {
-        return food.isAvailable ?? food.available ?? true;
-    }
-
-    function nextPreviewId() {
-        return Math.max(0, ...allFoods.map(food => Number(food.id || 0))) + 1;
-    }
-
-    function renderPreviewNav() {
-        const nav = document.getElementById('main-nav');
-
-        if (!nav) return;
-
-        nav.innerHTML = `
+            nav.innerHTML = `
             <a class="nav-brand" href="/manager/foods">KhoaFastFood</a>
             <div class="nav-links">
                 <a class="nav-link active" href="/manager/foods">Foods</a>
@@ -1290,33 +1356,33 @@
                 <a class="btn btn-ghost btn-sm" href="/signin">Sign out</a>
             </div>
         `;
-    }
-
-    function setupPage() {
-        if (typeof requireAuth === 'function') {
-            const ok = requireAuth(['MANAGER']);
-
-            if (!ok) {
-                return;
-            }
-
-            if (typeof renderNav === 'function') {
-                renderNav('/manager/foods');
-
-                const brand = document.querySelector('.nav-brand');
-                if (brand) brand.textContent = 'KhoaFastFood';
-            }
-        } else {
-            renderPreviewNav();
         }
 
-        loadFoods();
-    }
+        function setupPage() {
+            if (typeof requireAuth === 'function') {
+                const ok = requireAuth(['MANAGER']);
 
-    async function loadFoods() {
-        const grid = document.getElementById('food-grid');
+                if (!ok) {
+                    return;
+                }
 
-        grid.innerHTML = `
+                if (typeof renderNav === 'function') {
+                    renderNav('/manager/foods');
+
+                    const brand = document.querySelector('.nav-brand');
+                    if (brand) brand.textContent = 'KhoaFastFood';
+                }
+            } else {
+                renderPreviewNav();
+            }
+
+            loadFoods();
+        }
+
+        async function loadFoods() {
+            const grid = document.getElementById('food-grid');
+
+            grid.innerHTML = `
             <div class="loading">
                 <div class="empty-icon">🍳</div>
                 <h3>Loading foods...</h3>
@@ -1324,78 +1390,78 @@
             </div>
         `;
 
-        try {
-            if (typeof GET === 'function' && location.protocol !== 'file:') {
-                try {
-                    allFoods = await GET('/food/all');
-                } catch {
-                    allFoods = await GET('/food');
+            try {
+                if (typeof GET === 'function' && location.protocol !== 'file:') {
+                    try {
+                        allFoods = await GET('/food/all');
+                    } catch {
+                        allFoods = await GET('/food');
+                    }
+                } else {
+                    allFoods = [...PREVIEW_FOODS];
                 }
-            } else {
-                allFoods = [...PREVIEW_FOODS];
-            }
 
-            if (!Array.isArray(allFoods)) {
-                allFoods = [];
-            }
+                if (!Array.isArray(allFoods)) {
+                    allFoods = [];
+                }
 
-            renderFoods();
-        } catch (ex) {
-            if (location.protocol === 'file:') {
-                allFoods = [...PREVIEW_FOODS];
                 renderFoods();
-                return;
-            }
+            } catch (ex) {
+                if (location.protocol === 'file:') {
+                    allFoods = [...PREVIEW_FOODS];
+                    renderFoods();
+                    return;
+                }
 
-            grid.innerHTML = `
+                grid.innerHTML = `
                 <div class="error-box">
                     <div class="empty-icon">⚠️</div>
                     <h3>Could not load foods</h3>
                     <p>${escapeHtml(ex.message || 'Please try again later.')}</p>
                 </div>
             `;
+            }
         }
-    }
 
-    function renderStats(filteredFoods) {
-        const total = allFoods.length;
-        const shown = filteredFoods.length;
-        const availableCount = allFoods.filter(available).length;
-        const hiddenCount = total - availableCount;
+        function renderStats(filteredFoods) {
+            const total = allFoods.length;
+            const shown = filteredFoods.length;
+            const availableCount = allFoods.filter(available).length;
+            const hiddenCount = total - availableCount;
 
-        document.getElementById('stat-total').textContent = total;
-        document.getElementById('stat-available').textContent = availableCount;
-        document.getElementById('stat-hidden').textContent = hiddenCount;
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-available').textContent = availableCount;
+            document.getElementById('stat-hidden').textContent = hiddenCount;
 
-        document.getElementById('food-count').innerHTML = `
+            document.getElementById('food-count').innerHTML = `
             <strong>${shown}</strong> of ${total} items shown
         `;
-    }
+        }
 
-    function renderFoods() {
-        const q = document.getElementById('search-input').value.trim().toLowerCase();
-        const type = document.getElementById('type-filter').value;
-        const avail = document.getElementById('avail-filter').value;
+        function renderFoods() {
+            const q = document.getElementById('search-input').value.trim().toLowerCase();
+            const type = document.getElementById('type-filter').value;
+            const avail = document.getElementById('avail-filter').value;
 
-        const foods = allFoods.filter(food => {
-            const name = String(food.name || '').toLowerCase();
-            const foodType = String(food.type || 'food').toLowerCase();
-            const isAvail = available(food);
+            const foods = allFoods.filter(food => {
+                const name = String(food.name || '').toLowerCase();
+                const foodType = String(food.type || 'food').toLowerCase();
+                const isAvail = available(food);
 
-            if (q && !name.includes(q)) return false;
-            if (type && foodType !== type) return false;
-            if (avail === 'true' && !isAvail) return false;
-            if (avail === 'false' && isAvail) return false;
+                if (q && !name.includes(q)) return false;
+                if (type && foodType !== type) return false;
+                if (avail === 'true' && !isAvail) return false;
+                if (avail === 'false' && isAvail) return false;
 
-            return true;
-        });
+                return true;
+            });
 
-        renderStats(foods);
+            renderStats(foods);
 
-        const grid = document.getElementById('food-grid');
+            const grid = document.getElementById('food-grid');
 
-        if (!foods.length) {
-            grid.innerHTML = `
+            if (!foods.length) {
+                grid.innerHTML = `
                 <div class="empty">
                     <div class="empty-icon">🔎</div>
                     <h3>No foods found</h3>
@@ -1403,20 +1469,20 @@
                     <button class="btn" style="margin-top:22px" onclick="openCreate()">+ Add food</button>
                 </div>
             `;
-            return;
-        }
+                return;
+            }
 
-        grid.innerHTML = foods.map(food => {
-            const isAvail = available(food);
-            const type = String(food.type || 'food').toLowerCase();
+            grid.innerHTML = foods.map(food => {
+                const isAvail = available(food);
+                const type = String(food.type || 'food').toLowerCase();
 
-            return `
+                return `
                 <article class="food-card ${!isAvail ? 'unavailable' : ''}">
                     <div class="food-img">
                         ${food.imageUrl
-                            ? `<img src="${escapeHtml(food.imageUrl)}" alt="${escapeHtml(food.name)}" onerror="this.remove(); this.parentElement.querySelector('.food-emoji').style.display='grid';">`
-                            : ''
-                        }
+                        ? `<img src="${escapeHtml(food.imageUrl)}" alt="${escapeHtml(food.name)}" onerror="this.remove(); this.parentElement.querySelector('.food-emoji').style.display='grid';">`
+                        : ''
+                    }
 
                         <div class="food-emoji" style="${food.imageUrl ? 'display:none' : ''}">
                             ${foodEmoji(type)}
@@ -1433,9 +1499,9 @@
                         <h3 class="food-name">${escapeHtml(food.name)}</h3>
 
                         ${food.description
-                            ? `<p class="food-desc">${escapeHtml(food.description)}</p>`
-                            : `<p class="food-desc">No description yet. Add one to make this item clearer for customers.</p>`
-                        }
+                        ? `<p class="food-desc">${escapeHtml(food.description)}</p>`
+                        : `<p class="food-desc">No description yet. Add one to make this item clearer for customers.</p>`
+                    }
 
                         <div class="food-meta">
                             <span class="food-price">${Formatter.currency(food.basePrice || 0)}</span>
@@ -1458,251 +1524,252 @@
                     </div>
                 </article>
             `;
-        }).join('');
-    }
-
-    function updatePreview() {
-        const name = document.getElementById('f-name').value.trim() || 'Food preview';
-        const type = document.getElementById('f-type').value || 'food';
-        const desc = document.getElementById('f-desc').value.trim() || 'Fill the form below to update this food item.';
-
-        document.getElementById('preview-icon').textContent = foodEmoji(type);
-        document.getElementById('preview-name').textContent = name;
-        document.getElementById('preview-desc').textContent = desc;
-    }
-
-    function openFoodModal() {
-        const modal = document.getElementById('food-modal');
-
-        if (typeof openModal === 'function') {
-            openModal('food-modal');
-        } else {
-            modal.classList.add('open');
-        }
-    }
-
-    function closeFoodModal() {
-        const modal = document.getElementById('food-modal');
-
-        if (typeof closeModal === 'function') {
-            closeModal('food-modal');
-        } else {
-            modal.classList.remove('open');
-        }
-    }
-
-    function openDeleteModal() {
-        const modal = document.getElementById('delete-modal');
-
-        if (typeof openModal === 'function') {
-            openModal('delete-modal');
-        } else {
-            modal.classList.add('open');
-        }
-    }
-
-    function closeDeleteModal() {
-        const modal = document.getElementById('delete-modal');
-
-        if (typeof closeModal === 'function') {
-            closeModal('delete-modal');
-        } else {
-            modal.classList.remove('open');
-        }
-    }
-
-    function openCreate() {
-        document.getElementById('modal-title').textContent = 'Add food';
-        document.getElementById('f-id').value = '';
-        document.getElementById('f-name').value = '';
-        document.getElementById('f-price').value = '';
-        document.getElementById('f-type').value = 'food';
-        document.getElementById('f-image').value = '';
-        document.getElementById('f-desc').value = '';
-        document.getElementById('f-available').checked = true;
-        document.getElementById('save-btn').textContent = 'Add food';
-
-        updatePreview();
-        openFoodModal();
-    }
-
-    function openEdit(id) {
-        const food = allFoods.find(item => Number(item.id) === Number(id));
-
-        if (!food) return;
-
-        document.getElementById('modal-title').textContent = 'Edit food';
-        document.getElementById('f-id').value = food.id;
-        document.getElementById('f-name').value = food.name || '';
-        document.getElementById('f-price').value = food.basePrice || '';
-        document.getElementById('f-type').value = food.type || 'food';
-        document.getElementById('f-image').value = food.imageUrl || '';
-        document.getElementById('f-desc').value = food.description || '';
-        document.getElementById('f-available').checked = available(food);
-        document.getElementById('save-btn').textContent = 'Save changes';
-
-        updatePreview();
-        openFoodModal();
-    }
-
-    async function saveFood() {
-        const id = document.getElementById('f-id').value;
-        const name = document.getElementById('f-name').value.trim();
-        const price = document.getElementById('f-price').value;
-
-        if (!name || !price) {
-            notify('Name and price are required.', 'error');
-            return;
+            }).join('');
         }
 
-        const payload = {
-            name,
-            basePrice: Number(price),
-            type: document.getElementById('f-type').value,
-            imageUrl: document.getElementById('f-image').value.trim() || null,
-            description: document.getElementById('f-desc').value.trim() || null,
-            isAvailable: document.getElementById('f-available').checked
-        };
+        function updatePreview() {
+            const name = document.getElementById('f-name').value.trim() || 'Food preview';
+            const type = document.getElementById('f-type').value || 'food';
+            const desc = document.getElementById('f-desc').value.trim() || 'Fill the form below to update this food item.';
 
-        const btn = document.getElementById('save-btn');
-        const oldText = btn.textContent;
+            document.getElementById('preview-icon').textContent = foodEmoji(type);
+            document.getElementById('preview-name').textContent = name;
+            document.getElementById('preview-desc').textContent = desc;
+        }
 
-        btn.disabled = true;
-        btn.textContent = 'Saving...';
+        function openFoodModal() {
+            const modal = document.getElementById('food-modal');
 
-        try {
-            if (typeof POST === 'function' && location.protocol !== 'file:') {
-                if (id) {
-                    await PATCH('/food/' + id, payload);
-                } else {
-                    await POST('/food', payload);
-                }
-
-                notify(id ? 'Food updated.' : 'Food added.', 'success');
-                closeFoodModal();
-                loadFoods();
-                return;
-            }
-
-            if (id) {
-                allFoods = allFoods.map(food => {
-                    if (Number(food.id) !== Number(id)) return food;
-
-                    return {
-                        ...food,
-                        ...payload
-                    };
-                });
-
-                notify('Food updated in preview mode.', 'success');
+            if (typeof openModal === 'function') {
+                openModal('food-modal');
             } else {
-                allFoods.unshift({
-                    id: nextPreviewId(),
-                    ...payload
-                });
-
-                notify('Food added in preview mode.', 'success');
+                modal.classList.add('open');
             }
-
-            closeFoodModal();
-            renderFoods();
-        } catch (ex) {
-            notify(ex.message || 'Could not save food.', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = id ? 'Save changes' : oldText;
         }
-    }
 
-    async function toggleAvailability(id, makeAvailable) {
-        try {
-            if (typeof PATCH === 'function' && location.protocol !== 'file:') {
-                await PATCH('/food/' + id, {
-                    isAvailable: makeAvailable
-                });
+        function closeFoodModal() {
+            const modal = document.getElementById('food-modal');
 
-                notify(makeAvailable ? 'Food is now visible.' : 'Food hidden from menu.', 'info');
-                loadFoods();
-                return;
+            if (typeof closeModal === 'function') {
+                closeModal('food-modal');
+            } else {
+                modal.classList.remove('open');
             }
+        }
 
+        function openDeleteModal() {
+            const modal = document.getElementById('delete-modal');
+
+            if (typeof openModal === 'function') {
+                openModal('delete-modal');
+            } else {
+                modal.classList.add('open');
+            }
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('delete-modal');
+
+            if (typeof closeModal === 'function') {
+                closeModal('delete-modal');
+            } else {
+                modal.classList.remove('open');
+            }
+        }
+
+        function openCreate() {
+            document.getElementById('modal-title').textContent = 'Add food';
+            document.getElementById('f-id').value = '';
+            document.getElementById('f-name').value = '';
+            document.getElementById('f-price').value = '';
+            document.getElementById('f-type').value = 'food';
+            document.getElementById('f-image').value = '';
+            document.getElementById('f-desc').value = '';
+            document.getElementById('f-available').checked = true;
+            document.getElementById('save-btn').textContent = 'Add food';
+
+            updatePreview();
+            openFoodModal();
+        }
+
+        function openEdit(id) {
             const food = allFoods.find(item => Number(item.id) === Number(id));
 
-            if (food) {
-                food.isAvailable = makeAvailable;
-                food.available = makeAvailable;
-            }
+            if (!food) return;
 
-            notify(makeAvailable ? 'Food shown in preview mode.' : 'Food hidden in preview mode.', 'info');
-            renderFoods();
-        } catch (ex) {
-            notify(ex.message || 'Could not update availability.', 'error');
+            document.getElementById('modal-title').textContent = 'Edit food';
+            document.getElementById('f-id').value = food.id;
+            document.getElementById('f-name').value = food.name || '';
+            document.getElementById('f-price').value = food.basePrice || '';
+            document.getElementById('f-type').value = food.type || 'food';
+            document.getElementById('f-image').value = food.imageUrl || '';
+            document.getElementById('f-desc').value = food.description || '';
+            document.getElementById('f-available').checked = available(food);
+            document.getElementById('save-btn').textContent = 'Save changes';
+
+            updatePreview();
+            openFoodModal();
         }
-    }
 
-    function openDelete(id) {
-        const food = allFoods.find(item => Number(item.id) === Number(id));
+        async function saveFood() {
+            const id = document.getElementById('f-id').value;
+            const name = document.getElementById('f-name').value.trim();
+            const price = document.getElementById('f-price').value;
 
-        if (!food) return;
-
-        deleteId = id;
-
-        document.getElementById('delete-name').textContent = food.name || 'Food item';
-        document.getElementById('delete-name-inline').textContent = food.name || 'this food';
-
-        openDeleteModal();
-    }
-
-    async function confirmDelete() {
-        if (!deleteId) return;
-
-        const btn = document.getElementById('confirm-delete-btn');
-        const oldText = btn.textContent;
-
-        btn.disabled = true;
-        btn.textContent = 'Deleting...';
-
-        try {
-            if (typeof DELETE === 'function' && location.protocol !== 'file:') {
-                await DELETE('/food/' + deleteId);
-
-                notify('Food deleted.', 'info');
-                closeDeleteModal();
-                loadFoods();
+            if (!name || !price) {
+                notify('Name and price are required.', 'error');
                 return;
             }
 
-            allFoods = allFoods.filter(food => Number(food.id) !== Number(deleteId));
+            const payload = {
+                name,
+                basePrice: Number(price),
+                type: document.getElementById('f-type').value,
+                imageUrl: document.getElementById('f-image').value.trim() || null,
+                description: document.getElementById('f-desc').value.trim() || null,
+                isAvailable: document.getElementById('f-available').checked
+            };
 
-            notify('Food deleted in preview mode.', 'info');
-            closeDeleteModal();
-            renderFoods();
-        } catch (ex) {
-            notify(ex.message || 'Could not delete food.', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = oldText;
-            deleteId = null;
+            const btn = document.getElementById('save-btn');
+            const oldText = btn.textContent;
+
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                if (typeof POST === 'function' && location.protocol !== 'file:') {
+                    if (id) {
+                        await PATCH('/food/' + id, payload);
+                    } else {
+                        await POST('/food', payload);
+                    }
+
+                    notify(id ? 'Food updated.' : 'Food added.', 'success');
+                    closeFoodModal();
+                    loadFoods();
+                    return;
+                }
+
+                if (id) {
+                    allFoods = allFoods.map(food => {
+                        if (Number(food.id) !== Number(id)) return food;
+
+                        return {
+                            ...food,
+                            ...payload
+                        };
+                    });
+
+                    notify('Food updated in preview mode.', 'success');
+                } else {
+                    allFoods.unshift({
+                        id: nextPreviewId(),
+                        ...payload
+                    });
+
+                    notify('Food added in preview mode.', 'success');
+                }
+
+                closeFoodModal();
+                renderFoods();
+            } catch (ex) {
+                notify(ex.message || 'Could not save food.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = id ? 'Save changes' : oldText;
+            }
         }
-    }
 
-    ['search-input', 'type-filter', 'avail-filter'].forEach(id => {
-        document.getElementById(id).addEventListener('input', renderFoods);
-        document.getElementById(id).addEventListener('change', renderFoods);
-    });
+        async function toggleAvailability(id, makeAvailable) {
+            try {
+                if (typeof PATCH === 'function' && location.protocol !== 'file:') {
+                    await PATCH('/food/' + id, {
+                        isAvailable: makeAvailable
+                    });
 
-    ['f-name', 'f-type', 'f-desc'].forEach(id => {
-        document.getElementById(id).addEventListener('input', updatePreview);
-        document.getElementById(id).addEventListener('change', updatePreview);
-    });
+                    notify(makeAvailable ? 'Food is now visible.' : 'Food hidden from menu.', 'info');
+                    loadFoods();
+                    return;
+                }
 
-    document.addEventListener('click', e => {
-        if (e.target.classList.contains('modal-overlay')) {
-            e.target.classList.remove('open');
+                const food = allFoods.find(item => Number(item.id) === Number(id));
+
+                if (food) {
+                    food.isAvailable = makeAvailable;
+                    food.available = makeAvailable;
+                }
+
+                notify(makeAvailable ? 'Food shown in preview mode.' : 'Food hidden in preview mode.', 'info');
+                renderFoods();
+            } catch (ex) {
+                notify(ex.message || 'Could not update availability.', 'error');
+            }
         }
-    });
 
-    setupPage();
-</script>
+        function openDelete(id) {
+            const food = allFoods.find(item => Number(item.id) === Number(id));
+
+            if (!food) return;
+
+            deleteId = id;
+
+            document.getElementById('delete-name').textContent = food.name || 'Food item';
+            document.getElementById('delete-name-inline').textContent = food.name || 'this food';
+
+            openDeleteModal();
+        }
+
+        async function confirmDelete() {
+            if (!deleteId) return;
+
+            const btn = document.getElementById('confirm-delete-btn');
+            const oldText = btn.textContent;
+
+            btn.disabled = true;
+            btn.textContent = 'Deleting...';
+
+            try {
+                if (typeof DELETE === 'function' && location.protocol !== 'file:') {
+                    await DELETE('/food/' + deleteId);
+
+                    notify('Food deleted.', 'info');
+                    closeDeleteModal();
+                    loadFoods();
+                    return;
+                }
+
+                allFoods = allFoods.filter(food => Number(food.id) !== Number(deleteId));
+
+                notify('Food deleted in preview mode.', 'info');
+                closeDeleteModal();
+                renderFoods();
+            } catch (ex) {
+                notify(ex.message || 'Could not delete food.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = oldText;
+                deleteId = null;
+            }
+        }
+
+        ['search-input', 'type-filter', 'avail-filter'].forEach(id => {
+            document.getElementById(id).addEventListener('input', renderFoods);
+            document.getElementById(id).addEventListener('change', renderFoods);
+        });
+
+        ['f-name', 'f-type', 'f-desc'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePreview);
+            document.getElementById(id).addEventListener('change', updatePreview);
+        });
+
+        document.addEventListener('click', e => {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('open');
+            }
+        });
+
+        setupPage();
+    </script>
 </body>
+
 </html>

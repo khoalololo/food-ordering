@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,13 +17,12 @@
             --sage: #D3D4C0;
             --brown: #8B5E3C;
             --bg: #fffaf3;
-            --surface: #fff7ec;
             --white: #ffffff;
-            --red: #c94832;
-            --green: #2f7d4f;
-            --yellow: #d99a2b;
-            --shadow: 0 24px 70px rgba(10, 41, 71, 0.16);
-            --shadow-soft: 0 14px 35px rgba(10, 41, 71, 0.10);
+            --red: #d9161f;
+            --green: #07883f;
+            --muted: #7c6f63;
+            --border: rgba(211, 212, 192, 0.95);
+            --shadow-soft: 0 10px 30px rgba(10, 41, 71, 0.08);
         }
 
         * {
@@ -40,8 +40,8 @@
             font-family: "Be Vietnam Pro", Arial, sans-serif;
             color: var(--navy);
             background:
-                radial-gradient(circle at 10% 12%, rgba(139, 94, 60, 0.16), transparent 28rem),
-                radial-gradient(circle at 92% 88%, rgba(10, 41, 71, 0.13), transparent 32rem),
+                radial-gradient(circle at 8% 12%, rgba(139, 94, 60, 0.13), transparent 26rem),
+                radial-gradient(circle at 94% 90%, rgba(10, 41, 71, 0.11), transparent 30rem),
                 linear-gradient(135deg, #fffaf3 0%, #f3e4c9 100%);
             overflow-x: hidden;
         }
@@ -56,20 +56,20 @@
         }
 
         body::before {
-            width: 280px;
-            height: 280px;
-            left: -96px;
-            top: -92px;
+            width: 260px;
+            height: 260px;
+            left: -100px;
+            top: -98px;
             background: rgba(139, 94, 60, 0.14);
             filter: blur(2px);
         }
 
         body::after {
-            width: 320px;
-            height: 320px;
+            width: 310px;
+            height: 310px;
             right: -120px;
             bottom: -120px;
-            background: rgba(10, 41, 71, 0.12);
+            background: rgba(10, 41, 71, 0.11);
             filter: blur(2px);
         }
 
@@ -79,9 +79,7 @@
         }
 
         button,
-        input,
-        select,
-        textarea {
+        input {
             font-family: "Be Vietnam Pro", Arial, sans-serif;
         }
 
@@ -90,14 +88,14 @@
             z-index: 5;
             width: min(1180px, calc(100% - 48px));
             margin: 22px auto 0;
-            padding: 16px 20px;
+            padding: 14px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            border: 1px solid rgba(211, 212, 192, 0.9);
+            border: 1px solid var(--border);
             border-radius: 28px;
-            background: rgba(255, 250, 243, 0.88);
+            background: rgba(255, 250, 243, 0.9);
             box-shadow: var(--shadow-soft);
             backdrop-filter: blur(18px);
         }
@@ -113,16 +111,14 @@
         }
 
         .nav-brand::before {
-            content: "🍔";
-            width: 48px;
-            height: 48px;
-            display: grid;
-            place-items: center;
-            border-radius: 18px;
-            color: var(--cream);
-            background: var(--brown);
+            content: "";
+            width: 46px;
+            height: 46px;
+            display: inline-block;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #ffffff url("/images/logo/logo-kff.png") center / contain no-repeat;
             box-shadow: var(--shadow-soft);
-            font-size: 24px;
         }
 
         .nav-links {
@@ -158,7 +154,7 @@
             justify-content: center;
             border-radius: 999px;
             color: var(--cream);
-            background: var(--red);
+            background: #d64b3a;
             font-size: 11px;
             font-weight: 800;
         }
@@ -166,182 +162,269 @@
         .page {
             position: relative;
             z-index: 1;
-            width: min(1180px, calc(100% - 48px));
+            width: min(1040px, calc(100% - 48px));
             margin: 0 auto;
-            padding: 34px 0 80px;
+            padding: 58px 0 90px;
         }
 
-        .cart-hero {
-            position: relative;
-            min-height: 250px;
-            padding: 36px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            align-items: center;
-            gap: 28px;
-            border-radius: 42px;
-            color: var(--cream);
-            background:
-                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92)),
-                radial-gradient(circle at top right, rgba(243, 228, 201, 0.22), transparent 20rem);
-            box-shadow: var(--shadow);
-            overflow: hidden;
+        .cart-title-row {
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(211, 212, 192, 0.95);
         }
 
-        .cart-hero::before {
-            content: "";
-            position: absolute;
-            right: -100px;
-            top: -140px;
-            width: 320px;
-            height: 320px;
-            border-radius: 999px;
-            background: rgba(243, 228, 201, 0.13);
-        }
-
-        .cart-hero::after {
-            content: "";
-            position: absolute;
-            left: 38%;
-            bottom: -100px;
-            width: 220px;
-            height: 220px;
-            border-radius: 999px;
-            background: rgba(255, 250, 243, 0.08);
-        }
-
-        .hero-copy,
-        .hero-stat {
-            position: relative;
-            z-index: 1;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0 0 14px;
-            padding: 8px 13px;
-            border-radius: 999px;
-            color: var(--cream);
-            background: rgba(243, 228, 201, 0.13);
-            border: 1px solid rgba(243, 228, 201, 0.20);
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .page-title {
+        .cart-title {
             margin: 0;
-            max-width: 620px;
-            font-size: clamp(44px, 5vw, 70px);
-            line-height: 0.95;
-            letter-spacing: -2.8px;
+            color: var(--navy);
+            font-size: 30px;
+            line-height: 1.1;
+            letter-spacing: -1px;
             font-weight: 800;
         }
 
-        .hero-text {
-            max-width: 560px;
-            margin: 20px 0 0;
-            color: rgba(243, 228, 201, 0.78);
-            font-size: 16px;
-            line-height: 1.75;
+        .cart-subtitle {
+            margin: 8px 0 0;
+            color: var(--brown);
+            font-size: 14px;
+            line-height: 1.6;
         }
 
-        .hero-stat {
-            min-width: 230px;
-            padding: 22px;
-            border-radius: 30px;
-            background: rgba(255, 250, 243, 0.13);
-            border: 1px solid rgba(243, 228, 201, 0.2);
-            backdrop-filter: blur(16px);
+        .product-list {
+            display: grid;
+            gap: 0;
         }
 
-        .hero-stat span {
+        .cart-item {
+            display: grid;
+            grid-template-columns: 118px minmax(0, 1fr) 156px 140px 46px;
+            align-items: center;
+            gap: 24px;
+            padding: 28px 0;
+            border-bottom: 1px solid rgba(211, 212, 192, 0.95);
+        }
+
+        .item-photo {
+            width: 96px;
+            height: 96px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid rgba(211, 212, 192, 0.9);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .item-photo img {
+            width: 100%;
+            height: 100%;
             display: block;
-            color: rgba(243, 228, 201, 0.72);
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .item-photo-fallback {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: var(--cream);
+            background: linear-gradient(135deg, rgba(10, 41, 71, 0.95), rgba(139, 94, 60, 0.9));
+            font-size: 34px;
+        }
+
+        .item-info {
+            min-width: 0;
+        }
+
+        .item-name {
+            margin: 0;
+            color: #111111;
+            font-size: 19px;
+            line-height: 1.22;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .item-details {
+            margin-top: 6px;
+            display: grid;
+            gap: 3px;
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        .item-detail-line {
+            display: block;
+        }
+
+        .item-detail-line.is-empty {
+            color: rgba(139, 94, 60, 0.78);
+        }
+
+        .item-unit {
+            margin-top: 7px;
+            color: var(--brown);
             font-size: 13px;
             font-weight: 700;
         }
 
-        .hero-stat strong {
-            display: block;
-            margin-top: 8px;
-            color: var(--cream);
-            font-size: 32px;
-            line-height: 1;
-            font-weight: 800;
-        }
-
-        .cart-layout {
+        .item-options {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 360px;
-            gap: 24px;
-            align-items: start;
-            margin-top: 26px;
+            gap: 8px;
         }
 
-        .card,
-        .summary-card,
-        .empty {
-            border-radius: 34px;
-            background: rgba(255, 247, 236, 0.92);
-            border: 1px solid rgba(211, 212, 192, 0.88);
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(18px);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 22px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            border-bottom: 1px solid rgba(211, 212, 192, 0.88);
-        }
-
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--navy);
-            font-size: 20px;
+        .item-options-title {
+            color: var(--brown);
+            font-size: 12px;
             font-weight: 800;
-            letter-spacing: -0.6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .card-title::before {
-            content: "🧺";
+        .option-pill {
+            min-height: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.82);
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .option-pill input {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            accent-color: var(--green);
+        }
+
+        .option-pill small {
+            color: var(--brown);
+            font-weight: 800;
+        }
+
+        .qty-box {
+            width: 128px;
+            height: 44px;
+            display: grid;
+            grid-template-columns: 34px 1fr 34px;
+            align-items: center;
+            border: 1px solid rgba(211, 212, 192, 0.95);
+            border-radius: 10px;
+            background: #ffffff;
+        }
+
+        .qty-btn {
+            width: 34px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border: 0;
+            color: rgba(10, 41, 71, 0.78);
+            background: transparent;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            transition: 0.16s ease;
+        }
+
+        .qty-btn:hover {
+            color: var(--green);
+            background: rgba(11, 143, 79, 0.08);
+        }
+
+        .item-qty {
+            text-align: center;
+            color: #111111;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .item-subtotal {
+            text-align: right;
+            color: #111111;
+            font-size: 18px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .item-remove {
             width: 42px;
             height: 42px;
             display: grid;
             place-items: center;
-            border-radius: 16px;
-            background: rgba(243, 228, 201, 0.72);
-            font-size: 22px;
+            border: 0;
+            border-radius: 999px;
+            color: #b9b9b9;
+            background: transparent;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.16s ease;
+        }
+
+        .item-remove:hover {
+            color: var(--red);
+            background: rgba(201, 72, 50, 0.08);
+        }
+
+        .cart-bottom {
+            margin-top: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .total-line {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-bottom: 34px;
+            color: #111111;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .total-line strong {
+            color: var(--red);
+            font-size: 26px;
+            white-space: nowrap;
+        }
+
+        .bottom-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 18px;
         }
 
         .btn {
+            min-height: 54px;
+            padding: 0 32px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            min-height: 44px;
-            padding: 12px 18px;
+            gap: 12px;
             border: 0;
-            border-radius: 999px;
-            color: var(--cream);
-            background: linear-gradient(135deg, var(--navy), #123d64);
-            font-size: 14px;
+            border-radius: 8px;
+            color: #ffffff;
+            background: var(--navy);
+            font-size: 15px;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 14px 30px rgba(10, 41, 71, 0.20);
-            transition: 0.2s ease;
+            transition: 0.18s ease;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 38px rgba(10, 41, 71, 0.24);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-soft);
         }
 
         .btn:disabled {
@@ -350,249 +433,31 @@
             transform: none;
         }
 
-        .btn-ghost {
-            color: var(--navy);
-            background: rgba(255, 250, 243, 0.72);
-            border: 1px solid rgba(211, 212, 192, 0.95);
-            box-shadow: none;
+        .btn-continue {
+            background: #7f978a;
         }
 
-        .btn-ghost:hover {
-            color: var(--brown);
-            background: var(--white);
+        .btn-checkout {
+            background: var(--green);
+            min-width: 250px;
         }
 
-        .btn-sm {
-            min-height: 38px;
-            padding: 9px 14px;
-            font-size: 13px;
-        }
-
-        .btn-lg {
-            min-height: 56px;
-            font-size: 16px;
-        }
-
-        .cart-item {
-            display: grid;
-            grid-template-columns: 64px minmax(0, 1fr) auto auto auto;
-            align-items: center;
-            gap: 16px;
-            padding: 18px 24px;
-            border-bottom: 1px solid rgba(211, 212, 192, 0.72);
-            transition: 0.18s ease;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .cart-item:hover {
-            background: rgba(243, 228, 201, 0.36);
-        }
-
-        .item-emoji {
-            width: 58px;
-            height: 58px;
-            display: grid;
-            place-items: center;
-            border-radius: 22px;
-            background:
-                linear-gradient(135deg, rgba(10, 41, 71, 0.95), rgba(139, 94, 60, 0.9));
-            color: var(--cream);
-            font-size: 28px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .item-info {
-            min-width: 0;
-        }
-
-        .item-name {
-            color: var(--navy);
-            font-size: 17px;
-            font-weight: 800;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            letter-spacing: -0.3px;
-        }
-
-        .item-toppings {
-            margin-top: 5px;
-            color: var(--brown);
-            font-size: 13px;
-            line-height: 1.45;
-        }
-
-        .item-price {
-            margin-top: 5px;
-            color: rgba(139, 94, 60, 0.85);
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .item-controls {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px;
-            border-radius: 999px;
-            background: rgba(255, 250, 243, 0.78);
-            border: 1px solid rgba(211, 212, 192, 0.9);
-        }
-
-        .qty-btn {
-            width: 32px;
-            height: 32px;
-            display: grid;
-            place-items: center;
-            border-radius: 999px;
-            border: 0;
-            color: var(--navy);
-            background: rgba(243, 228, 201, 0.84);
-            font-size: 18px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.18s ease;
-        }
-
-        .qty-btn:hover {
-            color: var(--cream);
-            background: var(--navy);
-        }
-
-        .item-qty {
-            min-width: 24px;
-            text-align: center;
-            color: var(--navy);
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .item-subtotal {
-            min-width: 110px;
-            text-align: right;
-            color: var(--brown);
-            font-size: 17px;
-            font-weight: 800;
-        }
-
-        .item-remove {
-            border: 0;
-            background: transparent;
-            color: rgba(139, 94, 60, 0.78);
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.18s ease;
-        }
-
-        .item-remove:hover {
-            color: var(--red);
-        }
-
-        .summary-card {
-            position: sticky;
-            top: 24px;
-            padding: 24px;
-        }
-
-        .summary-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .summary-icon {
-            width: 48px;
-            height: 48px;
-            display: grid;
-            place-items: center;
-            border-radius: 18px;
-            color: var(--cream);
-            background: var(--brown);
-            font-size: 24px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .summary-title {
-            color: var(--navy);
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.7px;
-        }
-
-        .summary-subtitle {
-            margin-top: 3px;
-            color: var(--brown);
-            font-size: 13px;
-        }
-
-        .summary-box {
-            padding: 16px;
-            border-radius: 24px;
-            background: rgba(243, 228, 201, 0.46);
-            border: 1px solid rgba(211, 212, 192, 0.9);
-        }
-
-        .summary-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 10px 0;
-            color: var(--brown);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .summary-row .val {
-            color: var(--navy);
-            font-weight: 800;
-        }
-
-        .summary-row .free {
-            color: var(--green);
-            font-weight: 800;
-        }
-
-        .summary-row.total {
-            margin-top: 8px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(139, 94, 60, 0.22);
-            color: var(--navy);
-            font-size: 17px;
-            font-weight: 800;
-        }
-
-        .summary-row.total .val {
-            color: var(--brown);
-            font-size: 22px;
-        }
-
-        .summary-actions {
-            display: grid;
-            gap: 10px;
-            margin-top: 18px;
-        }
-
-        .cart-note {
-            margin-top: 16px;
-            padding: 14px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.56);
-            border: 1px dashed rgba(139, 94, 60, 0.32);
-            color: var(--brown);
+        .pending-note {
+            display: none;
+            margin: 0 0 18px;
+            padding: 12px 16px;
+            max-width: 520px;
+            border-radius: 14px;
+            color: #87551f;
+            background: rgba(243, 228, 201, 0.58);
+            border: 1px dashed rgba(139, 94, 60, 0.34);
             font-size: 13px;
             line-height: 1.55;
         }
 
         .empty {
             display: none;
-            margin-top: 26px;
-            padding: 54px 30px;
+            padding: 70px 20px;
             text-align: center;
         }
 
@@ -604,8 +469,7 @@
             margin: 0 auto 18px;
             border-radius: 30px;
             color: var(--cream);
-            background:
-                linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
+            background: linear-gradient(135deg, rgba(10, 41, 71, 0.97), rgba(139, 94, 60, 0.92));
             font-size: 42px;
             box-shadow: var(--shadow-soft);
         }
@@ -628,6 +492,7 @@
 
         .empty .btn {
             margin-top: 22px;
+            border-radius: 999px;
         }
 
         #toast-container {
@@ -644,12 +509,12 @@
             border-radius: 18px;
             color: var(--cream);
             background: var(--navy);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-soft);
             font-weight: 700;
         }
 
         .toast.error {
-            background: var(--red);
+            background: #c94832;
         }
 
         .toast.success {
@@ -657,6 +522,7 @@
         }
 
         @media (max-width: 980px) {
+
             #main-nav,
             .page {
                 width: min(100% - 32px, 1180px);
@@ -671,301 +537,426 @@
                 justify-content: flex-start;
             }
 
-            .cart-hero {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-stat {
-                width: 100%;
-                min-width: 0;
-            }
-
-            .cart-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .summary-card {
-                position: static;
-            }
-        }
-
-        @media (max-width: 720px) {
-            .cart-hero {
-                padding: 30px 24px;
-                border-radius: 34px;
-            }
-
-            .page-title {
-                font-size: 42px;
-                letter-spacing: -1.8px;
-            }
-
             .cart-item {
-                grid-template-columns: 56px minmax(0, 1fr);
-                gap: 14px;
+                grid-template-columns: 96px minmax(0, 1fr);
+                gap: 18px;
             }
 
-            .item-emoji {
-                width: 54px;
-                height: 54px;
-                border-radius: 20px;
-            }
-
-            .item-controls,
+            .item-options,
+            .qty-box,
             .item-subtotal,
             .item-remove {
                 grid-column: 2;
             }
 
-            .item-controls {
-                width: fit-content;
-            }
-
             .item-subtotal {
-                min-width: 0;
                 text-align: left;
             }
 
-            .item-remove {
-                width: fit-content;
-                padding: 0;
+            .cart-bottom,
+            .total-line,
+            .bottom-actions {
+                align-items: flex-start;
+                justify-content: flex-start;
             }
         }
 
-        @media (max-width: 520px) {
-            #main-nav,
-            .page {
-                width: min(100% - 24px, 1180px);
+        /* =====================================================
+   CART TOPPING LAYOUT FIX
+   4 topping thành 2 ô trên, 2 ô dưới
+   đồng thời sửa icon xóa bị rớt dòng
+   ===================================================== */
+
+        .page {
+            width: min(1180px, calc(100% - 48px)) !important;
+        }
+
+        .cart-item {
+            grid-template-columns: 96px minmax(220px, 1fr) 360px 128px 130px 42px !important;
+            gap: 20px !important;
+            align-items: center !important;
+        }
+
+        .item-options {
+            width: 100% !important;
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 10px !important;
+            align-items: stretch !important;
+        }
+
+        .item-options-title {
+            grid-column: 1 / -1 !important;
+            margin-bottom: 2px !important;
+            color: var(--brown) !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.6px !important;
+        }
+
+        .option-pill {
+            width: 100% !important;
+            min-height: 58px !important;
+            padding: 10px 12px !important;
+            display: grid !important;
+            grid-template-columns: 18px minmax(0, 1fr) auto !important;
+            align-items: center !important;
+            gap18px minmax(0, 1fr) auto !important;
+            align-items: center !important;
+            gap: 9px !important;
+            border-radius: 16px !important;
+            background: rgba(255, 250, 243, 0.94) !important;
+            border: 1px solid rgba(211, 212, 192, 0.98) !important;
+            box-shadow: 0 8px 20px rgba(10, 41, 71, 0.04) !important;
+        }
+
+        .option-pill input {
+            width: 16px !important;
+            height: 16px !important;
+            margin: 0 !important;
+        }
+
+        .option-pill span {
+            color: var(--navy) !important;
+            font-size: 13px !important;
+            line-height: 1.25 !important;
+            font-weight: 800 !important;
+        }
+
+        .option-pill small {
+            color: var(--brown) !important;
+            font-size: 12px !important;
+            line-height: 1.2 !important;
+            font-weight: 800 !important;
+            white-space: nowrap !important;
+        }
+
+        .item-remove {
+            grid-column: auto !important;
+            justify-self: center !important;
+        }
+
+        @media (max-width: 980px) {
+            .cart-item {
+                grid-template-columns: 96px minmax(0, 1fr) !important;
             }
 
-            .card-header {
-                align-items: flex-start;
-                flex-direction: column;
+            .item-options,
+            .qty-box,
+            .item-subtotal,
+            .item-remove {
+                grid-column: 2 !important;
             }
 
-            .hero-text {
-                font-size: 14px;
+            .item-options {
+                grid-template-columns: repeat(2, minmax(130px, 1fr)) !important;
             }
+        }
 
-            .summary-card,
-            .card,
-            .empty {
-                border-radius: 28px;
+        @media (max-width: 620px) {
+            .item-options {
+                grid-template-columns: 1fr !important;
             }
+        }
+
+        .btn-clear-cart {
+            color: #c94832 !important;
+            background: rgba(201, 72, 50, 0.08) !important;
+            border: 1px solid rgba(201, 72, 50, 0.22) !important;
+            box-shadow: none !important;
+        }
+
+        .btn-clear-cart:hover {
+            color: #ffffff !important;
+            background: #c94832 !important;
+            border-color: #c94832 !important;
         }
     </style>
 </head>
 
 <body>
-<nav id="main-nav"></nav>
-<div id="toast-container"></div>
+    <nav id="main-nav"></nav>
+    <div id="toast-container"></div>
 
-<div class="page">
-    <section class="cart-hero">
-        <div class="hero-copy">
-            <p class="eyebrow">🧺 Your food basket</p>
-            <h1 class="page-title">Giỏ hàng đã sẵn sàng lên bếp.</h1>
-            <p class="hero-text">
-                Kiểm tra lại món, chỉnh số lượng rồi đặt hàng. Mọi thứ được gom gọn để bạn không bỏ sót chiếc burger định mệnh nào.
-            </p>
-        </div>
+    <main class="page">
+        <section class="cart-title-row">
+            <h1 class="cart-title">Item</h1>
+            <p class="cart-subtitle">Choose toppings and quantities right in your cart before checking out.</p>
+        </section>
 
-        <div class="hero-stat">
-            <span>Total items</span>
-            <strong id="hero-count">0</strong>
-        </div>
-    </section>
+        <section id="empty-state" class="empty">
+            <div class="empty-icon">🛒</div>
+            <h3>Your cart is empty</h3>
+            <p>Go back to the menu to add some delicious items to your cart before ordering.</p>
+            <a href="/customer/menu" class="btn">View Menu</a>
+        </section>
 
-    <div id="empty-state" class="empty">
-        <div class="empty-icon">🛒</div>
-        <h3>Cart is empty</h3>
-        <p>
-            Giỏ hàng đang trống. Quay lại menu để thêm vài món ngon trước khi căn bếp ngủ quên nhé.
-        </p>
-        <a href="/customer/menu" class="btn">Browse menu</a>
-    </div>
+        <section id="cart-content">
+            <div class="product-list" id="item-list"></div>
 
-    <div id="cart-content" class="cart-layout">
-        <div class="card">
-            <div class="card-header">
-                <span class="card-title">Cart items</span>
-                <button class="btn btn-ghost btn-sm" onclick="clearAll()">Clear all</button>
-            </div>
-
-            <div id="item-list"></div>
-        </div>
-
-        <aside class="summary-card">
-            <div class="summary-head">
-                <div class="summary-icon">🧾</div>
-                <div>
-                    <div class="summary-title">Order summary</div>
-                    <div class="summary-subtitle">Review before checkout</div>
-                </div>
-            </div>
-
-            <div class="summary-box">
-                <div class="summary-row">
-                    <span>Items</span>
-                    <span id="sum-count" class="val">0</span>
+            <div class="cart-bottom">
+                <div class="pending-note" id="pending-note">
+                    You have a pending order that hasn't been paid yet. Click "Checkout" to return to the payment page for
+                    that order.
                 </div>
 
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span id="sum-subtotal" class="val">—</span>
+                <div class="total-line">
+                    <span>Total:</span>
+                    <strong id="sum-total">0₫</strong>
                 </div>
 
-                <div class="summary-row">
-                    <span>Delivery</span>
-                    <span class="free">Free</span>
+                <div class="bottom-actions">
+                    <button class="btn btn-clear-cart" type="button" onclick="clearAll()">
+                        Delete all
+                    </button>
+
+                    <a href="/customer/menu" class="btn btn-continue">
+                        <span>←</span>
+                        Continue ordering
+                    </a>
+
+                    <button class="btn btn-checkout" onclick="checkout()" id="checkout-btn">
+                        Payment
+                        <span>→</span>
+                    </button>
                 </div>
-
-                <div class="summary-row total">
-                    <span>Total</span>
-                    <span id="sum-total" class="val">—</span>
-                </div>
             </div>
+        </section>
+    </main>
 
-            <div class="summary-actions">
-                <button class="btn btn-lg" onclick="checkout()" id="checkout-btn">
-                    Place order
-                    <span>→</span>
-                </button>
+    <script src="/js/shared.js"></script>
 
-                <a href="/customer/menu" class="btn btn-ghost">
-                    Continue shopping
-                </a>
-            </div>
+    <script>
+        const TOPPINGS_BY_TYPE = {
+            burger: [
+                { key: 'extra-cheese', label: 'Extra Cheese', price: 10000 },
+                { key: 'extra-meat', label: 'Extra Meat', price: 20000 },
+                { key: 'extra-veggies', label: 'Extra Veggies', price: 8000 },
+                { key: 'no-onion', label: 'No Onion', price: 0 }
+            ],
+            pizza: [
+                { key: 'extra-cheese', label: 'Extra Cheese', price: 15000 },
+                { key: 'pepperoni', label: 'More Pepperoni', price: 20000 },
+                { key: 'mushroom', label: 'Mushroom', price: 10000 },
+                { key: 'thin-crust', label: 'Thin Crust', price: 0 }
+            ],
+            pasta: [
+                { key: 'parmesan', label: 'Parmesan Cheese', price: 12000 },
+                { key: 'extra-bacon', label: 'Extra Bacon', price: 18000 },
+                { key: 'extra-sauce', label: 'Extra Sauce', price: 8000 }
+            ],
+            salad: [
+                { key: 'chicken', label: 'Grilled Chicken', price: 18000 },
+                { key: 'extra-dressing', label: 'Extra Dressing', price: 5000 },
+                { key: 'croutons', label: 'Croutons', price: 7000 }
+            ],
+            soup: [
+                { key: 'bread', label: 'Garlic Bread', price: 10000 },
+                { key: 'extra-cream', label: 'Extra Cream', price: 6000 }
+            ],
+            dessert: [
+                { key: 'ice-cream', label: 'Ice Cream', price: 12000 },
+                { key: 'extra-chocolate', label: 'Extra Chocolate', price: 7000 }
+            ],
+            drink: [
+                { key: 'extra-ice', label: 'Extra Ice', price: 0 },
+                { key: 'no-sugar', label: 'No Sugar', price: 0 }
+            ]
+        };
 
-            <div class="cart-note">
-                Tip: Sau khi đặt hàng, hệ thống sẽ chuyển bạn sang trang thanh toán để chọn phương thức phù hợp.
-            </div>
-        </aside>
-    </div>
-</div>
-
-<script src="/js/shared.js"></script>
-
-<script>
-    const PreviewCart = {
-        items: [
-            {
-                key: 'demo-burger',
-                foodId: 1,
-                name: 'Cheese Burger',
-                type: 'burger',
-                unitPrice: 59000,
-                quantity: 2,
-                toppings: ['Extra cheese', 'BBQ sauce'],
-                subtotal: 118000
+        const PreviewCart = {
+            items: [
+                {
+                    key: 'demo-pizza',
+                    foodId: 2,
+                    name: 'Pepperoni Pizza',
+                    type: 'pizza',
+                    imageUrl: '/images/foods/pepperoni-pizza.webp',
+                    basePrice: 119000,
+                    unitPrice: 119000,
+                    quantity: 1,
+                    toppings: [],
+                    toppingDetails: [],
+                    subtotal: 119000
+                }
+            ],
+            save(items) {
+                this.items = items;
             },
-            {
-                key: 'demo-pizza',
-                foodId: 2,
-                name: 'Pepperoni Pizza',
-                type: 'pizza',
-                unitPrice: 99000,
-                quantity: 1,
-                toppings: ['Olives'],
-                subtotal: 99000
+            update(key, qty) {
+                const item = this.items.find(i => i.key === key);
+                if (!item) return;
+
+                if (qty <= 0) {
+                    this.remove(key);
+                    return;
+                }
+
+                item.quantity = qty;
+                item.subtotal = Number(item.unitPrice || 0) * qty;
+                this.save(this.items);
             },
-            {
-                key: 'demo-drink',
-                foodId: 3,
-                name: 'Iced Lemon Tea',
-                type: 'drink',
-                unitPrice: 25000,
-                quantity: 1,
-                toppings: [],
-                subtotal: 25000
+            remove(key) {
+                this.items = this.items.filter(i => i.key !== key);
+            },
+            clear() {
+                this.items = [];
+            },
+            total() {
+                return this.items.reduce((sum, item) => sum + Number(item.subtotal || 0), 0);
+            },
+            count() {
+                return this.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
             }
-        ],
-        save(items) {
-            this.items = items;
-        },
-        update(key, qty) {
-            const item = this.items.find(i => i.key === key);
-            if (!item) return;
-            if (qty <= 0) {
-                this.remove(key);
-                return;
-            }
-            item.quantity = qty;
-            item.subtotal = item.unitPrice * qty;
-            this.save(this.items);
-        },
-        remove(key) {
-            this.items = this.items.filter(i => i.key !== key);
-        },
-        clear() {
-            this.items = [];
-        },
-        total() {
-            return this.items.reduce((sum, item) => sum + item.subtotal, 0);
-        },
-        count() {
-            return this.items.reduce((sum, item) => sum + item.quantity, 0);
+        };
+
+        const CartStore = typeof Cart !== 'undefined' ? Cart : PreviewCart;
+
+        const Formatter = typeof fmt !== 'undefined'
+            ? fmt
+            : {
+                currency: n => new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    maximumFractionDigits: 0
+                }).format(Number(n || 0))
+            };
+
+        const notify = typeof toast === 'function'
+            ? toast
+            : function (message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const item = document.createElement('div');
+                item.className = `toast ${type}`;
+                item.textContent = message;
+                container.appendChild(item);
+
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(16px)';
+                    item.style.transition = '0.25s ease';
+                    setTimeout(() => item.remove(), 260);
+                }, 2600);
+            };
+
+        const FOOD_EMOJI = {
+            pizza: '🍕',
+            burger: '🍔',
+            pasta: '🍝',
+            salad: '🥗',
+            soup: '🍲',
+            dessert: '🍰',
+            drink: '🥤',
+            food: '🍽️'
+        };
+
+        function foodEmoji(type) {
+            return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
         }
-    };
 
-    const CartStore = typeof Cart !== 'undefined' ? Cart : PreviewCart;
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
 
-    const Formatter = typeof fmt !== 'undefined'
-        ? fmt
-        : {
-            currency: n => new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                maximumFractionDigits: 0
-            }).format(n)
-        };
+        function clearPendingCheckout() {
+            localStorage.removeItem('pendingOrderId');
+            localStorage.removeItem('pendingOrderCart');
+        }
 
-    const notify = typeof toast === 'function'
-        ? toast
-        : function(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const item = document.createElement('div');
-            item.className = `toast ${type}`;
-            item.textContent = message;
-            container.appendChild(item);
+        function currentPendingOrderId() {
+            return localStorage.getItem('pendingOrderId');
+        }
 
-            setTimeout(() => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(16px)';
-                item.style.transition = '0.25s ease';
-                setTimeout(() => item.remove(), 260);
-            }, 2600);
-        };
+        function getItems() {
+            return CartStore.items || [];
+        }
 
-    const FOOD_EMOJI = {
-        pizza: '🍕',
-        burger: '🍔',
-        pasta: '🍝',
-        salad: '🥗',
-        soup: '🍲',
-        dessert: '🍰',
-        drink: '🥤',
-        food: '🍽️'
-    };
+        function saveItems(items) {
+            if (typeof CartStore.save === 'function') {
+                CartStore.save(items);
+            } else {
+                localStorage.setItem('cart', JSON.stringify(items));
+            }
+        }
 
-    function foodEmoji(type) {
-        return FOOD_EMOJI[String(type || '').toLowerCase()] || FOOD_EMOJI.food;
-    }
+        function basePriceOf(item) {
+            if (item.basePrice !== undefined && item.basePrice !== null) {
+                return Number(item.basePrice || 0);
+            }
 
-    function escapeHtml(value) {
-        return String(value ?? '')
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#039;');
-    }
+            const currentTop = Array.isArray(item.toppingDetails)
+                ? item.toppingDetails.reduce((sum, topping) => sum + Number(topping.price || 0), 0)
+                : 0;
 
-    function renderPreviewNav() {
-        const nav = document.getElementById('main-nav');
-        if (!nav) return;
+            return Math.max(0, Number(item.unitPrice || 0) - currentTop);
+        }
 
-        nav.innerHTML = `
+        function toppingDefsFor(item) {
+            return TOPPINGS_BY_TYPE[String(item.type || '').toLowerCase()] || [];
+        }
+
+        function selectedToppingKeys(item) {
+            if (Array.isArray(item.toppingDetails) && item.toppingDetails.length) {
+                return item.toppingDetails.map(topping => topping.key).filter(Boolean);
+            }
+
+            const labels = Array.isArray(item.toppings) ? item.toppings : [];
+            const defs = toppingDefsFor(item);
+
+            return labels.map(label => {
+                const found = defs.find(def => def.label === label || def.name === label);
+                return found?.key;
+            }).filter(Boolean);
+        }
+
+        function applyToppings(item, keys) {
+            const defs = toppingDefsFor(item);
+            const selected = defs.filter(def => keys.includes(def.key));
+            const toppingTotal = selected.reduce((sum, topping) => sum + Number(topping.price || 0), 0);
+            const basePrice = basePriceOf(item);
+            const unitPrice = basePrice + toppingTotal;
+
+            item.basePrice = basePrice;
+            item.toppingDetails = selected.map(topping => ({
+                key: topping.key,
+                label: topping.label,
+                price: Number(topping.price || 0)
+            }));
+            item.toppings = item.toppingDetails.map(topping => topping.label);
+            item.toppingTotal = toppingTotal;
+            item.unitPrice = unitPrice;
+            item.subtotal = unitPrice * Number(item.quantity || 1);
+        }
+
+        function updateItemTopping(key, toppingKey, checked) {
+            clearPendingCheckout();
+
+            const items = getItems();
+            const item = items.find(i => String(i.key) === String(key));
+
+            if (!item) return;
+
+            const keys = selectedToppingKeys(item);
+            const nextKeys = checked
+                ? [...new Set([...keys, toppingKey])]
+                : keys.filter(keyItem => keyItem !== toppingKey);
+
+            applyToppings(item, nextKeys);
+            saveItems(items);
+            render();
+        }
+
+        function renderPreviewNav() {
+            const nav = document.getElementById('main-nav');
+            if (!nav) return;
+
+            nav.innerHTML = `
             <a class="nav-brand" href="/customer/menu">KhoaFastFood</a>
             <div class="nav-links">
                 <a class="nav-link" href="/customer/menu">Menu</a>
@@ -977,138 +968,217 @@
                 <a class="nav-link" href="/customer/notifications">Notifications</a>
             </div>
         `;
-    }
-
-    if (typeof requireAuth === 'function') {
-        const ok = requireAuth();
-
-        if (ok && typeof renderNav === 'function') {
-            renderNav('/customer/cart');
-        }
-    } else {
-        renderPreviewNav();
-    }
-
-    function render() {
-        const items = CartStore.items;
-        const empty = document.getElementById('empty-state');
-        const content = document.getElementById('cart-content');
-        const heroCount = document.getElementById('hero-count');
-        const badge = document.getElementById('cart-badge');
-
-        const count = CartStore.count();
-        const total = CartStore.total();
-
-        heroCount.textContent = count;
-        if (badge) {
-            badge.textContent = count;
-            badge.style.display = count > 0 ? 'inline-flex' : 'none';
         }
 
-        if (!items.length) {
-            empty.style.display = 'block';
-            content.style.display = 'none';
+        if (typeof requireAuth === 'function') {
+            const ok = requireAuth();
 
-            document.getElementById('sum-count').textContent = '0 items';
-            document.getElementById('sum-subtotal').textContent = Formatter.currency(0);
-            document.getElementById('sum-total').textContent = Formatter.currency(0);
-            return;
+            if (ok && typeof renderNav === 'function') {
+                renderNav('/customer/cart');
+            }
+        } else {
+            renderPreviewNav();
         }
 
-        empty.style.display = 'none';
-        content.style.display = 'grid';
+        function renderToppingOptions(item) {
+            const defs = toppingDefsFor(item);
+            const selected = selectedToppingKeys(item);
 
-        document.getElementById('item-list').innerHTML = items.map(item => `
-            <div class="cart-item">
-                <div class="item-emoji">${foodEmoji(item.type)}</div>
-
-                <div class="item-info">
-                    <div class="item-name">${escapeHtml(item.name)}</div>
-
-                    ${item.toppings?.length
-                        ? `<div class="item-toppings">+ ${item.toppings.map(escapeHtml).join(', ')}</div>`
-                        : ''
-                    }
-
-                    <div class="item-price">${Formatter.currency(item.unitPrice)} each</div>
+            if (!defs.length) {
+                return `
+                <div class="item-options">
+                    <div class="item-options-title">Topping</div>
+                    <span class="item-detail-line is-empty">Món này không có tùy chọn thêm.</span>
                 </div>
-
-                <div class="item-controls">
-                    <button class="qty-btn" onclick="updateQty('${escapeHtml(item.key)}', ${item.quantity - 1})">−</button>
-                    <span class="item-qty">${item.quantity}</span>
-                    <button class="qty-btn" onclick="updateQty('${escapeHtml(item.key)}', ${item.quantity + 1})">+</button>
-                </div>
-
-                <span class="item-subtotal">${Formatter.currency(item.subtotal)}</span>
-
-                <button class="item-remove" onclick="removeItem('${escapeHtml(item.key)}')" title="Remove">
-                    Remove
-                </button>
-            </div>
-        `).join('');
-
-        document.getElementById('sum-count').textContent = count + ' item' + (count !== 1 ? 's' : '');
-        document.getElementById('sum-subtotal').textContent = Formatter.currency(total);
-        document.getElementById('sum-total').textContent = Formatter.currency(total);
-    }
-
-    function updateQty(key, qty) {
-        CartStore.update(key, qty);
-        render();
-    }
-
-    function removeItem(key) {
-        CartStore.remove(key);
-        render();
-        notify('Item removed from cart.', 'info');
-    }
-
-    function clearAll() {
-        if (confirm('Clear your entire cart?')) {
-            CartStore.clear();
-            render();
-            notify('Cart cleared.', 'info');
-        }
-    }
-
-    async function checkout() {
-        const items = CartStore.items;
-
-        if (!items.length) return;
-
-        const btn = document.getElementById('checkout-btn');
-        btn.disabled = true;
-        btn.innerHTML = 'Placing order...';
-
-        try {
-            if (typeof POST !== 'function') {
-                throw new Error('Please run Spring Boot and open http://localhost:9090/customer/cart to place order.');
+            `;
             }
 
-            const payload = {
-                items: items.map(item => ({
-                    foodId: item.foodId,
-                    quantity: item.quantity,
-                    toppings: item.toppings || []
-                }))
-            };
-
-            const order = await POST('/order', payload);
-
-            CartStore.clear();
-            notify('Order placed!', 'success');
-
-            setTimeout(() => {
-                location.href = `/customer/payment?orderId=${order.id}`;
-            }, 800);
-        } catch (ex) {
-            notify(ex.message || 'Could not place order.', 'error');
-            btn.disabled = false;
-            btn.innerHTML = 'Place order <span>→</span>';
+            return `
+            <div class="item-options">
+                <div class="item-options-title">Topping</div>
+                ${defs.map(def => `
+                    <label class="option-pill">
+                        <input
+                            type="checkbox"
+                            ${selected.includes(def.key) ? 'checked' : ''}
+                            onchange="updateItemTopping('${escapeHtml(item.key)}', '${escapeHtml(def.key)}', this.checked)"
+                        >
+                        <span>${escapeHtml(def.label)}</span>
+                        <small>${Number(def.price || 0) > 0 ? '+' + Formatter.currency(def.price) : 'Free'}</small>
+                    </label>
+                `).join('')}
+            </div>
+        `;
         }
-    }
 
-    render();
-</script>
+        function render() {
+            const items = getItems();
+            const empty = document.getElementById('empty-state');
+            const content = document.getElementById('cart-content');
+            const badge = document.getElementById('cart-badge');
+            const pendingNote = document.getElementById('pending-note');
+
+            const count = typeof CartStore.count === 'function'
+                ? CartStore.count()
+                : items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+
+            const total = typeof CartStore.total === 'function'
+                ? CartStore.total()
+                : items.reduce((sum, item) => sum + Number(item.subtotal || 0), 0);
+
+            const pendingOrderId = currentPendingOrderId();
+
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'inline-flex' : 'none';
+            }
+
+            if (pendingNote) {
+                pendingNote.style.display = pendingOrderId && items.length ? 'block' : 'none';
+            }
+
+            if (!items.length) {
+                empty.style.display = 'block';
+                content.style.display = 'none';
+                document.getElementById('sum-total').textContent = Formatter.currency(0);
+                return;
+            }
+
+            empty.style.display = 'none';
+            content.style.display = 'block';
+
+            document.getElementById('item-list').innerHTML = items.map(item => {
+                const toppings = Array.isArray(item.toppings) ? item.toppings : [];
+                const image = item.imageUrl || item.image || item.foodImage || '';
+
+                const details = toppings.length
+                    ? toppings.map(topping => `<span class="item-detail-line">${escapeHtml(topping)}</span>`).join('')
+                    : `<span class="item-detail-line is-empty">Chưa chọn topping</span>`;
+
+                const photo = image
+                    ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(item.name)}">`
+                    : `<div class="item-photo-fallback">${foodEmoji(item.type)}</div>`;
+
+                return `
+                <article class="cart-item">
+                    <div class="item-photo">${photo}</div>
+
+                    <div class="item-info">
+                        <h2 class="item-name">${escapeHtml(item.name)}</h2>
+
+                        <div class="item-details">
+                            ${details}
+                        </div>
+
+                        <div class="item-unit">${Formatter.currency(item.unitPrice)} / món</div>
+                    </div>
+
+                    ${renderToppingOptions(item)}
+
+                    <div class="qty-box">
+                        <button class="qty-btn" type="button" onclick="updateQty('${escapeHtml(item.key)}', ${Number(item.quantity || 0) - 1})">-</button>
+                        <span class="item-qty">${item.quantity}</span>
+                        <button class="qty-btn" type="button" onclick="updateQty('${escapeHtml(item.key)}', ${Number(item.quantity || 0) + 1})">+</button>
+                    </div>
+
+                    <div class="item-subtotal">${Formatter.currency(item.subtotal)}</div>
+
+                    <button class="item-remove" type="button" onclick="removeItem('${escapeHtml(item.key)}')" title="Xóa món">🗑</button>
+                </article>
+            `;
+            }).join('');
+
+            document.getElementById('sum-total').textContent = Formatter.currency(total);
+        }
+
+        function updateQty(key, qty) {
+            clearPendingCheckout();
+            CartStore.update(key, qty);
+            render();
+        }
+
+        function removeItem(key) {
+            clearPendingCheckout();
+            CartStore.remove(key);
+            render();
+            notify('Đã xóa món khỏi giỏ hàng.', 'info');
+        }
+
+        function clearAll() {
+            const items = getItems();
+
+            if (!items.length) {
+                notify('Giỏ hàng đang trống.', 'info');
+                return;
+            }
+
+            if (!confirm('Xóa toàn bộ món trong giỏ hàng?')) {
+                return;
+            }
+
+            clearPendingCheckout();
+
+            if (typeof CartStore.clear === 'function') {
+                CartStore.clear();
+            } else {
+                saveItems([]);
+            }
+
+            render();
+            notify('Đã xóa toàn bộ giỏ hàng.', 'info');
+        }
+
+        async function checkout() {
+            const items = getItems();
+
+            if (!items.length) {
+                notify('Giỏ hàng đang trống.', 'error');
+                return;
+            }
+
+            const pendingOrderId = currentPendingOrderId();
+
+            if (pendingOrderId) {
+                location.href = `/customer/payment?orderId=${pendingOrderId}`;
+                return;
+            }
+
+            const btn = document.getElementById('checkout-btn');
+            btn.disabled = true;
+            btn.innerHTML = 'Đang tạo đơn...';
+
+            try {
+                if (typeof POST !== 'function') {
+                    throw new Error('Please run Spring Boot and open http://localhost:9090/customer/cart to place order.');
+                }
+
+                const payload = {
+                    items: items.map(item => ({
+                        foodId: item.foodId,
+                        quantity: item.quantity,
+                        toppings: item.toppings || []
+                    }))
+                };
+
+                const order = await POST('/order', payload);
+
+                localStorage.setItem('pendingOrderId', String(order.id));
+                localStorage.setItem('pendingOrderCart', JSON.stringify(items));
+
+                notify('Đơn đã tạo, chuyển sang thanh toán.', 'success');
+
+                setTimeout(() => {
+                    location.href = `/customer/payment?orderId=${order.id}`;
+                }, 500);
+            } catch (ex) {
+                notify(ex.message || 'Could not place order.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Payment <span>→</span>';
+            }
+        }
+
+        render();
+    </script>
 </body>
+
 </html>

@@ -708,9 +708,11 @@
         display: none;
     }
 }
-    .brand-logo-img {
-    background: #ffffff url("/images/logo/logo-kff.png") center / cover no-repeat !important;
+   .brand-icon.brand-logo-img,
+   .mark.brand-logo-img {
+    background: #ffffff url("/images/logo/logo-kff.png") center / contain no-repeat !important;
     color: transparent !important;
+    border-radius: 50% !important;
 }
     </style>
 </head>
@@ -729,11 +731,11 @@
         </div>
 
         <div class="hero-content">
-            <p class="eyebrow">🔥 Food ordering system</p>
-            <h1 class="hero-title">Order nhanh, món nóng, bụng vui.</h1>
+            <p class="eyebrow"> Food ordering system</p>
+            <h1 class="hero-title">Order fast, hot food, happy belly.</h1>
             <p class="hero-text">
-                Quản lý món ăn, đơn hàng và khách hàng trong một giao diện gọn gàng.
-                Đăng nhập để vào đúng khu vực của bạn.
+                Manage food items, orders, and customers in a clean interface.
+                Sign in to access your designated area.
             </p>
 
             <div class="signin-food-showcase">
@@ -742,7 +744,7 @@
         <div class="showcase-content">
             <span class="showcase-tag">Hot pick</span>
             <strong>Pepperoni Pizza</strong>
-            <p>Cheesy, crispy and loaded with flavor.</p>
+            <p>Pizza pepperoni phô mai béo thơm, đế giòn và vị đậm đà.</p>
         </div>
     </div>
 
@@ -774,9 +776,9 @@
                 <p>Món ngon lên đơn nhanh, nhìn là đói</p>
             </div>
 
-            <h1 class="auth-title">Welcome back</h1>
+            <h1 class="auth-title">Welcome</h1>
             <p class="auth-desc">
-                Đăng nhập để tiếp tục đặt món, quản lý đơn hàng hoặc cập nhật menu.
+                Login to continue ordering, manage orders, or update the menu.
             </p>
 
             <div id="error-msg" class="error-msg"></div>
