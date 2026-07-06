@@ -338,7 +338,7 @@ function renderNav(activePage) {
   const managerLinks = [
     { href: '/manager/foods', label: 'Foods' },
     { href: '/manager/staff', label: 'Staff' },
-    { href: '/staff/orders', label: 'Orders' },
+    
   ];
 
   let links = customerLinks;

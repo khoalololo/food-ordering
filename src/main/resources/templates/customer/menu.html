@@ -1407,7 +1407,7 @@
     <div class="page">
         <section class="menu-hero">
             <div class="hero-copy">
-                <p class="eyebrow"> Varied menu</p>
+                <p class="eyebrow"> Variedmenu</p>
                 <h1 class="page-title">Choose your favorite, <span>add to cart</span> quickly.</h1>
                 <p class="hero-text">
                     Browse the menu, select toppings, adjust quantities, and add items to your cart.
@@ -1541,37 +1541,39 @@
 
     <script>
         const TOPPINGS_BY_TYPE = {
-            pizza: [
-                { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
-                { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
-                { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
-                { key: 'spicy', label: 'Spicy', price: 0 }
-            ],
             burger: [
-                { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
-                { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
-                { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
-                { key: 'noOnion', label: 'No Onion', price: 0 }
+                { key: 'extra-cheese', label: 'Extra Cheese', price: 10000 },
+                { key: 'extra-meat', label: 'Extra Meat', price: 20000 },
+                { key: 'extra-veggies', label: 'Extra Veggies', price: 8000 },
+                { key: 'no-onion', label: 'No Onion', price: 0 }
+            ],
+            pizza: [
+                { key: 'extra-cheese', label: 'Extra Cheese', price: 15000 },
+                { key: 'pepperoni', label: 'More Pepperoni', price: 20000 },
+                { key: 'mushroom', label: 'Mushroom', price: 10000 },
+                { key: 'thin-crust', label: 'Thin Crust', price: 0 }
             ],
             pasta: [
-                { key: 'extraCheese', label: 'Extra Cheese', price: 10000 },
-                { key: 'extraSauce', label: 'Extra Sauce', price: 5000 },
-                { key: 'spicy', label: 'Spicy', price: 0 }
+                { key: 'parmesan', label: 'Parmesan Cheese', price: 12000 },
+                { key: 'extra-bacon', label: 'Extra Bacon', price: 18000 },
+                { key: 'extra-sauce', label: 'Extra Sauce', price: 8000 }
             ],
             salad: [
-                { key: 'extraVeggies', label: 'Extra Veggies', price: 8000 },
-                { key: 'noDressing', label: 'No Dressing', price: 0 }
+                { key: 'chicken', label: 'Grilled Chicken', price: 18000 },
+                { key: 'extra-dressing', label: 'Extra Dressing', price: 5000 },
+                { key: 'croutons', label: 'Croutons', price: 7000 }
             ],
             soup: [
-                { key: 'extraMeat', label: 'Extra Meat', price: 20000 },
-                { key: 'spicy', label: 'Spicy', price: 0 }
-            ],
-            drink: [
-                { key: 'extraIce', label: 'Extra Ice', price: 0 },
-                { key: 'noSugar', label: 'No Sugar', price: 0 }
+                { key: 'bread', label: 'Garlic Bread', price: 10000 },
+                { key: 'extra-cream', label: 'Extra Cream', price: 6000 }
             ],
             dessert: [
-                { key: 'noSugar', label: 'No Sugar', price: 0 }
+                { key: 'ice-cream', label: 'Ice Cream', price: 12000 },
+                { key: 'extra-chocolate', label: 'Extra Chocolate', price: 7000 }
+            ],
+            drink: [
+                { key: 'extra-ice', label: 'Extra Ice', price: 0 },
+                { key: 'no-sugar', label: 'No Sugar', price: 0 }
             ]
         };
 
