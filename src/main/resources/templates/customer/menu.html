@@ -7,6 +7,7 @@
     <title>Menu | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -1456,7 +1457,7 @@
             </div>
 
             <div class="search-shell">
-                <span class="search-icon">🔎</span>
+                <span class="search-icon"><i data-lucide="search" style="width:18px;height:18px"></i></span>
                 <input class="filter-search" type="search" id="search-input" placeholder="Search menu...">
             </div>
         </section>
@@ -1471,7 +1472,7 @@
 
         <section class="food-grid" id="food-grid">
             <div class="loading">
-                <div class="empty-icon">🍳</div>
+                <div class="empty-icon"><i data-lucide="loader" class="spin" style="width:48px;height:48px;opacity:0.3"></i></div>
                 <h3>Loading menu...</h3>
                 <p>Loading menu items for customers.</p>
             </div>
@@ -1538,6 +1539,7 @@
     </div>
 
     <script src="/js/shared.js"></script>
+    <script>lucide.createIcons();</script>
 
     <script>
         const TOPPINGS_BY_TYPE = {

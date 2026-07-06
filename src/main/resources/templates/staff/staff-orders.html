@@ -6,6 +6,7 @@
     <title>Staff Orders | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -1340,6 +1341,7 @@
 </div>
 
 <script src="/js/shared.js"></script>
+<script>lucide.createIcons();</script>
 
 <script>
     const PREVIEW_ORDERS = [
@@ -1399,12 +1401,12 @@
     const STATUS_FLOW = ['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'COMPLETED'];
 
     const STATUS_META = {
-        PENDING: { icon: '⏳', label: 'Pending' },
-        CONFIRMED: { icon: '✅', label: 'Confirmed' },
-        PREPARING: { icon: '🍳', label: 'Preparing' },
-        READY: { icon: '📦', label: 'Ready' },
-        COMPLETED: { icon: '🎉', label: 'Completed' },
-        CANCELLED: { icon: '❌', label: 'Cancelled' }
+        PENDING: { icon: 'clock', label: 'Pending' },
+        CONFIRMED: { icon: 'check-circle', label: 'Confirmed' },
+        PREPARING: { icon: 'utensils', label: 'Preparing' },
+        READY: { icon: 'package', label: 'Ready' },
+        COMPLETED: { icon: 'party-popper', label: 'Completed' },
+        CANCELLED: { icon: 'x-circle', label: 'Cancelled' }
     };
 
     const Formatter = typeof fmt !== 'undefined'
@@ -1471,7 +1473,8 @@
     }
 
     function statusIcon(status) {
-        return STATUS_META[status]?.icon || '🧾';
+        const iconName = STATUS_META[status]?.icon || 'receipt';
+        return `<i data-lucide="${iconName}" style="width:14px;height:14px"></i>`;
     }
 
     function itemCount(order) {
@@ -1631,6 +1634,8 @@
         } else {
             renderTable();
         }
+
+        if (window.lucide) lucide.createIcons();
     }
 
     function renderBoard() {
@@ -1648,11 +1653,12 @@
         if (!orders.length) {
             board.innerHTML = `
                 <div class="empty">
-                    <div class="empty-icon">🔎</div>
+                    <div class="empty-icon"><i data-lucide="package-search" style="width:40px;height:40px;opacity:0.2"></i></div>
                     <h3>No orders found</h3>
                     <p>Không có đơn hàng phù hợp với bộ lọc hiện tại.</p>
                 </div>
             `;
+            if (window.lucide) lucide.createIcons();
             return;
         }
 
@@ -1900,7 +1906,7 @@
                         </div>
                     `).join('')
                     : `<div class="empty" style="box-shadow:none">
-                        <div class="empty-icon">📭</div>
+                        <div class="empty-icon"><i data-lucide="package-x" style="width:48px;height:48px;opacity:0.2"></i></div>
                         <h3>No item details</h3>
                         <p>Đơn này chưa có chi tiết món.</p>
                     </div>`

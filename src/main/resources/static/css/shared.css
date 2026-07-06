@@ -54,6 +54,7 @@ nav {
   font-weight: 800; font-size: 1.2rem;
   color: var(--accent);
   letter-spacing: -0.02em;
+  display: flex; align-items: center; gap: 0.5rem;
 }
 .nav-links { display: flex; align-items: center; gap: 0.25rem; }
 .nav-link {
@@ -435,4 +436,11 @@ div {
     border-radius: 16px !important;
     background: #ffffff url("/images/logo/logo-kff.png") center / cover no-repeat !important;
     box-shadow: 0 10px 24px rgba(10, 41, 71, 0.14) !important;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 1s linear infinite;
 }

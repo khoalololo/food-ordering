@@ -7,6 +7,7 @@
     <title>Cart | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -684,7 +685,7 @@
         </section>
 
         <section id="empty-state" class="empty">
-            <div class="empty-icon">🛒</div>
+            <div class="empty-icon"><i data-lucide="shopping-cart" style="width:48px;height:48px;opacity:0.2"></i></div>
             <h3>Your cart is empty</h3>
             <p>Go back to the menu to add some delicious items to your cart before ordering.</p>
             <a href="/customer/menu" class="btn">View Menu</a>
@@ -725,6 +726,7 @@
     </main>
 
     <script src="/js/shared.js"></script>
+    <script>lucide.createIcons();</script>
 
     <script>
         const TOPPINGS_BY_TYPE = {

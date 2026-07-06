@@ -28,7 +28,7 @@ public class OrderItem {
     @JoinColumn(name="food_id", nullable = false)
     private Food food;
 
-    @Column(nullable = false)
+    @Column(name = "food_name", nullable = false)
     private String foodName;
 
     @Column(nullable = false)

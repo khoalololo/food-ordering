@@ -7,6 +7,7 @@
     <title>Payment | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -1139,6 +1140,7 @@
     </div>
 
     <script src="/js/shared.js"></script>
+    <script>lucide.createIcons();</script>
 
     <script>
         const PREVIEW_ORDER = {
@@ -1403,11 +1405,12 @@
             if (!items.length) {
                 document.getElementById('order-items-list').innerHTML = `
                 <div class="empty">
-                    <div class="empty-icon">📭</div>
+                    <div class="empty-icon"><i data-lucide="package-x" style="width:48px;height:48px;opacity:0.2"></i></div>
                     <h3>No item details</h3>
                     <p>Không có chi tiết món trong đơn hàng này.</p>
                 </div>
             `;
+                if (window.lucide) lucide.createIcons();
                 return;
             }
 

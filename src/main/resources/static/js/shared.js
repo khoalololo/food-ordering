@@ -108,9 +108,19 @@ function toast(msg, type = 'info', duration = 3500) {
 
   const item = document.createElement('div');
   item.className = `toast ${type}`;
-  item.innerHTML = `<span>${msg}</span>`;
+
+  let icon = 'info';
+  if (type === 'success') icon = 'check-circle';
+  if (type === 'error') icon = 'alert-circle';
+  if (type === 'warning') icon = 'alert-triangle';
+
+  item.innerHTML = `
+    <i data-lucide="${icon}" style="width:18px;height:18px;margin-right:8px;flex-shrink:0"></i>
+    <span>${msg}</span>
+  `;
 
   container.appendChild(item);
+  if (window.lucide) lucide.createIcons();
 
   setTimeout(() => {
     item.style.opacity = '0';
@@ -358,7 +368,10 @@ function renderNav(activePage) {
   if (!nav) return;
 
   nav.innerHTML = `
-    <a class="nav-brand" href="${homeHref}">KhoaFastFood</a>
+    <a class="nav-brand" href="${homeHref}">
+      <i data-lucide="utensils-crosses"></i>
+      KhoaFastFood
+    </a>
 
     <div class="nav-links">
       ${links.map(link => `
@@ -369,15 +382,18 @@ function renderNav(activePage) {
       `).join('')}
 
       ${user ? `
-        <span style="color:var(--muted);font-size:0.8rem;padding:0 0.5rem">
+        <span style="color:var(--navy);opacity:0.6;font-size:0.8rem;padding:0 0.5rem;display:flex;align-items:center;gap:4px">
+          <i data-lucide="user" style="width:14px;height:14px"></i>
           ${user.fullName || user.email}
         </span>
 
-        <button class="btn btn-ghost btn-sm" onclick="signout()">
+        <button class="btn btn-ghost btn-sm" onclick="signout()" style="display:flex;align-items:center;gap:6px">
+          <i data-lucide="log-out" style="width:16px;height:16px"></i>
           Sign out
         </button>
       ` : `
-        <a href="/signin" class="btn btn-primary btn-sm">
+        <a href="/signin" class="btn btn-primary btn-sm" style="display:flex;align-items:center;gap:6px">
+          <i data-lucide="log-in" style="width:16px;height:16px"></i>
           Sign in
         </a>
       `}
@@ -385,6 +401,7 @@ function renderNav(activePage) {
   `;
 
   Cart.updateBadge();
+  if (window.lucide) lucide.createIcons();
 }
 
 function signout() {

@@ -7,6 +7,7 @@
     <title>Food Management | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -1039,7 +1040,7 @@
 
             <aside class="hero-stats">
                 <div class="stat-card">
-                    <div class="stat-icon">📋</div>
+                    <div class="stat-icon"><i data-lucide="utensils"></i></div>
                     <div>
                         <span>Total foods</span>
                         <strong id="stat-total">0</strong>
@@ -1047,7 +1048,7 @@
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon">✅</div>
+                    <div class="stat-icon"><i data-lucide="check-circle"></i></div>
                     <div>
                         <span>Available</span>
                         <strong id="stat-available">0</strong>
@@ -1055,7 +1056,7 @@
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon">🙈</div>
+                    <div class="stat-icon"><i data-lucide="eye-off"></i></div>
                     <div>
                         <span>Hidden</span>
                         <strong id="stat-hidden">0</strong>
@@ -1066,7 +1067,7 @@
 
         <section class="toolbar">
             <div class="input-shell">
-                <span class="input-icon">🔎</span>
+                <span class="input-icon"><i data-lucide="search" style="width:18px;height:18px"></i></span>
                 <input class="form-input" type="search" id="search-input" placeholder="Search food by name...">
             </div>
 
@@ -1189,7 +1190,7 @@
 
             <div class="modal-body">
                 <div class="preview-card">
-                    <div class="preview-icon">🗑️</div>
+                    <div class="preview-icon"><i data-lucide="trash-2" style="width:40px;height:40px;color:var(--red)"></i></div>
                     <div>
                         <strong id="delete-name">Food item</strong>
                         <span>This action cannot be undone.</span>
@@ -1211,6 +1212,7 @@
     </div>
 
     <script src="/js/shared.js"></script>
+    <script>lucide.createIcons();</script>
 
     <script>
         const PREVIEW_FOODS = [

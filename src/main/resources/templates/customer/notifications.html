@@ -6,6 +6,7 @@
     <title>Notifications | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -600,7 +601,7 @@
 
         <div id="notification-list" class="notification-list">
             <div class="loading">
-                <div class="empty-icon">⏳</div>
+                <div class="empty-icon"><i data-lucide="loader" class="spin" style="width:48px;height:48px;opacity:0.3"></i></div>
                 <h3>Loading notifications...</h3>
                 <p>Give us a moment, we're fetching the latest updates from the backend.</p>
             </div>
@@ -611,6 +612,7 @@
 <div id="toast-container"></div>
 
 <script src="/js/shared.js"></script>
+<script>lucide.createIcons();</script>
 
 <script>
     const PREVIEW_NOTIFICATIONS = [
@@ -805,7 +807,7 @@
         if (!notifications.length) {
             list.innerHTML = `
                 <div class="empty">
-                    <div class="empty-icon">📭</div>
+                    <div class="empty-icon"><i data-lucide="bell-off" style="width:48px;height:48px;opacity:0.2"></i></div>
                     <h3>No notifications yet</h3>
                     <p>
                         When you place an order, make a payment, or an order's status changes,
@@ -813,6 +815,7 @@
                     </p>
                 </div>
             `;
+            if (window.lucide) lucide.createIcons();
             return;
         }
 
@@ -829,10 +832,9 @@
                         <p class="notification-message">${escapeHtml(item.message || 'No content available.')}</p>
 
                         <div class="notification-meta">
-                            <span class="pill">🕒 ${escapeHtml(formatTime(item.createdAt))}</span>
-                            <span class="pill">${isRead ? '✅ Read' : '🟠 Unread'}</span>
+                            <span class="pill"><i data-lucide="clock" style="width:12px;height:12px"></i> ${escapeHtml(formatTime(item.createdAt))}</span>
+                            <span class="pill">${isRead ? '<i data-lucide="check" style="width:12px;height:12px"></i> Read' : '🟠 Unread'}</span>
                             ${orderId ? `<span class="pill">#${escapeHtml(orderId)}</span>` : ''}
-                            ${item.type ? `<span class="pill">${escapeHtml(item.type)}</span>` : ''}
                         </div>
                     </div>
 

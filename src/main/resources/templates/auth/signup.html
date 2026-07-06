@@ -6,6 +6,7 @@
     <title>Sign Up | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -735,6 +736,7 @@
         </div>
     </div>
 </div>
+        </div>
     </section>
 
     <section class="auth-wrap">
@@ -757,7 +759,7 @@
                 <div class="form-group">
                     <label class="form-label" for="fullName">Full name</label>
                     <div class="input-shell">
-                        <span class="input-icon">👤</span>
+                        <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px"></i></span>
                         <input
                             class="form-input"
                             type="text"
@@ -773,7 +775,7 @@
                     <div class="form-group">
                         <label class="form-label" for="email">Email</label>
                         <div class="input-shell">
-                            <span class="input-icon">✉️</span>
+                            <span class="input-icon"><i data-lucide="mail" style="width:18px;height:18px"></i></span>
                             <input
                                 class="form-input"
                                 type="email"
@@ -788,7 +790,7 @@
                     <div class="form-group">
                         <label class="form-label" for="phone">Phone</label>
                         <div class="input-shell">
-                            <span class="input-icon">📞</span>
+                            <span class="input-icon"><i data-lucide="phone" style="width:18px;height:18px"></i></span>
                             <input
                                 class="form-input"
                                 type="tel"
@@ -804,7 +806,7 @@
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="input-shell">
-                        <span class="input-icon">🔒</span>
+                        <span class="input-icon"><i data-lucide="lock" style="width:18px;height:18px"></i></span>
                         <input
                             class="form-input"
                             type="password"
@@ -821,7 +823,7 @@
                 <div class="form-group">
                     <label class="form-label" for="confirm">Confirm password</label>
                     <div class="input-shell">
-                        <span class="input-icon">✅</span>
+                        <span class="input-icon"><i data-lucide="shield-check" style="width:18px;height:18px"></i></span>
                         <input
                             class="form-input"
                             type="password"
@@ -853,6 +855,7 @@
 </main>
 
 <script src="/js/shared.js"></script>
+<script>lucide.createIcons();</script>
 
 <script>
     if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {

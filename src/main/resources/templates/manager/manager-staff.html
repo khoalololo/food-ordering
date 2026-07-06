@@ -6,6 +6,7 @@
     <title>Staff Management | KhoaFastFood</title>
 
     <link rel="stylesheet" href="/css/shared.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
@@ -1082,7 +1083,7 @@
 
         <aside class="hero-stats">
             <div class="stat-card">
-                <div class="stat-icon">📋</div>
+                <div class="stat-icon"><i data-lucide="clipboard-list"></i></div>
                 <div>
                     <span>Total users</span>
                     <strong id="stat-total">0</strong>
@@ -1090,7 +1091,7 @@
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon">🧑‍🍳</div>
+                <div class="stat-icon"><i data-lucide="chef-hat"></i></div>
                 <div>
                     <span>Staff</span>
                     <strong id="stat-staff">0</strong>
@@ -1098,7 +1099,7 @@
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon">👑</div>
+                <div class="stat-icon"><i data-lucide="crown"></i></div>
                 <div>
                     <span>Managers</span>
                     <strong id="stat-managers">0</strong>
@@ -1285,6 +1286,7 @@
 </div>
 
 <script src="/js/shared.js"></script>
+<script>lucide.createIcons();</script>
 
 <script>
     const PREVIEW_USERS = [
